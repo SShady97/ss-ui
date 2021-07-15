@@ -4,7 +4,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 const options = [{ name: "AutomationEdge" }, { name: "OneSource" }];
 
-const Server = () => {
+const Select = () => {
     const handleChange = (event, newValue) => {
         console.log(newValue);
     };
@@ -12,7 +12,7 @@ const Server = () => {
     return (
         <Autocomplete
             bgcolor={"red"}
-            id="servers"
+            id="tableSelect"
             options={options}
             getOptionLabel={(option) => option.name}
             onChange={handleChange}
@@ -29,4 +29,4 @@ const Server = () => {
     );
 };
 
-export default Server;
+export default Select;

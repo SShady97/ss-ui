@@ -2,9 +2,9 @@ import React from "react";
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-const options = [{ name: "AutomationEdge" }, { name: "OneSource" }];
+const options = [{ name: "Alejandro" }, { name: "Laura" }];
 
-const Server = () => {
+const ExecutionUsers = () => {
     const handleChange = (event, newValue) => {
         console.log(newValue);
     };
@@ -12,7 +12,7 @@ const Server = () => {
     return (
         <Autocomplete
             bgcolor={"red"}
-            id="servers"
+            id="users"
             options={options}
             getOptionLabel={(option) => option.name}
             onChange={handleChange}
@@ -20,7 +20,7 @@ const Server = () => {
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Seleccionar Servidor"
+                    label="Seleccionar Usuario"
                     variant="outlined"
                     fullWidth
                 />
@@ -29,4 +29,4 @@ const Server = () => {
     );
 };
 
-export default Server;
+export default ExecutionUsers;
