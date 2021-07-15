@@ -1,17 +1,20 @@
-FROM node:16-alpine as build-step
+# get the base node image
+FROM node:alpine
 
-RUN mkdir /app
+# set the working dir for container
+WORKDIR '/frontend'
 
-WORKDIR /app
+# copy the json file first
+COPY package.json .
 
-COPY package.json /app
-
+# install npm dependencies
 RUN npm install
 
-COPY . /app
+RUN chown -R node.node /frontend
 
-RUN npm run build
+# copy other project files
 
-FROM nginx:1.21.1-alpine
+COPY . .
 
-COPY --from=build-step /app/build /usr/share/nginx/html
+# build the folder
+CMD [ "npm", "run", "start" ]
