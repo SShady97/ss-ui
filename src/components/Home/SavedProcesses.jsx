@@ -2,9 +2,9 @@ import React from "react";
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 
-const options = [{ name: "AutomationEdge" }, { name: "OneSource" }];
+const options = [{ name: "Proceso" }, { name: "Alternativa" }];
 
-const Server = () => {
+const SavedProcesses = () => {
     const handleChange = (event, newValue) => {
         console.log(newValue);
     };
@@ -12,15 +12,15 @@ const Server = () => {
     return (
         <Autocomplete
             bgcolor={"red"}
-            id="servers"
+            id="savedprocesses"
             options={options}
             getOptionLabel={(option) => option.name}
             onChange={handleChange}
-            style={{ width: "100%" }}
+            style={{ width: "100%", backgroundColor: "White"}}
             renderInput={(params) => (
                 <TextField
                     {...params}
-                    label="Seleccionar Servidor"
+                    label="Procesos"
                     variant="outlined"
                     fullWidth
                 />
@@ -29,4 +29,4 @@ const Server = () => {
     );
 };
 
-export default Server;
+export default SavedProcesses;
