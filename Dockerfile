@@ -1,17 +1,13 @@
-FROM node:16-alpine as build-step
+FROM node:alpine
 
-RUN mkdir /app
+WORKDIR '/frontend'
 
-WORKDIR /app
-
-COPY package.json /app
+COPY package.json .
 
 RUN npm install
 
-COPY . /app
+RUN chown -R node.node /frontend
 
-RUN npm run build
+COPY . .
 
-FROM nginx:1.21.1-alpine
-
-COPY --from=build-step /app/build /usr/share/nginx/html
+CMD [ "npm", "run", "start" ]
