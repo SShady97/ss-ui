@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useContext } from 'react';
 
 import { Grid, Container, Box, Accordion, Typography, makeStyles, AccordionSummary, AccordionDetails, Divider } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
@@ -12,6 +12,8 @@ import ProcessQueque from './ProcessQueque';
 import TasksQueque from './TasksQueque';
 import SavedProcesses from './SavedProcesses';
 import ResultsTable from './ResultsTable';
+
+import execuserContext from '../../context/execusers/execurserContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -27,6 +29,15 @@ const Home = () => {
 
     const classes = useStyles();
 
+    const execusersContext = useContext(execuserContext);
+
+    const  { execursers, getExecUsers } = execusersContext;
+
+    /* useEffect(() => {
+        getExecUsers();
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []); */
+
     return (
         <Fragment>
             <Appbar />
@@ -41,7 +52,7 @@ const Home = () => {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
-                                    <Typography className={classes.heading}>USUARIOS DE EJECCUCION</Typography>
+                                    <Typography className={classes.heading}>USUARIOS DE EJECUCIÓN</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <ExecutionUsers />
