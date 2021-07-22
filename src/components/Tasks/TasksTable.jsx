@@ -1,14 +1,12 @@
 import React from "react";
 
-import { makeStyles, withStyles, useTheme, IconButton, Button, Modal, Paper } from "@material-ui/core";
+import { makeStyles, withStyles, useTheme, IconButton, Paper } from "@material-ui/core";
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow, TablePagination, TableFooter } from "@material-ui/core";
 
-import CodeIcon from "@material-ui/icons/Code";
 import FirstPageIcon from '@material-ui/icons/FirstPage';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import LastPageIcon from '@material-ui/icons/LastPage';
-import CloseIcon from '@material-ui/icons/Close';
 
 import SearchBar from "material-ui-search-bar";
 import PropTypes from 'prop-types';
@@ -92,17 +90,18 @@ TablePaginationActions.propTypes = {
     page: PropTypes.number.isRequired,
 };
 
-function createData(alias, script) {
-    return { alias, script };
+
+function createData(alias, id, type, datetime, status) {
+    return { alias, id, type, datetime, status };
 }
 
 const originalRows = [
-    createData('alias', 'script asolkjdoiewjdoiewj9 2098eoi23jds 9234u89-23e-32ue98032ue -2893eu982jd2389du2 289 3ue8923ued9832ue8239 8923ue8932eu2 9823ue'),
-    createData('name', 'script'),
-    createData('something', 'script'),
-    createData('1', 'script asolkjdoiewjdoiewj9 2098eoi23jds 9234u89-23e-32ue98032ue -2893eu982jd2389du2 289 3ue8923ued9832ue8239 8923ue8932eu2 9823ue'),
-    createData('2', 'script'),
-    createData('3', 'script'),
+    createData('aaa', 159, 6.0, 24, 4.0),
+    createData('bbb', 21, 22, 69, 22),
+    createData('ccc', 4.0, 33, 21, 22),
+    createData('ddd', 15933, 21, 69, 22),
+    createData('eee', 15933, 21, 69, 22),
+    createData('dfs', 15933, 21, 69, 22),
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -118,14 +117,14 @@ const useStyles = makeStyles((theme) => ({
         padding: theme.spacing(2, 4, 3),
     },
     table: {
-        minWidth: 650
+        minWidth: 300
     }
 
 }));
 
-const Action = () => {
+const TasksTable = () => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(false);
+
     const [rows, setRows] = React.useState(originalRows);
     const [searched, setSearched] = React.useState("");
     const [page, setPage] = React.useState(0);
@@ -147,21 +146,9 @@ const Action = () => {
         requestSearch(searched);
     };
 
-    const handleOpen = () => {
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
-    const body = (
+    return (
         <div className={classes.paper}>
-            <h2 id="modal-title">Escoja una acción
-                <IconButton aria-label="close" className={classes.closeButton} onClick={handleClose} style={{ float: 'right' }}>
-                    <CloseIcon />
-                </IconButton>
-            </h2>
+            <h2 id="titulo"> Tareas Programadas </h2>
             <hr></hr>
             <Paper>
                 <SearchBar
@@ -176,7 +163,10 @@ const Action = () => {
                         <TableHead>
                             <TableRow>
                                 <StyledTableCell>Alias</StyledTableCell>
-                                <StyledTableCell align="left">Script</StyledTableCell>
+                                <StyledTableCell align="right">ID</StyledTableCell>
+                                <StyledTableCell align="right">Type</StyledTableCell>
+                                <StyledTableCell align="right">Execution Datetime</StyledTableCell>
+                                <StyledTableCell align="right">Status</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
@@ -188,13 +178,16 @@ const Action = () => {
                                     <TableCell component="th" scope="row">
                                         {row.alias}
                                     </TableCell>
-                                    <TableCell align="left">{row.script}</TableCell>
+                                    <TableCell align="right">{row.id}</TableCell>
+                                    <TableCell align="right">{row.type}</TableCell>
+                                    <TableCell align="right">{row.datetime}</TableCell>
+                                    <TableCell align="right">{row.status}</TableCell>
                                 </StyledTableRow>
                             ))}
 
                         </TableBody>
                         <TableFooter>
-                            <TableRow>
+                            <TableRow align="right">
                                 <TablePagination
                                     colSpan={3}
                                     count={rows.length}
@@ -212,25 +205,6 @@ const Action = () => {
             </Paper>
         </div>
     );
-
-    return (
-        <div style={{ width: "100%" }}>
-            <Button
-                variant="outlined"
-                style={{ width: "100%", backgroundColor: "White" }}
-                startIcon={<CodeIcon />}
-                onClick={handleOpen}
-            >
-                Acción a Ejecutar
-            </Button>
-            <Modal
-                open={open}
-                onClose={handleClose}
-            >
-                {body}
-            </Modal>
-        </div>
-    );
 };
 
-export default Action;
+export default TasksTable;
