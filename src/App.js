@@ -5,6 +5,7 @@ import Login from "./components/Login/Login";
 import Tasks from "./components/Tasks/Tasks";
 
 import ExecuserState from "./context/execusers/execuserState";
+import LoginState from "./context/login/loginState";
 
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
@@ -19,6 +20,7 @@ function App() {
                 ({login, authenticationState}) => {
 
                     return (
+                        <LoginState>
                         <ExecuserState>
                             <Router>
                                 <Switch>
@@ -29,6 +31,7 @@ function App() {
                                 </Switch>
                             </Router>
                         </ExecuserState>
+                        </LoginState>
                     )
                 }
             }

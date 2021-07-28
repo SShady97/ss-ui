@@ -91,6 +91,7 @@ const Appbar = () => {
         <AzureAD provider={authProvider}>
             {
                 ({ logout, authenticationState, accountInfo }) => {
+
                     switch (authenticationState) {
                         case AuthenticationState.Unauthenticated:
                             return (

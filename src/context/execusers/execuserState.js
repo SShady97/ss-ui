@@ -20,11 +20,11 @@ const ExecuserState = props => {
 
             console.log(process.env.PORT)
 
-            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/exec_users/${3}`;
+            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/exec_users`;
 
             console.log(api_url)
 
-            const responseExecUsers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2MjY0NTQxOTMsIm5iZiI6MTYyNjQ1NDE5MywianRpIjoiOTJkNDhkZDAtNGI1Ni00MDQ3LTgwYzMtNTRmZjQwZDk4MGVjIiwiZXhwIjoxNjI2NDU1MDkzLCJpZGVudGl0eSI6IjY0Njk2NTY3NmYyZTcyNmY2YTYxNzM0MDczNzU2ZDZkNjEyZDczNjM2OTJlNjM2ZjZkIiwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.c55tftoRy5sbhYegQjaMbyMsVLE0bum0Si5_AQCSUGA'}});
+            const responseExecUsers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${sessionStorage.getItem(process.env.REACT_APP_SSTORAGE_KEY)}`}});
             const resultExecUsers = await responseExecUsers.json();
 
             console.log(resultExecUsers);

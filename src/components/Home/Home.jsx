@@ -14,6 +14,7 @@ import SavedProcesses from './SavedProcesses';
 import ResultsTable from './ResultsTable';
 
 import execuserContext from '../../context/execusers/execurserContext';
+import loginContext from '../../context/login/loginContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,13 +31,15 @@ const Home = () => {
     const classes = useStyles();
 
     const execusersContext = useContext(execuserContext);
+    const logContext = useContext(loginContext);
 
     const  { execursers, getExecUsers } = execusersContext;
+    const  { token } = logContext;
 
-    /* useEffect(() => {
+    useEffect(() => {
         getExecUsers();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []); */
+         // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
     return (
         <Fragment>

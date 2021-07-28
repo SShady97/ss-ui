@@ -1,9 +1,11 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useContext } from 'react';
 
 import { AzureAD, AuthenticationState } from 'react-aad-msal';
 import { authProvider } from '../../Auth/authProvider';
 import { Redirect } from "react-router-dom";
 import { makeStyles, withStyles, Grid, Box, TextField, Button } from '@material-ui/core';
+
+import loginContext from '../../context/login/loginContext';
 
 const FormTextField = withStyles({
     root: {
@@ -46,16 +48,22 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Login = () => {
+
     const classes = useStyles();
+
+    const logContext = useContext(loginContext);
 
     return (
         <AzureAD provider={authProvider}>
             {
-                ({login, authenticationState}) => {
+                ({login, authenticationState, accountInfo}) => {
+
                     switch (authenticationState) {
                         case AuthenticationState.Authenticated:
                             return (
-                                <Redirect to='/'/>
+                                <>
+                                    <Redirect to='/' />
+                                </>
                             );
                         default:
                             return (
@@ -76,7 +84,7 @@ const Login = () => {
                                             </Grid>
                                             <Grid item>
                                                 <Box textAlign='center' mt={4} display="flex" flexDirection="row-reverse">
-                                                    <ColorButton variant='contained' color="blue" onClick={login}>
+                                                    <ColorButton variant='contained' onClick={login}>
                                                         Iniciar Sesión
                                                     </ColorButton>
                                                 </Box>
