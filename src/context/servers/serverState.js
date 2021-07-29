@@ -2,24 +2,24 @@ import React, { useReducer } from 'react';
 
 import { authProvider } from '../../Auth/authProvider';
 
-import execuserReducer from './execuserReducer';
-import execuserContext from './execurserContext';
+import serverReducer from './serverReducer';
+import serverContext from './serverContext';
 
-import { EXEC_USERS, SET_EXEC } from '../../types';
+import { SERVERS } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
-const ExecuserState = props => {
+const ServerState = props => {
     
     const initialState = {
-        exec_users : [],
-        selected_exec: null
+        servers : [],
+        selected_server: null
     }
 
-    const [ state, dispatch ] = useReducer(execuserReducer, initialState)
+    const [ state, dispatch ] = useReducer(serverReducer, initialState)
 
 
-    const getExecUsers = async () => {
+    const getServers = async () => {
 
         try {
 
@@ -37,8 +37,8 @@ const ExecuserState = props => {
             const exec_users = await getStatus(task_id, task_name);
 
             dispatch({
-                type: EXEC_USERS,
-                payload: exec_users
+                type: SERVERS,
+                payload: servers
             })
             
         } catch (error) {
@@ -47,27 +47,27 @@ const ExecuserState = props => {
 
     }
 
-    const selectExec = (exec_user_id) => {
+    const selectServer = (server_id) => {
         dispatch({
-            type: SET_EXEC,
-            payload: exec_user_id
+            type: SET_SERVER,
+            payload: server_id
         })
     }
 
 
     return (
-        <execuserContext.Provider
+        <serverContext.Provider
             value={{
-                exec_users: state.exec_users,
-                selected_exec: state.selected_exec,
-                getExecUsers: getExecUsers,
-                selectExec: selectExec
+                servers: state.servers,
+                selected_server: state.selected_server,
+                getServers: getServers,
+                selectServer: selectServer
             }}
         >
             {props.children}
-        </execuserContext.Provider>
+        </serverContext.Provider>
     )
 
 }
 
-export default ExecuserState;
+export default ServerState;

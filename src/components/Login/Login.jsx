@@ -5,8 +5,6 @@ import { authProvider } from '../../Auth/authProvider';
 import { Redirect } from "react-router-dom";
 import { makeStyles, withStyles, Grid, Box, TextField, Button } from '@material-ui/core';
 
-import loginContext from '../../context/login/loginContext';
-
 const FormTextField = withStyles({
     root: {
         '& label.Mui-focused': {
@@ -51,12 +49,10 @@ const Login = () => {
 
     const classes = useStyles();
 
-    const logContext = useContext(loginContext);
-
     return (
         <AzureAD provider={authProvider}>
             {
-                ({login, authenticationState, accountInfo}) => {
+                ({ login, authenticationState }) => {
 
                     switch (authenticationState) {
                         case AuthenticationState.Authenticated:

@@ -14,7 +14,6 @@ import SavedProcesses from './SavedProcesses';
 import ResultsTable from './ResultsTable';
 
 import execuserContext from '../../context/execusers/execurserContext';
-import loginContext from '../../context/login/loginContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -31,15 +30,17 @@ const Home = () => {
     const classes = useStyles();
 
     const execusersContext = useContext(execuserContext);
-    const logContext = useContext(loginContext);
 
-    const  { execursers, getExecUsers } = execusersContext;
-    const  { token } = logContext;
+    const  { exec_users, getExecUsers } = execusersContext;
 
     useEffect(() => {
         getExecUsers();
          // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, []);
+
+    useEffect(() => {
+        console.log(exec_users)
+    }, [exec_users])
 
     return (
         <Fragment>
@@ -55,10 +56,10 @@ const Home = () => {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
-                                    <Typography className={classes.heading}>USUARIOS DE EJECUCIÓN</Typography>
+                                    <Typography className={classes.heading}>SERVIDOR</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <ExecutionUsers />
+                                    <Server />
                                 </AccordionDetails>
                             </Accordion>
                             <Accordion>
@@ -67,12 +68,12 @@ const Home = () => {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
-                                    <Typography className={classes.heading}>SERVIDOR</Typography>
+                                    <Typography className={classes.heading}>USUARIOS DE EJECUCIÓN</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <Server />
+                                    <ExecutionUsers />
                                 </AccordionDetails>
-                            </Accordion>
+                            </Accordion>                   
                             <Box mt={1}>
                                 <Action />
                             </Box>
