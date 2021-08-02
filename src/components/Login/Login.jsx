@@ -1,5 +1,8 @@
-import React, { Fragment } from 'react';
+import React, { Fragment, useEffect, useContext } from 'react';
 
+import { AzureAD, AuthenticationState } from 'react-aad-msal';
+import { authProvider } from '../../Auth/authProvider';
+import { Redirect } from "react-router-dom";
 import { makeStyles, withStyles, Grid, Box, TextField, Button } from '@material-ui/core';
 
 const FormTextField = withStyles({
@@ -43,41 +46,56 @@ const useStyles = makeStyles((theme) => ({
 
 
 const Login = () => {
+
     const classes = useStyles();
 
     return (
-        <Fragment>
-            <Box className={classes.box} m="auto" style={{ marginTop: '20vh', backgroundColor: 'white' }}>
-                <Grid
-                    container
-                    direction="column"
-                    justifyContent="center"
-                    alignItems="center"
-                    mt={20}
-                    color="White"
-                    spacing={4}
-                >
-                    <Grid item>
-                        <img src="/App_Icon.png" alt="" width="427" height="57" />
+        <AzureAD provider={authProvider}>
+            {
+                ({ login, authenticationState }) => {
 
-                    </Grid>
-                    <Grid item>
-                        <form noValidate autoComplete="off">
-                            <FormTextField id="user" label="Usuario" fullWidth={true} />
-                            <FormTextField id="standard-basic" label="Contraseña" type="password" autoComplete="current-password" fullWidth={true} margin='dense' />
-                        </form>
-                        <Box textAlign='center' mt={4} display="flex" flexDirection="row-reverse">
-                            <ColorButton variant='contained' color="blue">
-                                Iniciar Sesión
-                            </ColorButton>
-                        </Box>
-                    </Grid>
-                </Grid>
-            </Box>
-            <Box m="auto" mt={13} display="flex" justifyContent="center">
-                <img src="/footer_login.png" alt="" width="268" height="43" />
-            </Box>
-        </Fragment >
+                    switch (authenticationState) {
+                        case AuthenticationState.Authenticated:
+                            return (
+                                <>
+                                    <Redirect to='/' />
+                                </>
+                            );
+                        default:
+                            return (
+                                <Fragment>
+                                    <Box className={classes.box} m="auto" style={{ marginTop: '20vh', backgroundColor: 'white' }}>
+                                        <Grid
+                                            container
+                                            direction="column"
+                                            justifyContent="center"
+                                            alignItems="center"
+                                            mt={20}
+                                            color="White"
+                                            spacing={4}
+                                        >
+                                            <Grid item>
+                                                <img src="/App_Icon.png" alt="" width="427" height="57" />
+        
+                                            </Grid>
+                                            <Grid item>
+                                                <Box textAlign='center' mt={4} display="flex" flexDirection="row-reverse">
+                                                    <ColorButton variant='contained' onClick={login}>
+                                                        Iniciar Sesión
+                                                    </ColorButton>
+                                                </Box>
+                                            </Grid>
+                                        </Grid>
+                                    </Box>
+                                    <Box m="auto" mt={13} display="flex" justifyContent="center">
+                                        <img src="/footer_login.png" alt="" width="268" height="43" />
+                                    </Box>
+                                </Fragment >
+                            )
+                    }
+                }
+            }    
+        </AzureAD>
     );
 }
 

@@ -30,9 +30,9 @@ function createData(app, env, server, ip, action, result, text, email, date, use
 
 const rows = [
     createData(1, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
-    createData(1, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
-    createData(1, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
-    createData(1, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
+    createData(2, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
+    createData(3, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
+    createData(4, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
 ];
 
 const useStyles = makeStyles({

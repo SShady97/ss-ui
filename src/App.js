@@ -4,18 +4,39 @@ import Admin from "./components/Admin/Admin";
 import Login from "./components/Login/Login";
 import Tasks from "./components/Tasks/Tasks";
 
-import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import ExecuserState from "./context/execusers/execuserState";
+import ServerState from "./context/servers/serverState";
+
+import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
+
+import { authProvider } from './Auth/authProvider';
+import { AzureAD } from 'react-aad-msal';
 
 function App() {
+    
     return (
-        <Router>
-            <Switch>
-                <Route exact path="/" component={Home}></Route>
-                <Route exact path="/login" component={Login}></Route>
-                <Route exact path="/admin" component={Admin}></Route>
-                <Route exact path="/tasks" component={Tasks}></Route>
-            </Switch>
-        </Router>
+        <AzureAD provider={authProvider}>
+            {
+                ({login, authenticationState}) => {
+
+                    return (
+                        
+                        <ServerState>
+                        <ExecuserState>
+                            <Router>
+                                <Switch>
+                                    <Route exact path="/login" component={Login}></Route>
+                                    <Route exact path="/">{authenticationState ? <Home /> : <Redirect to = '/login'/>}</Route>
+                                    <Route exact path="/admin">{authenticationState ? <Admin /> : <Redirect to = '/login'/>}</Route>
+                                    <Route exact path="/tasks">{authenticationState ? <Tasks /> : <Redirect to = '/login'/>}</Route>
+                                </Switch>
+                            </Router>
+                        </ExecuserState>
+                        </ServerState>
+                    )
+                }
+            }
+        </AzureAD>
     );
 }
 
