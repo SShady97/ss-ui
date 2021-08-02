@@ -1,31 +1,51 @@
 import React from "react";
-import { TextField } from "@material-ui/core";
-import Autocomplete from "@material-ui/lab/Autocomplete";
+import { TextField, MenuItem, withStyles } from "@material-ui/core";
 
-const options = [{ name: "AutomationEdge" }, { name: "OneSource" }];
+const SelectTextField = withStyles({
+    root: {
+        '& label.Mui-focused': {
+            color: '#517461',
+        },
+        '& .MuiInput-underline:after': {
+            borderBottomColor: '#517461',
+        },
+        '& .MuiOutlinedInput-root': {
+            '& fieldset': {
+                borderColor: '#517461',
+            },
+            '&:hover fieldset': {
+                borderColor: '#517461',
+            },
+            '&.Mui-focused fieldset': {
+                borderColor: '#517461',
+            },
+        },
+    },
+})(TextField);
 
-const Select = () => {
-    const handleChange = (event, newValue) => {
-        console.log(newValue);
+const Select = ({ options, onChange, value }) => {
+
+    const handleChange = (event) => {
+        const text = event.target.value;
+        onChange(text);
     };
 
     return (
-        <Autocomplete
-            bgcolor={"red"}
-            id="tableSelect"
-            options={options}
-            getOptionLabel={(option) => option.name}
+        <SelectTextField
+            id="standard-select-option"
+            select
+            label="Tabla"
+            value={value}
             onChange={handleChange}
-            style={{ width: "100%" }}
-            renderInput={(params) => (
-                <TextField
-                    {...params}
-                    label="Seleccionar Servidor"
-                    variant="outlined"
-                    fullWidth
-                />
-            )}
-        />
+            fullWidth
+            variant="outlined"
+        >
+            {options.map((option) => (
+                <MenuItem key={option.name} value={option.name}>
+                    {option.name}
+                </MenuItem>
+            ))}
+        </SelectTextField>
     );
 };
 

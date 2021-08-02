@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     title: {
         flexGrow: 1,
         fontWeight: 'bold',
-        fontFamily: 'Courier new'
+        fontFamily: 'Arial'
     },
 }));
 
