@@ -35,8 +35,6 @@ const ExecuserState = props => {
 
             const exec_users = await getStatus(task_id, task_name);
 
-            console.log(exec_users);
-
             dispatch({
                 type: EXEC_USERS,
                 payload: exec_users

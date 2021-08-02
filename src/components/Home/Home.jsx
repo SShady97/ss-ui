@@ -7,7 +7,7 @@ import Appbar from '../Appbar';
 import Server from './Server';
 import ExecutionUsers from './ExecutionUsers';
 import Export from './Export';
-import Action from './Action';
+import ActionsModal from './Actions/ActionsModal';
 import ProcessQueque from './ProcessQueque';
 import TasksQueque from './TasksQueque';
 import SavedProcesses from './SavedProcesses';
@@ -75,7 +75,7 @@ const Home = () => {
                                 </AccordionDetails>
                             </Accordion>                   
                             <Box mt={1}>
-                                <Action />
+                                <ActionsModal />
                             </Box>
                         </Box>
                         <Box mb={1}>
