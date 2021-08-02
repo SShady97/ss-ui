@@ -10,7 +10,7 @@ import ServerState from "./context/servers/serverState";
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
 import { authProvider } from './Auth/authProvider';
-import { AzureAD, AuthenticationState } from 'react-aad-msal';
+import { AzureAD } from 'react-aad-msal';
 
 function App() {
     

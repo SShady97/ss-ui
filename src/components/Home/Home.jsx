@@ -13,7 +13,7 @@ import TasksQueque from './TasksQueque';
 import SavedProcesses from './SavedProcesses';
 import ResultsTable from './ResultsTable';
 
-import execuserContext from '../../context/execusers/execurserContext';
+import serverContext from '../../context/servers/serverContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -29,18 +29,18 @@ const Home = () => {
 
     const classes = useStyles();
 
-    const execusersContext = useContext(execuserContext);
+    const serversContext = useContext(serverContext);
 
-    const  { exec_users, getExecUsers } = execusersContext;
+    const  { servers, getServers } = serversContext;
 
     useEffect(() => {
-        getExecUsers();
+        getServers();
          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
-        console.log(exec_users)
-    }, [exec_users])
+        console.log(servers)
+    }, [servers])
 
     return (
         <Fragment>

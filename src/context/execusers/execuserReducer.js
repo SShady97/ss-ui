@@ -1,4 +1,4 @@
-import { EXEC_USERS, SET_EXEC } from '../../types';
+import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS } from '../../types';
 
 export default (state, action) => {
     switch(action.type) {
@@ -13,6 +13,13 @@ export default (state, action) => {
             return {
                 ...state,
                 selected_exec: action.payload
+            }
+
+        case CLEAN_EXECUSERS:
+            return {
+                ...state,
+                exec_users: [],
+                selected_exec: null
             }
     }
 }

@@ -5,15 +5,23 @@ const getStatus = async (task_id, task_name, poll_sec=1000) => {
     
     try {
 
+        let taskStatus;
+
         const responseTask = await fetch(check_url, { method: 'GET' });
         const resultTask = await responseTask.json();
 
         switch (resultTask.data.task_name) {
 
             case 'tasks.winrm-exec_users':
-                let taskStatus = resultTask.data.task_status;
+                taskStatus = resultTask.data.task_status;
                 if (taskStatus === 'SUCCESS') {
                     return resultTask.data.task_result.users;
+                }
+                break;
+            case 'tasks.winrm-servers':
+                taskStatus = resultTask.data.task_status;
+                if (taskStatus === 'SUCCESS') {
+                    return resultTask.data.task_result.servers;
                 }
                 break;
                 

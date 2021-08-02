@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import serverReducer from './serverReducer';
 import serverContext from './serverContext';
 
-import { SERVERS } from '../../types';
+import { SERVERS, SET_SERVER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -20,6 +20,7 @@ const ServerState = props => {
 
 
     const getServers = async () => {
+        console.log(process.env.REACT_APP_API_URL)
 
         try {
 
@@ -27,14 +28,16 @@ const ServerState = props => {
             token = token.idToken.rawIdToken;
             console.log(token)
 
-            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/exec_users`;
+            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/servers`;
 
-            const responseExecUsers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
-            const resultExecUsers = await responseExecUsers.json();
+            const responseServers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
+            const resultServers = await responseServers.json();
 
-            const { task_id, task_name } = resultExecUsers;
+            const { task_id, task_name } = resultServers;
 
-            const exec_users = await getStatus(task_id, task_name);
+            const servers = await getStatus(task_id, task_name);
+
+            console.log(servers);
 
             dispatch({
                 type: SERVERS,
@@ -47,10 +50,10 @@ const ServerState = props => {
 
     }
 
-    const selectServer = (server_id) => {
+    const selectServer = (server) => {
         dispatch({
             type: SET_SERVER,
-            payload: server_id
+            payload: server
         })
     }
 

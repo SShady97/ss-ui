@@ -1,18 +1,18 @@
-import { EXEC_USERS, SET_EXEC } from '../../types';
+import { SERVERS, SET_SERVER } from '../../types';
 
 export default (state, action) => {
     switch(action.type) {
 
-        case EXEC_USERS:
+        case SERVERS:
             return {
                 ...state,
-                exec_users: action.payload
+                servers: action.payload
             }
         
-        case SET_EXEC:
+        case SET_SERVER:
             return {
                 ...state,
-                selected_exec: action.payload
+                selected_server: action.payload
             }
     }
 }
