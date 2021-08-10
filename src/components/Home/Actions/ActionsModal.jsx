@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
@@ -11,17 +11,9 @@ import CodeIcon from '@material-ui/icons/Code';
 
 import ActionsTable from './ActionsTable';
 
-import scriptContext from '../../../context/scripts/scriptContext';
-
-
 const ActionsModal = () => {
 
-  const [ actions, setActions ] = useState([]);
   const [open, setOpen] = useState(false);
-
-  const scriptsContext = useContext(scriptContext);
-
-  const { scripts, selectScripts } = scriptsContext;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -34,12 +26,6 @@ const ActionsModal = () => {
     setOpen(false);
   };
 
-  const handleAccept = () => {
-    setOpen(false);
-    
-    let selected_scripts = actions.map( action => (scripts[action]));
-    selectScripts(selected_scripts);
-  };
 
   return (
     <div>
@@ -57,18 +43,15 @@ const ActionsModal = () => {
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{"Acciones a Ejecutar"}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{"Acciones Disponibles"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <ActionsTable setActions={setActions} />
+            <ActionsTable />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose} color="primary" autoFocus>
-            Cancelar
-          </Button>
-          <Button onClick={handleAccept} color="primary" autoFocus>
-            Aceptar
+            Cerrar
           </Button>
         </DialogActions>
       </Dialog>

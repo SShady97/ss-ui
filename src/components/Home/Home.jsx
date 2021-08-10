@@ -6,8 +6,8 @@ import { ExpandMore } from '@material-ui/icons';
 import Appbar from '../Appbar';
 import Export from './Export';
 import ActionsModal from './Actions/ActionsModal';
-import ProcessesModal from './Parameters/ProcessesModal';
-import ProcessesTable from './Parameters/ProcessesTable';
+import ProcessesModal from './ProcessQueue/ProcessesModal';
+import ProcessesTable from './ProcessQueue/ProcessesTable';
 import ProcessQueque from './ProcessQueque';
 import TasksQueque from './TasksQueque';
 import SavedProcesses from './SavedProcesses';
@@ -47,60 +47,36 @@ const Home = () => {
         <Fragment>
             <Appbar />
             <Container maxWidth="xl" style={{ marginTop: '20px', }}>
-                <Grid container spacing={3} style={{ borderRadius: 10, margin: '5%', width: '90%', backgroundColor: 'Gainsboro' }}>
+                <Grid container spacing={3} style={{ borderRadius: 10, margin: '1%', width: '98%', backgroundColor: 'Gainsboro' }}>
                     <Grid item xs={12}>
                         <h3 style={{ marginBottom: '50px', textAlign: 'center' }}>CREAR COLA DE PROCESOS</h3>
-                        <Box mb={6}>
-                            <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMore />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography className={classes.heading}>CREAR PROCESOS</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <ProcessesTable />
-                                </AccordionDetails>
-                            </Accordion>
-                            {/* <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMore />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography className={classes.heading}>SERVIDOR</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <Server />
-                                </AccordionDetails>
-                            </Accordion>
-                            <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMore />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography className={classes.heading}>USUARIOS DE EJECUCIÓN</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <ExecutionUsers />
-                                </AccordionDetails>
-                            </Accordion> */}                   
+                        <Box mb={6}>                 
                             <Box mt={1}>
                                 <ActionsModal />
                             </Box>
                         </Box>
-                        <Box mb={1}>
+                        {/* <Box mb={1}>
                             <ProcessQueque />
                         </Box>
                         <Box>
                             <TasksQueque />
-                        </Box>
+                        </Box> */}
+                        <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMore />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >
+                                    <Typography className={classes.heading}>COLA DE PROCESOS</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <ProcessesTable />
+                                </AccordionDetails>
+                            </Accordion> 
                     </Grid>
 
                     <Grid item xs={12} sm container direction="column" justifyContent="flex-start">
-                        <Grid item container spacing={2}>
+                        {/* <Grid item container spacing={2}>
                             <Grid item xs>
                                 <Box display="flex" flexDirection="row-reverse">
                                     <h3>PROCESOS GUARDADOS</h3>
@@ -116,7 +92,7 @@ const Home = () => {
                                     <Export />
                                 </Box>
                             </Grid>
-                        </Grid>
+                        </Grid> */}
                         <Grid item >
                             <Box mt={2}>
                                 <Divider />

@@ -8,6 +8,7 @@ import ExecuserState from "./context/execusers/execuserState";
 import ServerState from "./context/servers/serverState";
 import ScriptState from "./context/scripts/scriptState";
 import ParameterState from "./context/parameters/parameterState";
+import ProcessQState from "./context/processQ/processQState";
 
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
@@ -23,6 +24,7 @@ function App() {
 
                     return (
                         
+                        <ProcessQState>
                         <ParameterState>
                         <ScriptState>
                         <ServerState>
@@ -39,6 +41,8 @@ function App() {
                         </ServerState>
                         </ScriptState>
                         </ParameterState>
+                        </ProcessQState>
+                        
                     )
                 }
             }

@@ -14,3 +14,6 @@ export const CLEAN_SCRIPTS = 'CLEAN_SCRIPTS';
 export const PARAMETERS = 'PARAMETERS';
 export const SET_PARAMETER = 'SET_PARAMETER';
 export const CLEAN_PARAMETERS = 'CLEAN_PARAMETERS';
+
+export const SET_QUEUE = 'SET_QUEUE';
+export const RUN_QUEUE = 'RUN_QUEUE';

@@ -1,16 +1,14 @@
-import React, { useState, useContext, useEffect } from 'react';
+import React, { useState, useContext } from 'react';
 
 import tableIcons from '../../tableIcons';
 import MaterialTable from 'material-table';
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import PlayArrowIcon from '@material-ui/icons/PlayArrow';
 import serverContext from '../../../context/servers/serverContext';
 import execuserContext from '../../../context/execusers/execurserContext';
 import scriptContext from '../../../context/scripts/scriptContext';
 import parameterContext from '../../../context/parameters/parameterContext';
-
-
+import processQContext from '../../../context/processQ/processQContext';
 
 const ProcessesTable = () => {
 
@@ -18,13 +16,14 @@ const ProcessesTable = () => {
     const execusersContext = useContext(execuserContext);
     const scriptsContext = useContext(scriptContext);
     const parametersContext = useContext(parameterContext);
+    const processesQContext = useContext(processQContext);
     
     const  { servers, selectServer, selected_server } = serversContext;
     const  { cleanExec, getExecUsers, selectExec, exec_users, selected_exec } = execusersContext;
     const  { scripts, selectScript, selected_script } = scriptsContext;
     const  { parameters, selectParameter, selected_parameter, getParameters, cleanParameters } = parametersContext;
+    const  { queue, setQueue, runQueue } = processesQContext;
 
-    const [ data, setData ] = useState([]);
     const [ validation, setValidation ] = useState(false);
 
     const handleChangeServer = (e, server, props) => {
@@ -74,13 +73,16 @@ const ProcessesTable = () => {
       setValidation(e.target.checked);
     };
 
-    
+    const handleRun = () => {
+      runQueue();
+    }
 
     const tableColumns = [
       
         {
           title: "Servidor",
           field: "server",
+          width: null,
           validate: rowData => selected_server !== null,
           editComponent: (props) => {
             return (
@@ -96,7 +98,7 @@ const ProcessesTable = () => {
                     renderInput={(params) => (
                         <TextField
                             {...params}
-                            label="Seleccionar Servidor"
+                            label="Servidor"
                             variant="outlined"
                             fullWidth
                         />
@@ -116,7 +118,7 @@ const ProcessesTable = () => {
           }
         },
         {
-          title: "Usuario de Ejecución",
+          title: "Usuario",
           field: "exec_user",
           validate: rowData => selected_exec !== null,
           editComponent: (props) => {
@@ -134,7 +136,7 @@ const ProcessesTable = () => {
                   renderInput={(params) => (
                       <TextField
                           {...params}
-                          label="Seleccionar Usuario"
+                          label="Usuario"
                           variant="outlined"
                           fullWidth
                       />
@@ -171,7 +173,7 @@ const ProcessesTable = () => {
                   renderInput={(params) => (
                       <TextField
                           {...params}
-                          label="Seleccionar Accion"
+                          label="Acción"
                           variant="outlined"
                           fullWidth
                       />
@@ -208,7 +210,7 @@ const ProcessesTable = () => {
                   renderInput={(params) => (
                       <TextField
                           {...params}
-                          label="Seleccionar Parámetro"
+                          label="Parámetro"
                           variant="outlined"
                           fullWidth
                       />
@@ -229,11 +231,18 @@ const ProcessesTable = () => {
         {
           title: "Validar",
           field: "validation",
+          headerStyle: {
+            textAlign: 'center'
+          },
+          cellStyle: {
+            textAlign: 'center'
+          },
           editComponent: (props) => {
             return (
               <input
                 type="checkbox"
                 checked={validation}
+                disabled={selected_script?.parameter !== false ? false : true}
                 onChange={(e, validation) => handleChangeValidation(e, props)}
               />
             );
@@ -244,16 +253,12 @@ const ProcessesTable = () => {
         }
     ];
 
-    useEffect(() => {
-      console.log(data)
-    }, [data]);
-
     return (
         <MaterialTable
         columns={tableColumns}
         icons={tableIcons}
         style={{ width: "100%" }}
-        data={data}
+        data={queue}
         title=""
         options={{ search: false, actionsColumnIndex: -1 }}
         editable={{
@@ -270,7 +275,7 @@ const ProcessesTable = () => {
                   validation: validation
                 };
                 
-                setData([...data, row]);
+                setQueue([...queue, row]);
                 setValidation(false);
                 selectServer(null);
                 selectScript(null);
@@ -282,10 +287,10 @@ const ProcessesTable = () => {
           onRowDelete: (oldData) =>
             new Promise((resolve, reject) => {
               setTimeout(() => {
-                const dataDelete = [...data];
+                const dataDelete = [...queue];
                 const index = oldData.tableData.id;
                 dataDelete.splice(index, 1);
-                setData([...dataDelete]);
+                setQueue([...dataDelete]);
 
                 resolve();
               }, 1000);
@@ -296,7 +301,7 @@ const ProcessesTable = () => {
             icon: tableIcons.RunQueue,
             tooltip: 'Run process queue',
             isFreeAction: true,
-            onClick: (event) => alert("You want to add a new row")
+            onClick: () => handleRun()
           }
         ]}
       />
