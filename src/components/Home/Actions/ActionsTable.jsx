@@ -1,36 +1,38 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 
-import MUIDataTable from "mui-datatables";
+import tableIcons from '../../tableIcons';
+import MaterialTable from 'material-table';
 
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import scriptContext from '../../../context/scripts/scriptContext';
 
 
-const ActionsTable = () => {
+const ActionsTable = ({ setActions }) => {
 
-    const data = [
-        ["Reiniciar Servidor", "qwadsefgrgh"],
-        ["Reiniciar IIS", "ewrerteyhr"]
+    
+    const scriptsContext = useContext(scriptContext);
+
+    const { scripts } = scriptsContext;
+
+    const columns = [
+        {
+            title:'Alias',
+            field: 'alias'
+        },
+        {
+            title:'Comando PowerShell',
+            field: 'script'
+        }
     ];
 
-    let columns = ['Alias', 'Comando Powershell'];
-
-    const options = {
-        download: 'false',
-        print: 'false',
-        selectableRows: 'none',
-        viewColumns: 'false',
-        filter: 'false'
-    
-    };
-
-
-
     return (
-        <MUIDataTable
-            title={"Employee List"}
-            data={data}
+        <MaterialTable
+            title="Acciones disponibles"
+            icons={tableIcons}
             columns={columns}
-            options={options}
+            data={scripts}        
+            options={{
+            search: true
+            }}
         />
 
     );

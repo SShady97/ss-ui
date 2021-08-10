@@ -4,16 +4,17 @@ import { Grid, Container, Box, Accordion, Typography, makeStyles, AccordionSumma
 import { ExpandMore } from '@material-ui/icons';
 
 import Appbar from '../Appbar';
-import Server from './Server';
-import ExecutionUsers from './ExecutionUsers';
 import Export from './Export';
 import ActionsModal from './Actions/ActionsModal';
+import ProcessesModal from './Parameters/ProcessesModal';
+import ProcessesTable from './Parameters/ProcessesTable';
 import ProcessQueque from './ProcessQueque';
 import TasksQueque from './TasksQueque';
 import SavedProcesses from './SavedProcesses';
 import ResultsTable from './ResultsTable';
 
 import serverContext from '../../context/servers/serverContext';
+import scriptContext from '../../context/scripts/scriptContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -30,27 +31,39 @@ const Home = () => {
     const classes = useStyles();
 
     const serversContext = useContext(serverContext);
+    const scriptsContext = useContext(scriptContext);
 
-    const  { servers, getServers } = serversContext;
+    const  { getServers } = serversContext;
+    const { getScripts } = scriptsContext;
 
     useEffect(() => {
         getServers();
+        getScripts();
          // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    useEffect(() => {
-        console.log(servers)
-    }, [servers])
 
     return (
         <Fragment>
             <Appbar />
             <Container maxWidth="xl" style={{ marginTop: '20px', }}>
                 <Grid container spacing={3} style={{ borderRadius: 10, margin: '5%', width: '90%', backgroundColor: 'Gainsboro' }}>
-                    <Grid item>
+                    <Grid item xs={12}>
                         <h3 style={{ marginBottom: '50px', textAlign: 'center' }}>CREAR COLA DE PROCESOS</h3>
                         <Box mb={6}>
                             <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMore />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >
+                                    <Typography className={classes.heading}>CREAR PROCESOS</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <ProcessesTable />
+                                </AccordionDetails>
+                            </Accordion>
+                            {/* <Accordion>
                                 <AccordionSummary
                                     expandIcon={<ExpandMore />}
                                     aria-controls="panel1a-content"
@@ -73,7 +86,7 @@ const Home = () => {
                                 <AccordionDetails>
                                     <ExecutionUsers />
                                 </AccordionDetails>
-                            </Accordion>                   
+                            </Accordion> */}                   
                             <Box mt={1}>
                                 <ActionsModal />
                             </Box>

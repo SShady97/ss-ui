@@ -1,6 +1,6 @@
-import { SERVERS, SET_SERVER } from '../../types';
+import { SERVERS, SET_SERVER, CLEAN_SERVERS } from '../../types';
 
-export default (state, action) => {
+const serverReducer = (state, action) => {
     switch(action.type) {
 
         case SERVERS:
@@ -14,5 +14,17 @@ export default (state, action) => {
                 ...state,
                 selected_server: action.payload
             }
+        
+        case CLEAN_SERVERS:
+            return {
+                ...state,
+                servers: [],
+                selected_server: null
+            };
+
+        default:
+            return 'Tipo desconocido';
     }
 }
+
+export default serverReducer;

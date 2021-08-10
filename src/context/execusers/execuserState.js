@@ -46,14 +46,14 @@ const ExecuserState = props => {
 
     }
 
-    const selectExec = (exec_user_id) => {
+    const selectExec = (exec_user) => {
         dispatch({
             type: SET_EXEC,
-            payload: exec_user_id
+            payload: exec_user
         })
     }
 
-    const clean = () => {
+    const cleanExec = () => {
         dispatch({
             type: CLEAN_EXECUSERS
         })
@@ -67,7 +67,7 @@ const ExecuserState = props => {
                 selected_exec: state.selected_exec,
                 getExecUsers: getExecUsers,
                 selectExec: selectExec,
-                clean: clean
+                cleanExec: cleanExec
             }}
         >
             {props.children}

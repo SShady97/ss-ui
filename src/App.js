@@ -6,6 +6,8 @@ import Tasks from "./components/Tasks/Tasks";
 
 import ExecuserState from "./context/execusers/execuserState";
 import ServerState from "./context/servers/serverState";
+import ScriptState from "./context/scripts/scriptState";
+import ParameterState from "./context/parameters/parameterState";
 
 import { BrowserRouter as Router, Switch, Route, Redirect } from "react-router-dom";
 
@@ -21,6 +23,8 @@ function App() {
 
                     return (
                         
+                        <ParameterState>
+                        <ScriptState>
                         <ServerState>
                         <ExecuserState>
                             <Router>
@@ -33,6 +37,8 @@ function App() {
                             </Router>
                         </ExecuserState>
                         </ServerState>
+                        </ScriptState>
+                        </ParameterState>
                     )
                 }
             }

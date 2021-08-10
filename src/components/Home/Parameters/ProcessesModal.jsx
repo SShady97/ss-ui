@@ -9,12 +9,12 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 import CodeIcon from '@material-ui/icons/Code';
 
-import ActionsTable from './ActionsTable';
+import ProcessesTable from './ProcessesTable';
 
 import scriptContext from '../../../context/scripts/scriptContext';
 
 
-const ActionsModal = () => {
+const ParametersModal = () => {
 
   const [ actions, setActions ] = useState([]);
   const [open, setOpen] = useState(false);
@@ -48,19 +48,19 @@ const ActionsModal = () => {
         style={{ width: "100%", backgroundColor:'White'}}
         startIcon={<CodeIcon />} onClick={handleClickOpen}
       >
-        Acciones
+        Parámetros
       </Button>
       <Dialog
         fullScreen={fullScreen}
         open={open}
-        maxWidth={'md'}
+        maxWidth={'xl'}
         onClose={handleClose}
         aria-labelledby="responsive-dialog-title"
       >
-        <DialogTitle id="responsive-dialog-title">{"Acciones a Ejecutar"}</DialogTitle>
+        <DialogTitle id="responsive-dialog-title">{"Parametros"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            <ActionsTable setActions={setActions} />
+            <ProcessesTable />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
@@ -76,4 +76,4 @@ const ActionsModal = () => {
   );
 }
 
-export default ActionsModal;
+export default ParametersModal;

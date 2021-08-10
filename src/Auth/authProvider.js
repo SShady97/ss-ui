@@ -3,7 +3,7 @@ import { MsalAuthProvider, LoginType } from 'react-aad-msal';
 // Msal Configurations
 const config = {
   auth: {
-    authority: 'https://login.microsoftonline.com/common',
+    authority: 'https://login.microsoftonline.com/4b5a32ae-9cb8-42ea-bcab-26005ef4c06f',
     clientId: '3ab4ab25-d0d2-4946-b13a-7a881a51cb15',
     redirectUri: 'http://localhost:3005'
   },
