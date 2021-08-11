@@ -1,20 +1,10 @@
-import React, { Fragment, useEffect, useContext } from 'react';
+import React, { Fragment } from 'react';
 
 import { AzureAD, AuthenticationState } from 'react-aad-msal';
 import { authProvider } from '../../Auth/authProvider';
 import { Redirect } from "react-router-dom";
-import { makeStyles, withStyles, Grid, Box, TextField, Button } from '@material-ui/core';
+import { makeStyles, withStyles, Grid, Box, Button } from '@material-ui/core';
 
-const FormTextField = withStyles({
-    root: {
-        '& label.Mui-focused': {
-            color: '#517461',
-        },
-        '& .MuiInput-underline:after': {
-            borderBottomColor: '#517461',
-        },
-    },
-})(TextField);
 
 const ColorButton = withStyles((theme) => ({
     root: {
@@ -76,7 +66,7 @@ const Login = () => {
                                         >
                                             <Grid item>
                                                 <img src="/App_Icon.png" alt="" width="427" height="57" />
-        
+
                                             </Grid>
                                             <Grid item>
                                                 <Box textAlign='center' mt={4} display="flex" flexDirection="row-reverse">
@@ -94,7 +84,7 @@ const Login = () => {
                             )
                     }
                 }
-            }    
+            }
         </AzureAD>
     );
 }

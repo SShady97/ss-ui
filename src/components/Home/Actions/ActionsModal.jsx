@@ -6,17 +6,24 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { useTheme } from '@material-ui/core/styles';
+import { useTheme, makeStyles } from '@material-ui/core/styles';
 import CodeIcon from '@material-ui/icons/Code';
 
 import ActionsTable from './ActionsTable';
 
+const useStyles = makeStyles((theme) => ({
+  boton: {
+    width: '100%',
+    backgroundColor: theme.palette.background.paper,
+  }
+}));
 
 const ActionsModal = () => {
 
   const [open, setOpen] = useState(false);
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+  const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -29,8 +36,8 @@ const ActionsModal = () => {
   return (
     <div>
       <Button
-        variant="contained"
-        style={{ width: "100%", backgroundColor:'White'}}
+        variant="outlined"
+        className={classes.boton}
         startIcon={<CodeIcon />} onClick={handleClickOpen}
       >
         Acciones

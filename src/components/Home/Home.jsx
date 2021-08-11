@@ -23,6 +23,12 @@ const useStyles = makeStyles((theme) => ({
         fontSize: theme.typography.pxToRem(15),
         fontWeight: theme.typography.fontWeightRegular,
     },
+    background: {
+        borderRadius: 10,
+        margin: '5%',
+        width: '90%',
+        backgroundColor: theme.palette.action.disabled,
+    }
 }));
 
 const Home = () => {
@@ -31,11 +37,11 @@ const Home = () => {
 
     const serversContext = useContext(serverContext);
 
-    const  { servers, getServers } = serversContext;
+    const { servers, getServers } = serversContext;
 
     useEffect(() => {
         getServers();
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     useEffect(() => {
@@ -46,7 +52,7 @@ const Home = () => {
         <Fragment>
             <Appbar />
             <Container maxWidth="xl" style={{ marginTop: '20px', }}>
-                <Grid container spacing={3} style={{ borderRadius: 10, margin: '5%', width: '90%', backgroundColor: 'Gainsboro' }}>
+                <Grid container spacing={3} className={classes.background}>
                     <Grid item>
                         <h3 style={{ marginBottom: '50px', textAlign: 'center' }}>CREAR COLA DE PROCESOS</h3>
                         <Box mb={6}>
@@ -73,7 +79,7 @@ const Home = () => {
                                 <AccordionDetails>
                                     <ExecutionUsers />
                                 </AccordionDetails>
-                            </Accordion>                   
+                            </Accordion>
                             <Box mt={1}>
                                 <ActionsModal />
                             </Box>
@@ -89,8 +95,8 @@ const Home = () => {
                     <Grid item xs={12} sm container direction="column" justifyContent="flex-start">
                         <Grid item container spacing={2}>
                             <Grid item xs>
-                                <Box display="flex" flexDirection="row-reverse">
-                                    <h3>PROCESOS GUARDADOS</h3>
+                                <Box display="flex" flexDirection="row-reverse" mt={1}>
+                                    <h3>PROCESOS GUARDADOS:</h3>
                                 </Box>
                             </Grid>
                             <Grid item xs={5}>

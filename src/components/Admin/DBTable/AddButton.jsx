@@ -1,9 +1,11 @@
 import React from "react";
-import { IconButton, Modal, TextField, Button, Box } from "@material-ui/core";
-import { makeStyles, withStyles } from "@material-ui/core/styles";
+import { IconButton, TextField, Button, Box, useMediaQuery } from "@material-ui/core";
+import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from '@material-ui/icons/Close';
+
+import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
 
 const FormTextField = withStyles({
     root: {
@@ -62,7 +64,8 @@ const useStyles = makeStyles((theme) => ({
 
 const AddButton = ({ value, columns }) => {
     const classes = useStyles();
-
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [open, setOpen] = React.useState(false);
 
     const handleOpen = () => {
@@ -80,41 +83,46 @@ const AddButton = ({ value, columns }) => {
     }
 
     const body = (
-        <div className={classes.paper}>
-            <h2 id="modal-title">
-                Crear nueva entrada en {value}
+        <div>
+            <DialogTitle id="responsive-dialog-title">Crear nueva entrada en {value}
                 <IconButton aria-label="close" className={classes.customizedButton} onClick={handleClose}>
                     <CloseIcon />
-                </IconButton>
-            </h2>
-            <hr></hr>
-
-            <form className={classes.root} noValidate autoComplete="off">
-                {columns.map((option) => (
-                    <FormTextField id={option} label={option} color="primary" style={{ width: "90%" }} variant="outlined" />
-                ))}
-            </form>
-            <Box mt={3} mr={3} textAlign='center' display="flex" flexDirection="row-reverse">
-                <ColorButton variant='contained' >
-                    Guardar
-                </ColorButton>
-            </Box>
+                </IconButton></DialogTitle>
+            <DialogContent>
+                <DialogContentText>
+                    <form className={classes.root} noValidate autoComplete="off">
+                        {columns.map((option) => (
+                            <FormTextField id={option} label={option} color="primary" style={{ width: "100%" }} variant="outlined" />
+                        ))}
+                    </form>
+                </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+                <Box textAlign='center' display="flex" flexDirection="row-reverse">
+                    <ColorButton variant='contained' >
+                        Guardar
+                    </ColorButton>
+                </Box>
+            </DialogActions>
         </div >
     );
 
     return (
         <React.Fragment>
             <Tooltip title={"Nueva Entrada en " + value}>
-                <IconButton className={IconButton} onClick={handleOpen}>
+                <IconButton onClick={handleOpen}>
                     <AddIcon className={AddIcon} />
                 </IconButton>
             </Tooltip>
-            <Modal
+            <Dialog
                 open={open}
                 onClose={handleClose}
+                fullScreen={fullScreen}
+                aria-labelledby="responsive-dialog-title"
+                fullWidth
             >
                 {body}
-            </Modal>
+            </Dialog>
         </React.Fragment>
     );
 }

@@ -155,7 +155,6 @@ const TasksTable = () => {
                     value={searched}
                     onChange={(searchVal) => requestSearch(searchVal)}
                     onCancelSearch={() => cancelSearch()}
-                    style={{ backgroundColor: "lightgrey" }}
                 />
                 <TableContainer>
                     <Table className={classes.table} aria-label="Actions">
