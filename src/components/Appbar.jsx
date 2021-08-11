@@ -93,10 +93,7 @@ const Appbar = () => {
                 ({ logout, authenticationState, accountInfo }) => {
 
                     switch (authenticationState) {
-                        case AuthenticationState.Unauthenticated:
-                            return (
-                                <Redirect to='/login'/>
-                            );
+                        
                         case AuthenticationState.Authenticated:
                             return (
                                 <AppBar position="static" style={{ background: 'linear-gradient(90deg, rgba(0,0,0,1) 35%, rgba(85,115,95,1) 100%)' }}>
@@ -170,7 +167,14 @@ const Appbar = () => {
                                     </Toolbar>
                                 </AppBar>
                             )
-                    }   
+
+                        default:
+                            return (
+                                <Redirect to='/login'/>
+                            );
+                    }
+                    
+                    
                 }
             }
         </AzureAD>       

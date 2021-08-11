@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import serverReducer from './serverReducer';
 import serverContext from './serverContext';
 
-import { SERVERS, SET_SERVER } from '../../types';
+import { SERVERS, SET_SERVER, CLEAN_SERVERS } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -20,7 +20,6 @@ const ServerState = props => {
 
 
     const getServers = async () => {
-        console.log(process.env.REACT_APP_API_URL)
 
         try {
 
@@ -57,6 +56,12 @@ const ServerState = props => {
         })
     }
 
+    const cleanServers = () => {
+        dispatch({
+            type: CLEAN_SERVERS
+        })
+    }
+
 
     return (
         <serverContext.Provider
@@ -64,7 +69,8 @@ const ServerState = props => {
                 servers: state.servers,
                 selected_server: state.selected_server,
                 getServers: getServers,
-                selectServer: selectServer
+                selectServer: selectServer,
+                cleanServers: cleanServers
             }}
         >
             {props.children}
