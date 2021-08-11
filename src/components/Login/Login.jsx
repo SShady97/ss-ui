@@ -4,10 +4,6 @@ import { AzureAD, AuthenticationState } from 'react-aad-msal';
 import { authProvider } from '../../Auth/authProvider';
 import { Redirect } from "react-router-dom";
 import { makeStyles, withStyles, Grid, Box, Button } from '@material-ui/core';
-<<<<<<< HEAD
-
-=======
->>>>>>> 5f5f7e8e5d30c276f8841a558e2994e469e785a1
 
 const ColorButton = withStyles((theme) => ({
     root: {

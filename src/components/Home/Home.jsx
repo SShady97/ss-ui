@@ -53,7 +53,7 @@ const Home = () => {
         <Fragment>
             <Appbar />
             <Container maxWidth="xl" style={{ marginTop: '20px', }}>
-                <Grid container spacing={3} style={{ borderRadius: 10, margin: '1%', width: '98%', backgroundColor: 'Gainsboro' }}>
+                <Grid container spacing={3} className={classes.background}>
                     <Grid item xs={12}>
                         <h3 style={{ marginBottom: '50px', textAlign: 'center' }}>CREAR COLA DE PROCESOS</h3>
                         <Box mb={6}>
