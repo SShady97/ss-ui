@@ -2,41 +2,10 @@ import React from "react";
 
 import MUIDataTable from "mui-datatables";
 
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 
 import AddButton from './AddButton';
-import RowModal from './RowModal/RowModal';
-
-const tableTheme = createTheme({
-    overrides: {
-        MUIDataTable: {
-            root: {
-                backgroundColor: "#FF000"
-            },
-            paper: {
-                boxShadow: "none"
-            }
-        },
-        MUIDataTableBodyRow: {
-            root: {
-                '&:nth-of-type(odd)': {
-                    backgroundColor: '#f2f2f2',
-                },
-            }
-        },
-        MUIDataTableToolbar: {
-            titleText: {
-                fontWeight: "bold",
-                fontSize: "150%"
-            }
-        },
-        MUIDataTableHeadCell: {
-            data: {
-                fontWeight: "bold"
-            }
-        }
-    }
-});
+import RowDialog from './RowModal/RowDialog';
 
 // const getData = async (url, page) => {
 //     this.setState({ isLoading: true });
@@ -59,11 +28,11 @@ const data2 = [
 ];
 const DBTable = ({ value }) => {
 
+    const theme = useTheme();
+
     const [modal, setModal] = React.useState(false);
 
     const [rowValues, setRowValues] = React.useState([]);
-
-    // let rowValues = [];
 
     const toggle = () => setModal(!modal);
 
@@ -122,14 +91,37 @@ const DBTable = ({ value }) => {
 
 
     return (
-        <ThemeProvider theme={tableTheme}>
+        <ThemeProvider theme={outerTheme => ({
+            ...outerTheme,
+            overrides: {
+                MUIDataTableBodyRow: {
+                    root: {
+                        '&:nth-of-type(odd)': {
+                            backgroundColor: theme.palette.action.selected,
+                        },
+                    }
+                },
+                MUIDataTableToolbar: {
+                    titleText: {
+                        fontWeight: "bold",
+                        fontSize: "150%"
+                    }
+                },
+                MUIDataTableHeadCell: {
+                    data: {
+                        fontWeight: "bold"
+                    }
+                }
+            }
+        })}>
             < MUIDataTable
                 title={value}
                 data={data}
                 columns={columns}
                 options={options}
             />
-            <RowModal rowValues={rowValues} toogle={toggle} open={modal} columns={columns} />
+            <RowDialog rowValues={rowValues} toogle={toggle} open={modal} columns={columns} />
+            {/* <RowModal rowValues={rowValues} toogle={toggle} open={modal} columns={columns} /> */}
         </ThemeProvider>
 
     );

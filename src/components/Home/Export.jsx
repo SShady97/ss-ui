@@ -1,16 +1,25 @@
 import React from "react";
 
-import Button from "@material-ui/core/Button";
+import { Button, makeStyles } from "@material-ui/core";
+
+const useStyles = makeStyles((theme) => ({
+    boton: {
+        width: '100%',
+        backgroundColor: theme.palette.background.default,
+    }
+}));
 
 const Export = () => {
-    /* const handleChange = (event, newValue) => {
-        console.log(newValue);
-    }; */
+    // const handleChange = (event, newValue) => {
+    //     console.log(newValue);
+    // };
+
+    const classes = useStyles();
 
     return (
         <Button
             variant="outlined"
-            style={{ width: "100%", backgroundColor:'#517461', color:'White'}}
+            className={classes.boton}
         >
             Export
         </Button>

@@ -1,12 +1,20 @@
 import React from "react";
 
 import VisibilityIcon from "@material-ui/icons/Visibility";
-import Button from "@material-ui/core/Button";
+import { Button, makeStyles } from "@material-ui/core";
 import { useHistory } from "react-router-dom";
+
+const useStyles = makeStyles((theme) => ({
+    boton: {
+        width: '100%',
+        backgroundColor: theme.palette.background.paper,
+    }
+}));
 
 const TasksQueque = () => {
 
     let history = useHistory();
+    const classes = useStyles();
 
     const handleOption = (option) => {
         history.push(option);
@@ -15,7 +23,7 @@ const TasksQueque = () => {
     return (
         <Button
             variant="outlined"
-            style={{ width: "100%", backgroundColor: 'White' }}
+            className={classes.boton}
             startIcon={<VisibilityIcon />}
             onClick={() => handleOption("/tasks")}
         >

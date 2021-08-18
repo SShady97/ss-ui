@@ -65,7 +65,7 @@ const Login = () => {
                                         >
                                             <Grid item>
                                                 <img src="/App_Icon.png" alt="" width="427" height="57" />
-        
+
                                             </Grid>
                                             <Grid item>
                                                 <Box textAlign='center' mt={4} display="flex" flexDirection="row-reverse">
@@ -83,7 +83,7 @@ const Login = () => {
                             )
                     }
                 }
-            }    
+            }
         </AzureAD>
     );
 }

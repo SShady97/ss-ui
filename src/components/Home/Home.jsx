@@ -22,6 +22,12 @@ const useStyles = makeStyles((theme) => ({
         fontSize: theme.typography.pxToRem(15),
         fontWeight: 'bold',
     },
+    background: {
+        borderRadius: 10,
+        margin: '5%',
+        width: '90%',
+        backgroundColor: theme.palette.action.disabled,
+    }
 }));
 
 const Home = () => {
@@ -31,13 +37,13 @@ const Home = () => {
     const serversContext = useContext(serverContext);
     const scriptsContext = useContext(scriptContext);
 
-    const  { getServers } = serversContext;
+    const { getServers } = serversContext;
     const { getScripts } = scriptsContext;
 
     useEffect(() => {
         getServers();
         getScripts();
-         // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
 
@@ -45,10 +51,10 @@ const Home = () => {
         <Fragment>
             <Appbar />
             <Container maxWidth="xl" style={{ marginTop: '20px', }}>
-                <Grid container spacing={3} style={{ borderRadius: 10, margin: '1%', width: '98%', backgroundColor: 'Gainsboro' }}>
+                <Grid container spacing={3} className={classes.background}>
                     <Grid item xs={12}>
                         <h3 style={{ marginBottom: '50px', textAlign: 'center' }}>CREAR COLA DE PROCESOS</h3>
-                        <Box mb={6}>                 
+                        <Box mb={6}>
                             <Box mt={1}>
                                 <ActionsModal />
                             </Box>
@@ -60,24 +66,24 @@ const Home = () => {
                             <TasksQueque />
                         </Box> */}
                         <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMore />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography className={classes.heading}>COLA DE PROCESOS</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <ProcessesTable />
-                                </AccordionDetails>
-                            </Accordion> 
+                            <AccordionSummary
+                                expandIcon={<ExpandMore />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography className={classes.heading}>COLA DE PROCESOS</Typography>
+                            </AccordionSummary>
+                            <AccordionDetails>
+                                <ProcessesTable />
+                            </AccordionDetails>
+                        </Accordion>
                     </Grid>
 
                     <Grid item xs={12} sm container direction="column" justifyContent="flex-start">
                         {/* <Grid item container spacing={2}>
                             <Grid item xs>
-                                <Box display="flex" flexDirection="row-reverse">
-                                    <h3>PROCESOS GUARDADOS</h3>
+                                <Box display="flex" flexDirection="row-reverse" mt={1}>
+                                    <h3>PROCESOS GUARDADOS:</h3>
                                 </Box>
                             </Grid>
                             <Grid item xs={5}>

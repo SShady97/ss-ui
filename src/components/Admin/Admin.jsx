@@ -1,6 +1,6 @@
 import React, { Fragment } from 'react';
 
-import { Grid, Container, Box, Divider } from '@material-ui/core';
+import { Grid, Container, Box, Divider, makeStyles } from '@material-ui/core';
 
 import Appbar from '../Appbar';
 import Select from './Select';
@@ -15,7 +15,18 @@ const options = [
     { name: "Processes" },
 ];
 
+const useStyles = makeStyles((theme) => ({
+    background: {
+        borderRadius: 10,
+        margin: '5%',
+        width: '90%',
+        backgroundColor: theme.palette.text.disabled,
+    }
+}));
+
 const Admin = () => {
+
+    const classes = useStyles();
 
     const [tableSelect, setTableSelect] = React.useState("Login Users");
 
@@ -26,8 +37,8 @@ const Admin = () => {
     return (
         <Fragment>
             <Appbar />
-            <Container maxWidth="xl" style={{ marginTop: '20px', }}>
-                <Grid container direction="column" spacing={3} style={{ borderRadius: 10, margin: '5%', width: '90%', backgroundColor: 'Gainsboro' }}>
+            <Container width="100%" style={{ marginTop: '20px', }}>
+                <Grid container direction="column" spacing={3} className={classes.background}>
                     <Grid item>
                         <Grid
                             container
