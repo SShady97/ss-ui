@@ -1,4 +1,4 @@
-import { SET_QUEUE, RUN_QUEUE } from '../../types';
+import { SET_QUEUE, RESPONSE, LOADING, SET_SQUEUES, LOAD_SQUEUE } from '../../types';
 
 const processQReducer = (state, action) => {
     switch(action.type) {
@@ -8,6 +8,32 @@ const processQReducer = (state, action) => {
                 ...state,
                 queue: action.payload
             }
+        
+        case RESPONSE:
+            return {
+                ...state,
+                res: action.payload,
+                loading: false
+            }
+
+        case LOADING:
+            return {
+                ...state,
+                loading: action.payload
+            }
+        
+        case SET_SQUEUES:
+        return {
+            ...state,
+            savedQueues: action.payload
+        }
+
+        case LOAD_SQUEUE:
+        return {
+            ...state,
+            queue: action.payload[0],
+            alias: action.payload[1]
+        }
 
         default:
             return 'Tipo desconocido';

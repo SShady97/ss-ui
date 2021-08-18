@@ -1,86 +1,121 @@
-import React, { useContext } from "react";
+import React, { useContext, Fragment } from "react";
 
-import { withStyles, makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import MUIDataTable from "mui-datatables";
+import CircularProgress from '@material-ui/core/CircularProgress';
 
-const StyledTableCell = withStyles((theme) => ({
-    head: {
-        backgroundColor: 'Black',
-        color: 'White',
-    },
-}))(TableCell);
+import Button from '@material-ui/core/Button';
+import GetAppIcon from '@material-ui/icons/GetApp';
+import { createTheme, ThemeProvider } from '@material-ui/core/styles';
 
-const StyledTableRow = withStyles((theme) => ({
-    root: {
-        '&:nth-of-type(odd)': {
-            backgroundColor: theme.palette.action.hover,
+import processQContext from '../../context/processQ/processQContext';
+
+
+const tableTheme = createTheme({
+    overrides: {
+        MUIDataTable: {
+            root: {
+                backgroundColor: "#FF000"
+            },
+            paper: {
+                boxShadow: "none"
+            }
         },
-    },
-}))(TableRow);
-
-function createData(app, env, server, ip, action, result, text, email, date, user) {
-    return { app, env, server, ip, action, result, text, email, date, user };
-}
-
-const rows = [
-    createData(1, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
-    createData(2, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
-    createData(3, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
-    createData(4, 159, 6.0, 24, 4.0, 33, 21, 22, 69, 22),
-];
-
-const useStyles = makeStyles({
-    table: {
-        minWidth: 200,
-    },
+        MUIDataTableBodyRow: {
+            root: {
+                '&:nth-of-type(odd)': {
+                    backgroundColor: '#f2f2f2',
+                },
+            }
+        },
+        MUIDataTableToolbar: {
+            titleText: {
+                fontWeight: "bold",
+                fontSize: "150%"
+            }
+        },
+        MUIDataTableHeadCell: {
+            data: {
+                fontWeight: "bold"
+            }
+        }
+    }
 });
 
 const ResultsTable = () => {
-    const classes = useStyles();
+    
+    const processesQContext = useContext(processQContext);
+    const  { res, loading } = processesQContext;
+
+    const columns = [
+        {
+            name: "Alias"
+        },
+        {
+            name: "Entorno"
+        },
+        {
+            name: "Hostname"
+        }, 
+        {
+            name:   "IP"
+        }, 
+        {
+            name: "Acción"
+        }, 
+        {
+            name: "Resultado"
+        }, 
+        {
+            name: "Usuario"
+        }, 
+        {
+            name: "Descargar",
+            options: {
+                customBodyRender: (value) => {
+                    
+                    return (
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            endIcon={<GetAppIcon />}
+                            style={{ width: "100%" }}
+                            href={`${process.env.REACT_APP_API_URL}/api/get-txt/${value}`}
+                        >
+                            Resultado
+                        </Button>
+                    )
+                }
+            }
+        }
+    ];
+
+    const options = {
+        download: 'false',
+        print: 'false',
+        selectableRows: 'none',
+        viewColumns: 'false',
+        filter: 'false'
+    };
 
     return (
-        <TableContainer component={Paper}>
-            <Table className={classes.table} size="small" aria-label="a dense table">
-                <TableHead>
-                    <TableRow>
-                        <StyledTableCell>App</StyledTableCell>
-                        <StyledTableCell align="right">Env</StyledTableCell>
-                        <StyledTableCell align="right">Server</StyledTableCell>
-                        <StyledTableCell align="right">IP</StyledTableCell>
-                        <StyledTableCell align="right">Action</StyledTableCell>
-                        <StyledTableCell align="right">Result</StyledTableCell>
-                        <StyledTableCell align="right">Get Text</StyledTableCell>
-                        <StyledTableCell align="right">Send Email</StyledTableCell>
-                        <StyledTableCell align="right">Datetime</StyledTableCell>
-                        <StyledTableCell align="right">Execution User</StyledTableCell>
-                    </TableRow>
-                </TableHead>
-                <TableBody>
-                    {rows.map((row) => (
-                        <StyledTableRow key={row.app}>
-                            <TableCell component="th" scope="row">
-                                {row.app}
-                            </TableCell>
-                            <TableCell align="right">{row.env}</TableCell>
-                            <TableCell align="right">{row.server}</TableCell>
-                            <TableCell align="right">{row.ip}</TableCell>
-                            <TableCell align="right">{row.action}</TableCell>
-                            <TableCell align="right">{row.result}</TableCell>
-                            <TableCell align="right">{row.text}</TableCell>
-                            <TableCell align="right">{row.email}</TableCell>
-                            <TableCell align="right">{row.date}</TableCell>
-                            <TableCell align="right">{row.user}</TableCell>
-                        </StyledTableRow>
-                    ))}
-                </TableBody>
-            </Table>
-        </TableContainer>
+        <Fragment>
+            {loading
+
+                ?
+                    <div style={{ alignItems: "center", display: "flex", justifyContent: "center", margin: "50px"}}>
+                        <CircularProgress />
+                    </div>
+                :
+                    <ThemeProvider theme={tableTheme}>
+                        <MUIDataTable 
+                            title={""} 
+                            data={res} 
+                            columns={columns}
+                            options={options}  
+                        />
+                    </ThemeProvider>
+            }
+        </Fragment>
     );
 };
 

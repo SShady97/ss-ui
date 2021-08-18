@@ -8,9 +8,7 @@ import Export from './Export';
 import ActionsModal from './Actions/ActionsModal';
 import ProcessesModal from './ProcessQueue/ProcessesModal';
 import ProcessesTable from './ProcessQueue/ProcessesTable';
-import ProcessQueque from './ProcessQueque';
 import TasksQueque from './TasksQueque';
-import SavedProcesses from './SavedProcesses';
 import ResultsTable from './ResultsTable';
 
 import serverContext from '../../context/servers/serverContext';
@@ -22,7 +20,7 @@ const useStyles = makeStyles((theme) => ({
     },
     heading: {
         fontSize: theme.typography.pxToRem(15),
-        fontWeight: theme.typography.fontWeightRegular,
+        fontWeight: 'bold',
     },
 }));
 

@@ -16,4 +16,7 @@ export const SET_PARAMETER = 'SET_PARAMETER';
 export const CLEAN_PARAMETERS = 'CLEAN_PARAMETERS';
 
 export const SET_QUEUE = 'SET_QUEUE';
-export const RUN_QUEUE = 'RUN_QUEUE';
+export const RESPONSE = 'RESPONSE';
+export const LOADING = 'LOADING';
+export const SET_SQUEUES = 'SET_SQUEUES';
+export const LOAD_SQUEUE = 'LOAD_SQUEUE';
