@@ -4,7 +4,7 @@ import Autocomplete from "@material-ui/lab/Autocomplete";
 
 import processQContext from '../../../context/processQ/processQContext';
 
-const SavedQueues = ({ setSelected }) => {
+const LoadQueue = ({ setSelected }) => {
 
     const processesQContext = useContext(processQContext);
 
@@ -33,4 +33,4 @@ const SavedQueues = ({ setSelected }) => {
     );
 };
 
-export default SavedQueues;
+export default LoadQueue;

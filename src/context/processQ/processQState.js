@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import processQReducer from './processQReducer';
 import processQContext from './processQContext';
 
-import { SET_QUEUE, LOADING, SET_SQUEUES, LOAD_SQUEUE } from '../../types';
+import { SET_QUEUE, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -17,7 +17,8 @@ const ProcessQState = props => {
         savedQueues: [],
         selected_SQueue: null,
         res: [],
-        loading: false
+        loading: false,
+        alert: null
     }
 
     const [ state, dispatch ] = useReducer(processQReducer, initialState);
@@ -119,6 +120,53 @@ const ProcessQState = props => {
         }
     }
 
+    const saveQueue = async (alias) => {
+
+        let processes = [];
+        let token = await authProvider.getIdToken();
+        const log_email = authProvider.account.userName;
+        token = token.idToken.rawIdToken;
+        
+        state.queue.map(process => {
+
+            const payload = {
+                
+                id_user: process.exec_user.id,
+                id_server: process.server.id,
+                id_script: process.script.id,
+                id_parameter: process.parameter !== null ? process.parameter.id : 1,
+                validation: process.validation
+                
+            };
+
+            processes.push(payload);
+            
+        });
+
+        const data = {
+            queue: { alias: alias, log_email: log_email },
+            queue_processes: processes
+        }
+
+        console.log(data)
+
+        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/queue`;
+
+        const responseSaveQueue = await fetch(datastore_url, 
+                                            { method: 'POST', 
+                                            headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                            body: JSON.stringify(data)
+                                            });
+                                            
+        const resultSaveQueue = await responseSaveQueue.json();
+
+        dispatch({
+            type: SAVE_QUEUE,
+            payload: {msg: resultSaveQueue.msg, alias: alias}
+        });
+
+    }
+
     const loadSavedQueue = async (queue) => {
 
         const alias = queue.alias;
@@ -161,6 +209,12 @@ const ProcessQState = props => {
         }
     }
 
+    const cleanAlias = () => {
+        dispatch({
+            type: CLEAN_ALIAS
+        })
+    }
+
     return (
         <processQContext.Provider
             value={{
@@ -170,11 +224,14 @@ const ProcessQState = props => {
                 selected_SQueue: state.selected_SQueue,
                 res: state.res,
                 loading: state.loading,
+                alert: state.alert,
                 runQueue: runQueue,
                 setQueue: setQueue,
                 setLoading: setLoading,
                 getSavedQueues: getSavedQueues,
-                loadSavedQueue: loadSavedQueue
+                loadSavedQueue: loadSavedQueue,
+                saveQueue: saveQueue,
+                cleanAlias: cleanAlias
             }}
         >
             {props.children}

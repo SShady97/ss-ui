@@ -1,10 +1,11 @@
-import React, { Fragment, useEffect, useContext } from 'react';
+import React, { Fragment, useEffect, useContext, useState } from 'react';
 
 import { Grid, Container, Box, Accordion, Typography, makeStyles, AccordionSummary, AccordionDetails, Divider } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 
 import Appbar from '../Appbar';
-import Export from './Export';
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 import ActionsModal from './Actions/ActionsModal';
 import ProcessesModal from './ProcessQueue/ProcessesModal';
 import ProcessesTable from './ProcessQueue/ProcessesTable';
@@ -34,11 +35,20 @@ const Home = () => {
 
     const classes = useStyles();
 
+    const [openAlert, setOpenAlert] = useState(false);
+
+
     const serversContext = useContext(serverContext);
     const scriptsContext = useContext(scriptContext);
 
     const { getServers } = serversContext;
     const { getScripts } = scriptsContext;
+
+
+    
+    const handleClose = (event, reason) => {
+        setOpenAlert(false);
+      };
 
     useEffect(() => {
         getServers();
@@ -50,7 +60,12 @@ const Home = () => {
     return (
         <Fragment>
             <Appbar />
-            <Container maxWidth="xl" style={{ marginTop: '20px', }}>
+            <Container maxWidth="xl" style={{ marginTop: '20px'}}>
+                <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity="success">
+                        This is a success message!
+                    </Alert>
+                </Snackbar>
                 <Grid container spacing={3} className={classes.background}>
                     <Grid item xs={12}>
                         <h3 style={{ marginBottom: '50px', textAlign: 'center' }}>CREAR COLA DE PROCESOS</h3>

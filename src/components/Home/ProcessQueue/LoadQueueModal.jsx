@@ -9,10 +9,10 @@ import Publish from '@material-ui/icons/Publish';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { useTheme } from '@material-ui/core/styles';
 
-import SavedQueues from './SavedQueues';
+import LoadQueue from './LoadQueue';
 import processQContext from '../../../context/processQ/processQContext';
 
-const SavedQueuesModal = () => {
+const LoadQueueModal = () => {
 
   const processesQContext = useContext(processQContext);
 
@@ -60,7 +60,7 @@ const SavedQueuesModal = () => {
             <DialogTitle id="responsive-dialog-title">{"Cargar Cola Almacenada"}</DialogTitle>
             <DialogContent>
             <DialogContentText>
-                <SavedQueues setSelected={setSelected} />
+                <LoadQueue setSelected={setSelected} />
             </DialogContentText>
             </DialogContent>
             <DialogActions>
@@ -76,4 +76,4 @@ const SavedQueuesModal = () => {
   );
 }
 
-export default SavedQueuesModal;
+export default LoadQueueModal;

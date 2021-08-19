@@ -3,13 +3,13 @@ import React, { useState, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 import PlayArrow from '@material-ui/icons/PlayArrow';
-import Save from '@material-ui/icons/Save';
 import LayersClear from '@material-ui/icons/LayersClear';
 import tableIcons from '../../tableIcons';
 import MaterialTable from 'material-table';
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
-import SavedQueuesModal from './savedQueuesModal';
+import LoadQueueModal from './LoadQueueModal';
+import SaveQueueModal from './SaveQueueModal';
 import serverContext from '../../../context/servers/serverContext';
 import execuserContext from '../../../context/execusers/execurserContext';
 import scriptContext from '../../../context/scripts/scriptContext';
@@ -28,7 +28,7 @@ const ProcessesTable = () => {
     const  { cleanExec, getExecUsers, selectExec, exec_users, selected_exec } = execusersContext;
     const  { scripts, selectScript, selected_script } = scriptsContext;
     const  { parameters, selectParameter, selected_parameter, getParameters, cleanParameters } = parametersContext;
-    const  { queue, alias, setQueue, runQueue, setLoading } = processesQContext;
+    const  { queue, alias, setQueue, runQueue, setLoading, cleanAlias } = processesQContext;
 
     const [ validation, setValidation ] = useState(false);
 
@@ -86,6 +86,7 @@ const ProcessesTable = () => {
 
     const handleClean = () => {
       setQueue([]);
+      cleanAlias();
     };
 
     const tableColumns = [
@@ -322,17 +323,10 @@ const ProcessesTable = () => {
           </Button>
         </Grid>
         <Grid item xs={3}>
-          <SavedQueuesModal />
+          <LoadQueueModal />
         </Grid>
         <Grid item xs={3}>
-          <Button
-            variant="contained"
-            color="default"
-            style={{ width: "100%", fontWeight: "bold" }}
-            startIcon={<Save />}
-          >
-            Guardar
-          </Button>
+          <SaveQueueModal />
         </Grid>
         <Grid item xs={3}>
           <Button
