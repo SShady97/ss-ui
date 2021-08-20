@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 
 import MUIDataTable from "mui-datatables";
 
@@ -7,25 +7,12 @@ import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 import AddButton from './AddButton';
 import RowDialog from './RowModal/RowDialog';
 
-// const getData = async (url, page) => {
-//     this.setState({ isLoading: true });
-//     const res = await this.xhrRequest(url, page);
-//     this.setState({ data: res.data, isLoading: false, count: res.total });
-// };
+import execuserContext from '../../../context/execusers/execurserContext';
+import serverContext from '../../../context/servers/serverContext';
+import scriptContext from '../../../context/scripts/scriptContext';
+import parameterContext from '../../../context/parameters/parameterContext';
+import processQContext from '../../../context/processQ/processQContext';
 
-const data1 = [
-    ["Joe James@email", "1", "Joe James", "asdASd2312as"],
-    ["John Walsh@email", "2", "John Wals", "CTasD12SS"],
-    ["Bob Herm@email", "3", "Bob Herm", "FLaSAs2@23"],
-    ["James Houston@email", "4", "James Houston", "TXdsd23WSAd32"],
-];
-
-const data2 = [
-    ["1", "Joe James", "asdASd2312as"],
-    ["2", "John Wals", "CTasD12SS"],
-    ["3", "Bob Herm", "FLaSAs2@23"],
-    ["4", "James Houston", "TXdsd23WSAd32"],
-];
 const DBTable = ({ value }) => {
 
     const theme = useTheme();
@@ -34,41 +21,154 @@ const DBTable = ({ value }) => {
 
     const [rowValues, setRowValues] = React.useState([]);
 
+    
+    const execusersContext = useContext(execuserContext);
+    const { exec_users, getAllExecUsers } = execusersContext;
+    const serversContext = useContext(serverContext);
+    const { servers, getServers } = serversContext;
+    const scriptsContext = useContext(scriptContext);
+    const { scripts, getScripts } = scriptsContext;
+    const parametersContext = useContext(parameterContext);
+    const { parameters, getAllParameters } = parametersContext;
+    const processQsContext = useContext(processQContext);
+    const { queque } = processQsContext;
+    
+
     const toggle = () => setModal(!modal);
 
-    let component = null;
     let columns = null;
     let data = null;
 
+    useEffect(() => {
+        getAllExecUsers();
+        getServers();
+        getScripts();
+        getAllParameters();
+
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
     switch (value) {
-        case 'Login Users':
-            component = 1;
-            columns = ["Email", "ID", "Name", "Password"];
-            data = data1;
-            break;
+        default:
         case 'Execution Users':
-            component = 2;
-            columns = ["ID", "Name", "Password"];
-            data = data2;
+            columns = [
+                {
+                    name: 'id',
+                    label:'ID',
+                },
+                {
+                    name: 'name',
+                    label:'Name',
+                },
+                {
+                    name: 'password',
+                    label:'Password',
+                    
+                }
+            ];
+            data = exec_users;
             break;
         case 'Servers':
-            component = 3;
-            columns = 'c';
+            columns = [
+                {
+                    name: 'app',
+                    label:'App',
+                },
+                {
+                    name: 'env',
+                    label:'Env',
+                },
+                {
+                    name: 'hostname',
+                    label:'Hostname',
+                },
+                {
+                    name: 'id',
+                    label:'ID',
+                },
+                {
+                    name: 'ip',
+                    label:'Direción IP',
+                },
+            ];
+            data = servers;  
             break;
         case 'Scripts':
-            component = 4;
-            columns = 'd';
+            columns = [
+                {
+                    name: 'alias',
+                    label:'Alias',
+                },
+                {
+                    name: 'id',
+                    label:'ID',
+                },
+                {
+                    name: 'parameter',
+                    label:'Parametro',
+                    options: {
+                        customBodyRender: (value, tableMeta, updateValue) => {
+                            if(value) {
+                                return 'Verdadero';
+                            } else {
+                                return 'Falso'
+                            }
+                        }
+                    }
+                },
+                {
+                    name: 'script',
+                    label:'Comando PowerShell',
+                },
+                {
+                    name: 'types',
+                    label:'Typo',
+                },
+            ];
+            data = scripts;   
             break;
         case 'Parameters':
-            component = 5;
-            columns = 'e';
+            columns = [
+                {
+                    name: 'alias',
+                    label:'Alias',
+                },
+                {
+                    name: 'cat',
+                    label:'CAT',
+                },
+                {
+                    name: 'id',
+                    label:'ID',
+                },
+                {
+                    name: 'param',
+                    label:'Param',
+                },
+            ];
+            data = parameters;   
             break;
         case 'Processes':
-            component = 6;
-            columns = 'f';
-            data = component;
+            columns = [
+                {
+                    name: 'alias',
+                    label:'Alias',
+                },
+                {
+                    name: 'cat',
+                    label:'CAT',
+                },
+                {
+                    name: 'id',
+                    label:'ID',
+                },
+                {
+                    name: 'param',
+                    label:'Param',
+                },
+            ];
+            console.log(queque);
+            data = queque;   
             break;
-        default:
     }
 
     const options = {
@@ -82,9 +182,11 @@ const DBTable = ({ value }) => {
             setModal(true);
         },
         customToolbar: () => {
-            return (
-                <AddButton value={value} columns={columns} />
-            );
+
+                return (
+                    <AddButton value={value} columns={columns} />
+                );
+            
         }
     };
 

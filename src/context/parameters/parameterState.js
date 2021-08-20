@@ -35,7 +35,28 @@ const ParameterState = props => {
 
             const parameters = await getStatus(task_id, task_name);
 
-            console.log(parameters);
+            dispatch({
+                type: PARAMETERS,
+                payload: parameters
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    const getAllParameters = async () => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+            
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/parameter`;
+
+            const responseParameters = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
+            const parameters = await responseParameters.json();
 
             dispatch({
                 type: PARAMETERS,
@@ -68,6 +89,7 @@ const ParameterState = props => {
                 parameters: state.parameters,
                 selected_parameter: state.selected_parameter,
                 getParameters: getParameters,
+                getAllParameters: getAllParameters,
                 selectParameter: selectParameter,
                 cleanParameters: cleanParameters
             }}

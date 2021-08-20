@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import processQReducer from './processQReducer';
 import processQContext from './processQContext';
 
-import { SET_QUEUE, RUN_QUEUE } from '../../types';
+import { SET_QUEUE, RUN_QUEUE, PROCESSQS } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -48,7 +48,6 @@ const ProcessQState = props => {
         });
 
     }
-
 
     return (
         <processQContext.Provider

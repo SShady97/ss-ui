@@ -46,6 +46,31 @@ const ExecuserState = props => {
 
     }
 
+    const getAllExecUsers = async () => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+            
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/exec_user`;
+
+            const responseExecUsers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
+            const exec_users = await responseExecUsers.json();
+
+            console.log(exec_users);
+
+            dispatch({
+                type: EXEC_USERS,
+                payload: exec_users
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     const selectExec = (exec_user) => {
         dispatch({
             type: SET_EXEC,
@@ -66,6 +91,7 @@ const ExecuserState = props => {
                 exec_users: state.exec_users,
                 selected_exec: state.selected_exec,
                 getExecUsers: getExecUsers,
+                getAllExecUsers: getAllExecUsers,
                 selectExec: selectExec,
                 cleanExec: cleanExec
             }}

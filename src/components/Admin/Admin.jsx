@@ -7,7 +7,6 @@ import Select from './Select';
 import DBTable from './DBTable/DBTable';
 
 const options = [
-    { name: "Login Users" },
     { name: "Execution Users" },
     { name: "Servers" },
     { name: "Scripts" },
@@ -28,7 +27,7 @@ const Admin = () => {
 
     const classes = useStyles();
 
-    const [tableSelect, setTableSelect] = React.useState("Login Users");
+    const [tableSelect, setTableSelect] = React.useState("Execution Users");
 
     const handleTableChange = (text) => {
         setTableSelect(text);
@@ -59,7 +58,6 @@ const Admin = () => {
                     </Grid>
                     <Divider />
                     <Grid item>
-
                         <DBTable value={tableSelect} />
                     </Grid>
                 </Grid>

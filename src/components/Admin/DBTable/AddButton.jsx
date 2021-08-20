@@ -76,11 +76,12 @@ const AddButton = ({ value, columns }) => {
         setOpen(false);
     };
 
-    for (var i = 0; i < columns.length; i++) {
-        if (columns[i] === 'ID') {
-            columns.splice(i, 1);
+    const columnsCopy = columns.reduce( (result, column) => {
+        if(column.name !== 'id') {
+            result.push(column.label);
         }
-    }
+        return result;
+    }, []);
 
     const body = (
         <div>
@@ -91,7 +92,7 @@ const AddButton = ({ value, columns }) => {
             <DialogContent>
                 <DialogContentText>
                     <form className={classes.root} noValidate autoComplete="off">
-                        {columns.map((option) => (
+                        {columnsCopy.map((option) => (
                             <FormTextField id={option} label={option} color="primary" style={{ width: "100%" }} variant="outlined" />
                         ))}
                     </form>
