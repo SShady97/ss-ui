@@ -7,11 +7,11 @@ import Select from './Select';
 import DBTable from './DBTable/DBTable';
 
 const options = [
-    { name: "Execution Users" },
-    { name: "Servers" },
-    { name: "Scripts" },
-    { name: "Parameters" },
-    { name: "Processes" },
+    { name: "Usuarios de Ejeccución" },
+    { name: "Servidores" },
+    { name: "Acciones" },
+    { name: "Parametros" },
+    { name: "Cola de Procesos" },
 ];
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +27,7 @@ const Admin = () => {
 
     const classes = useStyles();
 
-    const [tableSelect, setTableSelect] = React.useState("Execution Users");
+    const [tableSelect, setTableSelect] = React.useState("Usuarios de Ejeccución");
 
     const handleTableChange = (text) => {
         setTableSelect(text);

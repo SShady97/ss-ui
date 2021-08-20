@@ -36,14 +36,18 @@ const getStatus = async (task_id, task_name, poll_sec=1000) => {
                     return resultTask.data.task_result.params;
                 }
                 break;
+            case 'tasks.winclient':
+                taskStatus = resultTask.data.task_status;
+                if (taskStatus === 'SUCCESS') {
+                    return {status: taskStatus, result: resultTask.data.task_result};
+                }
+                break;
             
             default:
                 return 'No se ha encontrado la tarea';
         }
 
-        setTimeout(function() {
-            getStatus(resultTask.data.task_id, resultTask.data.task_name);
-        }, poll_sec);
+        return {status: taskStatus};
         
     } catch (error) {
         console.log(error)

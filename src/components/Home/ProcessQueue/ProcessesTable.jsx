@@ -1,9 +1,15 @@
 import React, { useState, useContext } from 'react';
 
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import PlayArrow from '@material-ui/icons/PlayArrow';
+import LayersClear from '@material-ui/icons/LayersClear';
 import tableIcons from '../../tableIcons';
 import MaterialTable from 'material-table';
 import { TextField } from "@material-ui/core";
 import Autocomplete from "@material-ui/lab/Autocomplete";
+import LoadQueueModal from './LoadQueueModal';
+import SaveQueueModal from './SaveQueueModal';
 import serverContext from '../../../context/servers/serverContext';
 import execuserContext from '../../../context/execusers/execurserContext';
 import scriptContext from '../../../context/scripts/scriptContext';
@@ -22,7 +28,7 @@ const ProcessesTable = () => {
     const  { cleanExec, getExecUsers, selectExec, exec_users, selected_exec } = execusersContext;
     const  { scripts, selectScript, selected_script } = scriptsContext;
     const  { parameters, selectParameter, selected_parameter, getParameters, cleanParameters } = parametersContext;
-    const  { queue, setQueue, runQueue } = processesQContext;
+    const  { queue, alias, setQueue, runQueue, setLoading, cleanAlias } = processesQContext;
 
     const [ validation, setValidation ] = useState(false);
 
@@ -74,8 +80,14 @@ const ProcessesTable = () => {
     };
 
     const handleRun = () => {
+      setLoading(true);
       runQueue();
-    }
+    };
+
+    const handleClean = () => {
+      setQueue([]);
+      cleanAlias();
+    };
 
     const tableColumns = [
       
@@ -108,10 +120,9 @@ const ProcessesTable = () => {
             );
           },
           render: (rowdata) => {
-
             return(
               <div>
-                {rowdata.server.app}
+                {rowdata.server.app}/{rowdata.server.env}
               </div>
              
             )
@@ -254,57 +265,81 @@ const ProcessesTable = () => {
     ];
 
     return (
-        <MaterialTable
-        columns={tableColumns}
-        icons={tableIcons}
-        style={{ width: "100%" }}
-        data={queue}
-        title=""
-        options={{ search: false, actionsColumnIndex: -1 }}
-        editable={{
-          onRowAdd: (process) =>
-          
-            new Promise((resolve, reject) => {
+      <Grid container spacing={3}>
+        <Grid item xs={12}>
+          <MaterialTable
+            columns={tableColumns}
+            icons={tableIcons}
+            style={{ width: "100%" }}
+            data={queue}
+            title={alias !== null ? alias : ""}
+            options={{ search: false, actionsColumnIndex: -1 }}
+            editable={{
+              onRowAdd: (process) =>
+              
+                new Promise((resolve, reject) => {
 
-              setTimeout(() => {
-                const row = {
-                  server: selected_server, 
-                  exec_user: selected_exec, 
-                  script: selected_script, 
-                  parameter: selected_parameter !== null ? selected_parameter : null,
-                  validation: validation
-                };
-                
-                setQueue([...queue, row]);
-                setValidation(false);
-                selectServer(null);
-                selectScript(null);
-                cleanExec();
-                cleanParameters();
-                resolve();
-              }, 1000);  
-            }),
-          onRowDelete: (oldData) =>
-            new Promise((resolve, reject) => {
-              setTimeout(() => {
-                const dataDelete = [...queue];
-                const index = oldData.tableData.id;
-                dataDelete.splice(index, 1);
-                setQueue([...dataDelete]);
+                  setTimeout(() => {
+                    const row = {
+                      server: selected_server, 
+                      exec_user: selected_exec, 
+                      script: selected_script, 
+                      parameter: selected_parameter !== null ? selected_parameter : null,
+                      validation: validation
+                    };
+                    
+                    setQueue([...queue, row]);
+                    setValidation(false);
+                    selectServer(null);
+                    selectScript(null);
+                    cleanExec();
+                    cleanParameters();
+                    resolve();
+                  }, 1000);  
+                }),
+              onRowDelete: (oldData) =>
+                new Promise((resolve, reject) => {
+                  setTimeout(() => {
+                    const dataDelete = [...queue];
+                    const index = oldData.tableData.id;
+                    dataDelete.splice(index, 1);
+                    setQueue([...dataDelete]);
 
-                resolve();
-              }, 1000);
-            })
-        }}
-        actions={[
-          {
-            icon: tableIcons.RunQueue,
-            tooltip: 'Run process queue',
-            isFreeAction: true,
-            onClick: () => handleRun()
-          }
-        ]}
-      />
+                    resolve();
+                  }, 1000);
+                })
+            }}
+          />
+        </Grid>
+        <Grid item xs={3}>
+          <Button
+            variant="contained"
+            color="secondary"
+            style={{ width: "100%", fontWeight: "bold" }}
+            startIcon={<LayersClear />}
+            onClick={handleClean}
+          >
+            Limpiar
+          </Button>
+        </Grid>
+        <Grid item xs={3}>
+          <LoadQueueModal />
+        </Grid>
+        <Grid item xs={3}>
+          <SaveQueueModal />
+        </Grid>
+        <Grid item xs={3}>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ width: "100%", fontWeight: "bold", background: "green" }}
+            startIcon={<PlayArrow />}
+            onClick={handleRun}
+          >
+            Ejecutar
+          </Button>
+        </Grid>
+      </Grid>
     );
 }
 

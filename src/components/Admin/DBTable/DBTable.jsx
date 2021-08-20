@@ -31,7 +31,7 @@ const DBTable = ({ value }) => {
     const parametersContext = useContext(parameterContext);
     const { parameters, getAllParameters } = parametersContext;
     const processQsContext = useContext(processQContext);
-    const { queque } = processQsContext;
+    const { savedQueues, getAllQueues } = processQsContext;
     
 
     const toggle = () => setModal(!modal);
@@ -44,12 +44,12 @@ const DBTable = ({ value }) => {
         getServers();
         getScripts();
         getAllParameters();
-
+        getAllQueues();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     switch (value) {
         default:
-        case 'Execution Users':
+        case 'Usuarios de Ejeccución':
             columns = [
                 {
                     name: 'id',
@@ -67,7 +67,7 @@ const DBTable = ({ value }) => {
             ];
             data = exec_users;
             break;
-        case 'Servers':
+        case 'Servidores':
             columns = [
                 {
                     name: 'app',
@@ -92,7 +92,7 @@ const DBTable = ({ value }) => {
             ];
             data = servers;  
             break;
-        case 'Scripts':
+        case 'Acciones':
             columns = [
                 {
                     name: 'alias',
@@ -126,7 +126,7 @@ const DBTable = ({ value }) => {
             ];
             data = scripts;   
             break;
-        case 'Parameters':
+        case 'Parametros':
             columns = [
                 {
                     name: 'alias',
@@ -147,27 +147,23 @@ const DBTable = ({ value }) => {
             ];
             data = parameters;   
             break;
-        case 'Processes':
+        case 'Cola de Procesos':
             columns = [
-                {
-                    name: 'alias',
-                    label:'Alias',
-                },
-                {
-                    name: 'cat',
-                    label:'CAT',
-                },
                 {
                     name: 'id',
                     label:'ID',
                 },
                 {
-                    name: 'param',
-                    label:'Param',
+                    name: 'alias',
+                    label:'Alias',
+                },
+                {
+                    name: 'log_email',
+                    label:'Creador',
                 },
             ];
-            console.log(queque);
-            data = queque;   
+            console.log(savedQueues);
+            data = savedQueues;   
             break;
     }
 
