@@ -7,13 +7,12 @@ import Appbar from '../Appbar';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import ActionsModal from './Actions/ActionsModal';
-import ProcessesModal from './ProcessQueue/ProcessesModal';
 import ProcessesTable from './ProcessQueue/ProcessesTable';
-import TasksQueque from './TasksQueque';
 import ResultsTable from './ResultsTable';
 
 import serverContext from '../../context/servers/serverContext';
 import scriptContext from '../../context/scripts/scriptContext';
+import processQContext from '../../context/processQ/processQContext';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -40,14 +39,17 @@ const Home = () => {
 
     const serversContext = useContext(serverContext);
     const scriptsContext = useContext(scriptContext);
+    const processesQContext = useContext(processQContext);
 
     const { getServers } = serversContext;
     const { getScripts } = scriptsContext;
+    const  { alertmsg, alertstatus, alert, setAlert } = processesQContext;
 
 
     
     const handleClose = (event, reason) => {
         setOpenAlert(false);
+        setAlert(false);
       };
 
     useEffect(() => {
@@ -61,9 +63,9 @@ const Home = () => {
         <Fragment>
             <Appbar />
             <Container maxWidth="xl" style={{ marginTop: '20px'}}>
-                <Snackbar open={openAlert} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity="success">
-                        This is a success message!
+                <Snackbar open={alert} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert onClose={handleClose} severity={alertstatus === 200 ? 'success' : 'warning'}>
+                        {alertmsg}
                     </Alert>
                 </Snackbar>
                 <Grid container spacing={3} className={classes.background}>
@@ -74,12 +76,6 @@ const Home = () => {
                                 <ActionsModal />
                             </Box>
                         </Box>
-                        {/* <Box mb={1}>
-                            <ProcessQueque />
-                        </Box>
-                        <Box>
-                            <TasksQueque />
-                        </Box> */}
                         <Accordion>
                             <AccordionSummary
                                 expandIcon={<ExpandMore />}
@@ -95,23 +91,6 @@ const Home = () => {
                     </Grid>
 
                     <Grid item xs={12} sm container direction="column" justifyContent="flex-start">
-                        {/* <Grid item container spacing={2}>
-                            <Grid item xs>
-                                <Box display="flex" flexDirection="row-reverse" mt={1}>
-                                    <h3>PROCESOS GUARDADOS:</h3>
-                                </Box>
-                            </Grid>
-                            <Grid item xs={5}>
-                                <Box mt={1}>
-                                    <SavedProcesses />
-                                </Box>
-                            </Grid>
-                            <Grid item>
-                                <Box mt={2}>
-                                    <Export />
-                                </Box>
-                            </Grid>
-                        </Grid> */}
                         <Grid item >
                             <Box mt={2}>
                                 <Divider />

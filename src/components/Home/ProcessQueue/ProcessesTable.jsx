@@ -318,6 +318,7 @@ const ProcessesTable = () => {
             style={{ width: "100%", fontWeight: "bold" }}
             startIcon={<LayersClear />}
             onClick={handleClean}
+            disabled={queue.length > 0 ? false : true}
           >
             Limpiar
           </Button>
@@ -335,6 +336,7 @@ const ProcessesTable = () => {
             style={{ width: "100%", fontWeight: "bold", background: "green" }}
             startIcon={<PlayArrow />}
             onClick={handleRun}
+            disabled={queue.length > 0 ? false : true}
           >
             Ejecutar
           </Button>

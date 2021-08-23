@@ -15,25 +15,25 @@ const getStatus = async (task_id, task_name, poll_sec=1000) => {
             case 'tasks.winrm-exec_users':
                 taskStatus = resultTask.data.task_status;
                 if (taskStatus === 'SUCCESS') {
-                    return resultTask.data.task_result.users;
+                    return {status: taskStatus, result: resultTask.data.task_result.users};
                 }
                 break;
             case 'tasks.winrm-servers':
                 taskStatus = resultTask.data.task_status;
                 if (taskStatus === 'SUCCESS') {
-                    return resultTask.data.task_result.servers;
+                    return {status: taskStatus, result: resultTask.data.task_result.servers};
                 }
                 break;
             case 'tasks.winrm-scripts':
                 taskStatus = resultTask.data.task_status;
                 if (taskStatus === 'SUCCESS') {
-                    return resultTask.data.task_result.scripts;
+                    return {status: taskStatus, result: resultTask.data.task_result.scripts};
                 }
                 break;
             case 'tasks.winrm-params':
                 taskStatus = resultTask.data.task_status;
                 if (taskStatus === 'SUCCESS') {
-                    return resultTask.data.task_result.params;
+                    return {status: taskStatus, result: resultTask.data.task_result.params};
                 }
                 break;
             case 'tasks.winclient':

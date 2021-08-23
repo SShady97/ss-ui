@@ -33,14 +33,33 @@ const ScriptState = props => {
 
             const { task_id, task_name } = resultScripts;
 
-            const scripts = await getStatus(task_id, task_name);
+            let res;
+        
+            const i = setInterval(async () => {
 
-            console.log(scripts);
+                res = await getStatus(task_id, task_name);
 
-            dispatch({
-                type: SCRIPTS,
-                payload: scripts
-            })
+                console.log(res.status)
+                
+                if(res.status === 'SUCCESS'){
+
+                    console.log(res.result)
+
+                    dispatch({
+                        type: SCRIPTS,
+                        payload: res.result
+                    });
+
+                    stopInterval();
+                }
+            
+            },500);
+
+            const stopInterval = () => {
+                clearInterval(i);
+            }
+
+            
             
         } catch (error) {
             console.log(error);

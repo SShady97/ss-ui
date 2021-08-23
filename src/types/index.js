@@ -22,3 +22,4 @@ export const SET_SQUEUES = 'SET_SQUEUES';
 export const LOAD_SQUEUE = 'LOAD_SQUEUE';
 export const CLEAN_ALIAS = 'CLEAN_ALIAS';
 export const SAVE_QUEUE = 'SAVE_QUEUE';
+export const SET_ALERT = 'SET_ALERT';

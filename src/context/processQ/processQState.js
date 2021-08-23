@@ -5,7 +5,10 @@ import { authProvider } from '../../Auth/authProvider';
 import processQReducer from './processQReducer';
 import processQContext from './processQContext';
 
-import { SET_QUEUE, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE } from '../../types';
+import { 
+    SET_QUEUE, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
+    SET_ALERT
+} from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -18,7 +21,9 @@ const ProcessQState = props => {
         selected_SQueue: null,
         res: [],
         loading: false,
-        alert: null
+        alert: false,
+        alertmsg: null,
+        alertstatus: null
     }
 
     const [ state, dispatch ] = useReducer(processQReducer, initialState);
@@ -30,7 +35,7 @@ const ProcessQState = props => {
         let token = await authProvider.getIdToken();
         token = token.idToken.rawIdToken;
         
-        state.queue.map(process => {
+        state.queue.forEach(process => {
 
             const payload = {
                 server: process.server.id,
@@ -127,7 +132,7 @@ const ProcessQState = props => {
         const log_email = authProvider.account.userName;
         token = token.idToken.rawIdToken;
         
-        state.queue.map(process => {
+        state.queue.forEach(process => {
 
             const payload = {
                 
@@ -148,8 +153,6 @@ const ProcessQState = props => {
             queue_processes: processes
         }
 
-        console.log(data)
-
         const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/queue`;
 
         const responseSaveQueue = await fetch(datastore_url, 
@@ -162,10 +165,21 @@ const ProcessQState = props => {
 
         dispatch({
             type: SAVE_QUEUE,
-            payload: {msg: resultSaveQueue.msg, alias: alias}
+            payload: {
+                msg: resultSaveQueue.msg, 
+                status: resultSaveQueue.status, 
+                alias: resultSaveQueue.status === 200 ? alias : null
+            }
         });
-
+ 
     }
+
+    const setAlert = (bool) => {
+        dispatch({
+            type: SET_ALERT,
+            payload: bool
+        });
+    } 
 
     const loadSavedQueue = async (queue) => {
 
@@ -225,13 +239,16 @@ const ProcessQState = props => {
                 res: state.res,
                 loading: state.loading,
                 alert: state.alert,
+                alertmsg: state.alertmsg,
+                alertstatus: state.alertstatus,
                 runQueue: runQueue,
                 setQueue: setQueue,
                 setLoading: setLoading,
                 getSavedQueues: getSavedQueues,
                 loadSavedQueue: loadSavedQueue,
                 saveQueue: saveQueue,
-                cleanAlias: cleanAlias
+                cleanAlias: cleanAlias,
+                setAlert: setAlert
             }}
         >
             {props.children}

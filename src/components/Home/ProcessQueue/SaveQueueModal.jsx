@@ -1,7 +1,6 @@
 import React, { useState, useContext } from 'react';
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import TextField from '@material-ui/core/TextField';
 import Input from '@material-ui/core/Input';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
@@ -22,7 +21,7 @@ const SaveQueueModal = () => {
 
   const [open, setOpen] = useState(false);
 
-  const  { saveQueue } = processesQContext;
+  const  { saveQueue, alias, queue } = processesQContext;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -54,6 +53,7 @@ const SaveQueueModal = () => {
             style={{ width: "100%", fontWeight: "bold" }}
             startIcon={<Save />}
             onClick={handleClickOpen}
+            disabled={(queue.length > 0 && alias === null) ? false : true}
         >
             Guardar
         </Button>
