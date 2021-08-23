@@ -26,7 +26,7 @@ const ScriptState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/scripts`;
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/script`;
 
             const responseScripts = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const resultScripts = await responseScripts.json();

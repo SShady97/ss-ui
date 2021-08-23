@@ -85,6 +85,7 @@ const ParameterState = props => {
                 parameters: state.parameters,
                 selected_parameter: state.selected_parameter,
                 getParameters: getParameters,
+                getAllParameters: getAllParameters,
                 selectParameter: selectParameter,
                 cleanParameters: cleanParameters
             }}

@@ -5,6 +5,12 @@ import { SET_QUEUE, RESPONSE, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SA
 const processQReducer = (state, action) => {
     switch(action.type) {
 
+        case QUEUES:
+            return {
+                ...state,
+                savedQueues: action.payload
+            }
+
         case SET_QUEUE:
             return {
                 ...state,

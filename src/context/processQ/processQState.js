@@ -6,7 +6,7 @@ import processQReducer from './processQReducer';
 import processQContext from './processQContext';
 
 import { 
-    SET_QUEUE, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
+    SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
     SET_ALERT
 } from '../../types';
 
@@ -229,6 +229,29 @@ const ProcessQState = props => {
         })
     }
 
+    const getAllQueues = async () => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+            
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/queues`;
+
+            const responseQueues = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
+            const savedQueues = await responseQueues.json();
+
+            dispatch({
+                type: QUEUES,
+                payload: savedQueues
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     return (
         <processQContext.Provider
             value={{
@@ -248,7 +271,8 @@ const ProcessQState = props => {
                 loadSavedQueue: loadSavedQueue,
                 saveQueue: saveQueue,
                 cleanAlias: cleanAlias,
-                setAlert: setAlert
+                setAlert: setAlert,
+                getAllQueues: getAllQueues
             }}
         >
             {props.children}

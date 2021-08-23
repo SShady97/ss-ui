@@ -58,7 +58,6 @@ const useStyles = makeStyles((theme) => ({
 
 const RowDialog = ({ columns, rowValues, toogle, open }) => {
 
-    let columnsCopy = columns.slice();
     const classes = useStyles();
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -67,25 +66,29 @@ const RowDialog = ({ columns, rowValues, toogle, open }) => {
         toogle();
     };
 
-    for (var i = 0; i < columns.length; i++) {
-        if (columnsCopy[i] === 'ID') {
-            columnsCopy.splice(i, 1);
-            rowValues.splice(i, 1);
-        }
-    }
+    const rowValuesCopy = rowValues;
 
+    const columnsCopy = columns.reduce( (result, column, index) => {
+        if(column.name !== 'id') {
+            result.push(column.label);
+        } else {
+            rowValuesCopy.splice(index, 1);
+        }
+        return result;
+    }, []);
+    
     const body = (
         <div>
             <DialogTitle id="responsive-dialog-title">{"Editar"}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     <form className={classes.root} noValidate autoComplete="off">
-                        {rowValues.map((rowValue, index) => (
+                        {columnsCopy.map((columnCopy, index) => (
                             <Box mb={2}>
-                                <FormTextField id="standard-basic" label={columnsCopy[index]} style={{ width: "100%" }} variant="outlined" value={rowValue} />
+                                <FormTextField id="standard-basic" label={columnCopy} style={{ width: "100%" }} variant="outlined" value={rowValuesCopy[index]} />
                             </Box>
 
-                        ))}
+                        ))} 
                     </form>
                 </DialogContentText>
             </DialogContent>
