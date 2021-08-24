@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import execuserReducer from './execuserReducer';
 import execuserContext from './execurserContext';
 
-import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS } from '../../types';
+import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -58,8 +58,6 @@ const ExecuserState = props => {
             const responseExecUsers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const exec_users = await responseExecUsers.json();
 
-            console.log(exec_users);
-
             dispatch({
                 type: EXEC_USERS,
                 payload: exec_users
@@ -84,6 +82,32 @@ const ExecuserState = props => {
         })
     }
 
+    const addExec = async ( formData ) => {
+
+        let token = await authProvider.getIdToken();
+        token = token.idToken.rawIdToken;
+
+        const data = {
+            name: formData.name,
+            password: formData.password
+        }
+
+        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/exec_user`;
+
+        const responseAddExecUser = await fetch(datastore_url, 
+                                                { method: 'POST',
+                                                headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                body: JSON.stringify(data)
+                                                });
+        
+        const resultAddExecUser = responseAddExecUser.json();                                        
+
+        dispatch({
+            type: ADD_EXECUSER,
+            payload: {msg: resultAddExecUser.msg }
+        })
+    }
+
 
     return (
         <execuserContext.Provider
@@ -93,7 +117,8 @@ const ExecuserState = props => {
                 getExecUsers: getExecUsers,
                 getAllExecUsers: getAllExecUsers,
                 selectExec: selectExec,
-                cleanExec: cleanExec
+                cleanExec: cleanExec,
+                addExec: addExec
             }}
         >
             {props.children}

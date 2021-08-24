@@ -5,6 +5,7 @@ import MUIDataTable from "mui-datatables";
 import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 
 import AddButton from './AddButton';
+import QueueModal from './QueueModal';
 import RowDialog from './RowModal/RowDialog';
 
 import execuserContext from '../../../context/execusers/execurserContext';
@@ -13,17 +14,20 @@ import scriptContext from '../../../context/scripts/scriptContext';
 import parameterContext from '../../../context/parameters/parameterContext';
 import processQContext from '../../../context/processQ/processQContext';
 
-const DBTable = ({ value }) => {
+const DBTable = ({ table }) => {
 
     const theme = useTheme();
 
     const [modal, setModal] = React.useState(false);
+    const [queueModal, setQueueModal] = React.useState(false);
 
     const [rowValues, setRowValues] = React.useState([]);
 
+    const toggleModal = () => setModal(!modal);
+    const toggleQueueModal = () => setQueueModal(!queueModal);
     
     const execusersContext = useContext(execuserContext);
-    const { exec_users, getAllExecUsers } = execusersContext;
+    const { exec_users, getAllExecUsers, addExec } = execusersContext;
     const serversContext = useContext(serverContext);
     const { servers, getServers } = serversContext;
     const scriptsContext = useContext(scriptContext);
@@ -31,13 +35,12 @@ const DBTable = ({ value }) => {
     const parametersContext = useContext(parameterContext);
     const { parameters, getAllParameters } = parametersContext;
     const processQsContext = useContext(processQContext);
-    const { savedQueues, getAllQueues } = processQsContext;
-    
-
-    const toggle = () => setModal(!modal);
+    const { savedQueues, getAllQueues, loadSavedQueue, queueA } = processQsContext;
 
     let columns = null;
     let data = null;
+    let addFunction = null;
+    let getFunction = null;
 
     useEffect(() => {
         getAllExecUsers();
@@ -47,7 +50,7 @@ const DBTable = ({ value }) => {
         getAllQueues();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
-    switch (value) {
+    switch (table) {
         default:
         case 'Usuarios de Ejeccución':
             columns = [
@@ -65,8 +68,11 @@ const DBTable = ({ value }) => {
                     
                 }
             ];
+            addFunction = addExec;
+            getFunction = getAllExecUsers;
             data = exec_users;
             break;
+
         case 'Servidores':
             columns = [
                 {
@@ -92,6 +98,7 @@ const DBTable = ({ value }) => {
             ];
             data = servers;  
             break;
+
         case 'Acciones':
             columns = [
                 {
@@ -108,9 +115,9 @@ const DBTable = ({ value }) => {
                     options: {
                         customBodyRender: (value, tableMeta, updateValue) => {
                             if(value) {
-                                return 'Verdadero';
+                                return 'Si';
                             } else {
-                                return 'Falso'
+                                return 'No'
                             }
                         }
                     }
@@ -126,6 +133,7 @@ const DBTable = ({ value }) => {
             ];
             data = scripts;   
             break;
+
         case 'Parametros':
             columns = [
                 {
@@ -147,6 +155,7 @@ const DBTable = ({ value }) => {
             ];
             data = parameters;   
             break;
+
         case 'Cola de Procesos':
             columns = [
                 {
@@ -162,7 +171,6 @@ const DBTable = ({ value }) => {
                     label:'Creador',
                 },
             ];
-            console.log(savedQueues);
             data = savedQueues;   
             break;
     }
@@ -173,16 +181,24 @@ const DBTable = ({ value }) => {
         selectableRows: 'none',
         viewColumns: 'false',
         onRowClick: rowData => {
-            console.log(rowData)
-            setRowValues(rowData);
-            setModal(true);
+            if ( table !== 'Cola de Procesos') {
+                setRowValues(rowData);
+                setModal(true);
+            } else {
+                const savedQueue = { 
+                    id: rowData[0],
+                    alias: rowData[1]
+                 };
+                loadSavedQueue(savedQueue, 1);
+                setQueueModal(true);
+            }
         },
         customToolbar: () => {
-
+            if ( table !== 'Cola de Procesos') {
                 return (
-                    <AddButton value={value} columns={columns} />
+                    <AddButton table={table} columns={columns} addFunction={addFunction} getFunction={getFunction}/>
                 );
-            
+            }
         }
     };
 
@@ -213,15 +229,14 @@ const DBTable = ({ value }) => {
             }
         })}>
             < MUIDataTable
-                title={value}
+                title={table}
                 data={data}
                 columns={columns}
                 options={options}
             />
-            <RowDialog rowValues={rowValues} toogle={toggle} open={modal} columns={columns} />
-            {/* <RowModal rowValues={rowValues} toogle={toggle} open={modal} columns={columns} /> */}
+            <RowDialog rowValues={rowValues} toogle={toggleModal} open={modal} columns={columns} />
+            <QueueModal rowValues={rowValues} toogle={toggleQueueModal} open={queueModal} />
         </ThemeProvider>
-
     );
 };
 

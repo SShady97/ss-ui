@@ -7,24 +7,24 @@ import CloseIcon from '@material-ui/icons/Close';
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
 
-const FormTextField = withStyles({
-    root: {
-        '& label.Mui-focused': {
-            color: 'green',
-        },
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                borderColor: '#517461',
-            },
-            '&:hover fieldset': {
-                borderColor: 'black',
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: '#517461',
-            },
-        },
-    },
-})(TextField);
+// const FormTextField = withStyles({
+//     root: {
+//         '& label.Mui-focused': {
+//             color: 'green',
+//         },
+//         '& .MuiOutlinedInput-root': {
+//             '& fieldset': {
+//                 borderColor: 'yellow',
+//             },
+//             '&:hover fieldset': {
+//                 borderColor: 'black',
+//             },
+//             '&.Mui-focused fieldset': {
+//                 borderColor: 'red',
+//             },
+//         },
+//     },
+// })(TextField);
 
 const ColorButton = withStyles((theme) => ({
     root: {
@@ -62,11 +62,15 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const AddButton = ({ value, columns }) => {
+const AddButton = ({ table, columns, addFunction, getFunction }) => {
+
     const classes = useStyles();
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [open, setOpen] = React.useState(false);
+
+    const columnsCopy = [...columns];
+    columnsCopy.splice(columnsCopy.findIndex(x => x.name ==='id'), 1);
 
     const handleOpen = () => {
         setOpen(true);
@@ -76,31 +80,41 @@ const AddButton = ({ value, columns }) => {
         setOpen(false);
     };
 
-    const columnsCopy = columns.reduce( (result, column) => {
-        if(column.name !== 'id') {
-            result.push(column.label);
+    const handleCreate = e => {
+        e.preventDefault();
+
+        let target = e.target;
+        let formData = {};
+
+        for (let i=0; i<target.length; i++) {
+            if(target.elements[i].value) {
+                formData[target.elements[i].getAttribute('id')] = target.elements[i].value;
+            }
         }
-        return result;
-    }, []);
+
+        addFunction(formData);
+        getFunction();
+        handleClose();
+    };
 
     const body = (
         <div>
-            <DialogTitle id="responsive-dialog-title">Crear nueva entrada en {value}
+            <DialogTitle id="responsive-dialog-title">Crear nueva entrada en {table}
                 <IconButton aria-label="close" className={classes.customizedButton} onClick={handleClose}>
                     <CloseIcon />
                 </IconButton></DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <form className={classes.root} noValidate autoComplete="off">
+                    <form id="addForm" onSubmit={handleCreate} className={classes.root} noValidate autoComplete="off">
                         {columnsCopy.map((option) => (
-                            <FormTextField id={option} label={option} color="primary" style={{ width: "100%" }} variant="outlined" />
+                            <TextField id={option.name} label={option.label} style={{ width: "100%" }} variant="outlined" />
                         ))}
                     </form>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
                 <Box textAlign='center' display="flex" flexDirection="row-reverse">
-                    <ColorButton variant='contained' >
+                    <ColorButton variant='contained' type='submit' form='addForm'>
                         Guardar
                     </ColorButton>
                 </Box>
@@ -110,7 +124,7 @@ const AddButton = ({ value, columns }) => {
 
     return (
         <React.Fragment>
-            <Tooltip title={"Nueva Entrada en " + value}>
+            <Tooltip title={"Nueva Entrada en " + table}>
                 <IconButton onClick={handleOpen}>
                     <AddIcon className={AddIcon} />
                 </IconButton>

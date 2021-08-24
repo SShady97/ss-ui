@@ -66,7 +66,7 @@ const RowDialog = ({ columns, rowValues, toogle, open }) => {
         toogle();
     };
 
-    const rowValuesCopy = rowValues;
+    const rowValuesCopy = [...rowValues];
 
     const columnsCopy = columns.reduce( (result, column, index) => {
         if(column.name !== 'id') {

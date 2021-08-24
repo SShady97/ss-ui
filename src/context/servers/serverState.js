@@ -25,7 +25,6 @@ const ServerState = props => {
 
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
-            console.log(token)
 
             const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/servers`;
 
@@ -35,8 +34,6 @@ const ServerState = props => {
             const { task_id, task_name } = resultServers;
 
             const servers = await getStatus(task_id, task_name);
-
-            console.log(servers);
 
             dispatch({
                 type: SERVERS,

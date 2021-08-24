@@ -1,4 +1,4 @@
-import { SET_QUEUE, QUEUES, RESPONSE, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE } from '../../types';
+import { SET_QUEUE, QUEUES, RESPONSE, LOADING, SET_SQUEUES, LOAD_SQUEUE, LOAD_SQUEUE_ADMIN, CLEAN_ALIAS, SAVE_QUEUE } from '../../types';
 
 const processQReducer = (state, action) => {
     switch(action.type) {
@@ -40,6 +40,12 @@ const processQReducer = (state, action) => {
             queue: action.payload[0],
             alias: action.payload[1]
         }
+
+        case LOAD_SQUEUE_ADMIN:
+            return {
+                ...state,
+                queueA: action.payload
+            }
 
         case CLEAN_ALIAS:
         return {

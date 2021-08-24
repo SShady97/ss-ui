@@ -58,7 +58,7 @@ const Admin = () => {
                     </Grid>
                     <Divider />
                     <Grid item>
-                        <DBTable value={tableSelect} />
+                        <DBTable table={tableSelect} />
                     </Grid>
                 </Grid>
             </Container>

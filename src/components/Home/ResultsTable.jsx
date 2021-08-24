@@ -5,43 +5,13 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Button from '@material-ui/core/Button';
 import GetAppIcon from '@material-ui/icons/GetApp';
-import { createTheme, ThemeProvider } from '@material-ui/core/styles';
+import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 
 import processQContext from '../../context/processQ/processQContext';
 
-
-const tableTheme = createTheme({
-    overrides: {
-        MUIDataTable: {
-            root: {
-                backgroundColor: "#FF000"
-            },
-            paper: {
-                boxShadow: "none"
-            }
-        },
-        MUIDataTableBodyRow: {
-            root: {
-                '&:nth-of-type(odd)': {
-                    backgroundColor: '#f2f2f2',
-                },
-            }
-        },
-        MUIDataTableToolbar: {
-            titleText: {
-                fontWeight: "bold",
-                fontSize: "150%"
-            }
-        },
-        MUIDataTableHeadCell: {
-            data: {
-                fontWeight: "bold"
-            }
-        }
-    }
-});
-
 const ResultsTable = () => {
+
+    const theme = useTheme();
     
     const processesQContext = useContext(processQContext);
     const  { res, loading } = processesQContext;
@@ -106,7 +76,29 @@ const ResultsTable = () => {
                         <CircularProgress />
                     </div>
                 :
-                    <ThemeProvider theme={tableTheme}>
+                    <ThemeProvider theme={outerTheme => ({
+                        ...outerTheme,
+                        overrides: {
+                            MUIDataTableBodyRow: {
+                                root: {
+                                    '&:nth-of-type(odd)': {
+                                        backgroundColor: theme.palette.action.selected,
+                                    },
+                                }
+                            },
+                            MUIDataTableToolbar: {
+                                titleText: {
+                                    fontWeight: "bold",
+                                    fontSize: "150%"
+                                }
+                            },
+                            MUIDataTableHeadCell: {
+                                data: {
+                                    fontWeight: "bold"
+                                }
+                            }
+                        }
+                    })}>
                         <MUIDataTable 
                             title={""} 
                             data={res} 
