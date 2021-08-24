@@ -33,12 +33,31 @@ const ExecuserState = props => {
 
             const { task_id, task_name } = resultExecUsers;
 
-            const exec_users = await getStatus(task_id, task_name);
+            let res;
+        
+            const i = setInterval(async () => {
 
-            dispatch({
-                type: EXEC_USERS,
-                payload: exec_users
-            })
+                res = await getStatus(task_id, task_name);
+
+                console.log(res.status)
+                
+                if(res.status === 'SUCCESS'){
+
+                    console.log(res.result)
+
+                    dispatch({
+                        type: EXEC_USERS,
+                        payload: res.result
+                    });
+
+                    stopInterval();
+                }
+            
+            },500);
+
+            const stopInterval = () => {
+                clearInterval(i);
+            }
             
         } catch (error) {
             console.log(error);

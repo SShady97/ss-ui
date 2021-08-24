@@ -33,12 +33,31 @@ const ParameterState = props => {
 
             const { task_id, task_name } = resultParameters;
 
-            const parameters = await getStatus(task_id, task_name);
+            let res;
+        
+            const i = setInterval(async () => {
 
-            dispatch({
-                type: PARAMETERS,
-                payload: parameters
-            })
+                res = await getStatus(task_id, task_name);
+
+                console.log(res.status)
+                
+                if(res.status === 'SUCCESS'){
+
+                    console.log(res.result)
+
+                    dispatch({
+                        type: PARAMETERS,
+                        payload: res.result
+                    })
+
+                    stopInterval();
+                }
+            
+            }, 500);
+
+            const stopInterval = () => {
+                clearInterval(i);
+            }
             
         } catch (error) {
             console.log(error);

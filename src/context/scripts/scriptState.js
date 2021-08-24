@@ -26,15 +26,40 @@ const ScriptState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/script`;
+            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/scripts`;
 
             const responseScripts = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
-            const scripts = await responseScripts.json();
+            const resultScripts = await responseScripts.json();
 
-            dispatch({
-                type: SCRIPTS,
-                payload: scripts
-            })
+            const { task_id, task_name } = resultScripts;
+
+            let res;
+        
+            const i = setInterval(async () => {
+
+                res = await getStatus(task_id, task_name);
+
+                console.log(res.status)
+                
+                if(res.status === 'SUCCESS'){
+
+                    console.log(res.result)
+
+                    dispatch({
+                        type: SCRIPTS,
+                        payload: res.result
+                    });
+
+                    stopInterval();
+                }
+            
+            },500);
+
+            const stopInterval = () => {
+                clearInterval(i);
+            }
+
+            
             
         } catch (error) {
             console.log(error);

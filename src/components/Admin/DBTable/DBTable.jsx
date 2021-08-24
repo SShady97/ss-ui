@@ -132,6 +132,7 @@ const DBTable = ({ table }) => {
                 },
             ];
             data = scripts;   
+            console.log(data);
             break;
 
         case 'Parametros':

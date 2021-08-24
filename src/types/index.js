@@ -24,4 +24,5 @@ export const LOAD_SQUEUE = 'LOAD_SQUEUE';
 export const LOAD_SQUEUE_ADMIN = 'LOAD_SQUEUE_ADMIN';
 export const CLEAN_ALIAS = 'CLEAN_ALIAS';
 export const SAVE_QUEUE = 'SAVE_QUEUE';
+export const SET_ALERT = 'SET_ALERT';
 export const QUEUES = 'QUEUES';

@@ -5,7 +5,10 @@ import { authProvider } from '../../Auth/authProvider';
 import processQReducer from './processQReducer';
 import processQContext from './processQContext';
 
-import { SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, LOAD_SQUEUE_ADMIN, CLEAN_ALIAS, SAVE_QUEUE } from '../../types';
+import { 
+    SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
+    SET_ALERT, LOAD_SQUEUE_ADMIN
+} from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -19,7 +22,9 @@ const ProcessQState = props => {
         selected_SQueue: null,
         res: [],
         loading: false,
-        alert: null
+        alert: false,
+        alertmsg: null,
+        alertstatus: null
     }
 
     const [ state, dispatch ] = useReducer(processQReducer, initialState);
@@ -31,7 +36,7 @@ const ProcessQState = props => {
         let token = await authProvider.getIdToken();
         token = token.idToken.rawIdToken;
         
-        state.queue.map(process => {
+        state.queue.forEach(process => {
 
             const payload = {
                 server: process.server.id,
@@ -128,7 +133,7 @@ const ProcessQState = props => {
         const log_email = authProvider.account.userName;
         token = token.idToken.rawIdToken;
         
-        state.queue.map(process => {
+        state.queue.forEach(process => {
 
             const payload = {
                 
@@ -161,12 +166,24 @@ const ProcessQState = props => {
 
         dispatch({
             type: SAVE_QUEUE,
-            payload: {msg: resultSaveQueue.msg, alias: alias}
+            payload: {
+                msg: resultSaveQueue.msg, 
+                status: resultSaveQueue.status, 
+                alias: resultSaveQueue.status === 200 ? alias : null
+            }
         });
-
+ 
     }
 
+    const setAlert = (bool) => {
+        dispatch({
+            type: SET_ALERT,
+            payload: bool
+        });
+    } 
+
     const loadSavedQueue = async (queue, flag=0) => {
+
         const alias = queue.alias;
         const queue_id = queue.id
         let token = await authProvider.getIdToken();
@@ -267,6 +284,8 @@ const ProcessQState = props => {
                 res: state.res,
                 loading: state.loading,
                 alert: state.alert,
+                alertmsg: state.alertmsg,
+                alertstatus: state.alertstatus,
                 runQueue: runQueue,
                 setQueue: setQueue,
                 setLoading: setLoading,
@@ -274,6 +293,7 @@ const ProcessQState = props => {
                 loadSavedQueue: loadSavedQueue,
                 saveQueue: saveQueue,
                 cleanAlias: cleanAlias,
+                setAlert: setAlert,
                 getAllQueues: getAllQueues
             }}
         >

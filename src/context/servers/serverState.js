@@ -33,12 +33,32 @@ const ServerState = props => {
 
             const { task_id, task_name } = resultServers;
 
-            const servers = await getStatus(task_id, task_name);
+    
+            let res;
+        
+            const i = setInterval(async () => {
 
-            dispatch({
-                type: SERVERS,
-                payload: servers
-            })
+                res = await getStatus(task_id, task_name);
+
+                console.log(res.status)
+                
+                if(res.status === 'SUCCESS'){
+
+                    console.log(res.result)
+
+                    dispatch({
+                        type: SERVERS,
+                        payload: res.result
+                    });
+
+                    stopInterval();
+                }
+            
+            },500);
+
+            const stopInterval = () => {
+                clearInterval(i);
+            }
             
         } catch (error) {
             console.log(error);
