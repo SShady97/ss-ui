@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import serverReducer from './serverReducer';
 import serverContext from './serverContext';
 
-import { SERVERS, SET_SERVER, CLEAN_SERVERS } from '../../types';
+import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -79,6 +79,33 @@ const ServerState = props => {
         })
     }
 
+    const addServer = async ( formData ) => {
+
+        let token = await authProvider.getIdToken();
+        token = token.idToken.rawIdToken;
+
+        const data = {
+            name: formData.name,
+            app: formData.app,
+            environment: formData.environment,
+            ip: formData.ip
+        }
+
+        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/server`;
+
+        const responseAddServer = await fetch(datastore_url, 
+                                                { method: 'POST',
+                                                headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                body: JSON.stringify(data)
+                                                });
+        
+        const resultAddServer = responseAddServer.json();                                        
+
+        dispatch({
+            type: ADD_SERVER,
+            payload: {msg: resultAddServer.msg }
+        })
+    }
 
     return (
         <serverContext.Provider
@@ -87,7 +114,8 @@ const ServerState = props => {
                 selected_server: state.selected_server,
                 getServers: getServers,
                 selectServer: selectServer,
-                cleanServers: cleanServers
+                cleanServers: cleanServers,
+                addServer: addServer
             }}
         >
             {props.children}

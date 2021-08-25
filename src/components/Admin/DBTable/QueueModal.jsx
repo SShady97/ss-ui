@@ -1,9 +1,9 @@
-import React , { useContext, useEffect } from "react";
+import React , { useContext } from "react";
 
-import { TextField, Button, Box, useMediaQuery } from "@material-ui/core";
-import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
+import { Button, useMediaQuery } from "@material-ui/core";
+import { Dialog, DialogActions, DialogContent, DialogContentText } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
-import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
+import { withStyles, useTheme } from "@material-ui/core/styles";
 import processQContext from '../../../context/processQ/processQContext';
 
 const ColorButton = withStyles((theme) => ({
@@ -16,49 +16,7 @@ const ColorButton = withStyles((theme) => ({
     },
 }))(Button);
 
-// const FormTextField = withStyles({
-//     root: {
-//         '& label.Mui-focused': {
-//             color: 'green',
-//         },
-//         '& .MuiOutlinedInput-root': {
-//             '& fieldset': {
-//                 borderColor: '#517461',
-//             },
-//             '&:hover fieldset': {
-//                 borderColor: 'black',
-//             },
-//             '&.Mui-focused fieldset': {
-//                 borderColor: '#517461',
-//             },
-//         },
-//     },
-// })(TextField);
-
-// const useStyles = makeStyles((theme) => ({
-//     paper: {
-//         top: '50%',
-//         left: '50%',
-//         transform: 'translate(-50%, -50%)',
-//         position: "absolute",
-//         width: 670,
-//         backgroundColor: theme.palette.background.paper,
-//         border: "2px solid #000",
-//         boxShadow: theme.shadows[5],
-//         padding: theme.spacing(3),
-//     },
-//     '& > *': {
-//         margin: theme.spacing(1),
-//         width: '25ch',
-//     },
-//     table: {
-//         minWidth: 650
-//     }
-
-// }));
-
-
-const QueueModal = ({ rowValues, open, toogle, getProcess }) => {
+const QueueModal = ({ open, toogle }) => {
 
     const processQsContext = useContext(processQContext);
     const { queueA } = processQsContext;

@@ -4,7 +4,7 @@ import MUIDataTable from "mui-datatables";
 
 import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 
-import AddButton from './AddButton';
+import AddButton from './AddButton/AddButton';
 import QueueModal from './QueueModal';
 import RowDialog from './RowModal/RowDialog';
 
@@ -29,13 +29,13 @@ const DBTable = ({ table }) => {
     const execusersContext = useContext(execuserContext);
     const { exec_users, getAllExecUsers, addExec } = execusersContext;
     const serversContext = useContext(serverContext);
-    const { servers, getServers } = serversContext;
+    const { servers, getServers, addServer } = serversContext;
     const scriptsContext = useContext(scriptContext);
-    const { scripts, getScripts } = scriptsContext;
+    const { scripts, getScripts, addScript } = scriptsContext;
     const parametersContext = useContext(parameterContext);
-    const { parameters, getAllParameters } = parametersContext;
+    const { parameters, getAllParameters, addParameter } = parametersContext;
     const processQsContext = useContext(processQContext);
-    const { savedQueues, getAllQueues, loadSavedQueue, queueA } = processQsContext;
+    const { savedQueues, getAllQueues, loadSavedQueue } = processQsContext;
 
     let columns = null;
     let data = null;
@@ -48,7 +48,6 @@ const DBTable = ({ table }) => {
         getScripts();
         getAllParameters();
         getAllQueues();
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
     switch (table) {
         default:
@@ -80,11 +79,11 @@ const DBTable = ({ table }) => {
                     label:'App',
                 },
                 {
-                    name: 'env',
-                    label:'Env',
+                    name: 'environment',
+                    label:'Ambiente',
                 },
                 {
-                    name: 'hostname',
+                    name: 'name',
                     label:'Hostname',
                 },
                 {
@@ -96,6 +95,8 @@ const DBTable = ({ table }) => {
                     label:'Direción IP',
                 },
             ];
+            addFunction = addServer;
+            getFunction = getServers;
             data = servers;  
             break;
 
@@ -123,7 +124,7 @@ const DBTable = ({ table }) => {
                     }
                 },
                 {
-                    name: 'script',
+                    name: 'command',
                     label:'Comando PowerShell',
                 },
                 {
@@ -131,8 +132,9 @@ const DBTable = ({ table }) => {
                     label:'Typo',
                 },
             ];
+            addFunction = addScript;
+            getFunction = getScripts;
             data = scripts;   
-            console.log(data);
             break;
 
         case 'Parametros':
@@ -154,6 +156,8 @@ const DBTable = ({ table }) => {
                     label:'Param',
                 },
             ];
+            addFunction = addParameter;
+            getFunction = getAllParameters;
             data = parameters;   
             break;
 
@@ -236,7 +240,7 @@ const DBTable = ({ table }) => {
                 options={options}
             />
             <RowDialog rowValues={rowValues} toogle={toggleModal} open={modal} columns={columns} />
-            <QueueModal rowValues={rowValues} toogle={toggleQueueModal} open={queueModal} />
+            <QueueModal toogle={toggleQueueModal} open={queueModal} />
         </ThemeProvider>
     );
 };

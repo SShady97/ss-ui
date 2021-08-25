@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import scriptReducer from './scriptReducer';
 import scriptContext from './scriptContext';
 
-import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS } from '../../types';
+import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -80,6 +80,34 @@ const ScriptState = props => {
         })
     }
 
+    const addScript = async ( formData ) => {
+
+        let token = await authProvider.getIdToken();
+        token = token.idToken.rawIdToken;
+
+        const data = {
+            types: formData.types,
+            command: formData.command,
+            alias: formData.alias,
+            parameter: formData.command.includes("$param")
+        }
+
+        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/script`;
+
+        const responseAddScript = await fetch(datastore_url, 
+                                                { method: 'POST',
+                                                headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                body: JSON.stringify(data)
+                                                });
+        
+        const resultAddScript = responseAddScript.json();                                        
+
+        dispatch({
+            type: ADD_SCRIPT,
+            payload: {msg: resultAddScript.msg }
+        })
+    }
+
 
     return (
         <scriptContext.Provider
@@ -88,7 +116,8 @@ const ScriptState = props => {
                 selected_script: state.selected_script,
                 getScripts: getScripts,
                 selectScript: selectScript,
-                cleanScripts: cleanScripts
+                cleanScripts: cleanScripts,
+                addScript: addScript
             }}
         >
             {props.children}
