@@ -68,6 +68,7 @@ const ScriptState = props => {
     }
 
     const selectScript = (scripts) => {
+        
         dispatch({
             type: SET_SCRIPTS,
             payload: scripts

@@ -7,7 +7,7 @@ import processQContext from './processQContext';
 
 import { 
     SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
-    SET_ALERT, LOAD_SQUEUE_ADMIN
+    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT
 } from '../../types';
 
 import getStatus from '../../functions/getStatus';
@@ -24,7 +24,8 @@ const ProcessQState = props => {
         loading: false,
         alert: false,
         alertmsg: null,
-        alertstatus: null
+        alertstatus: null,
+        process_ToEdit: null
     }
 
     const [ state, dispatch ] = useReducer(processQReducer, initialState);
@@ -39,10 +40,10 @@ const ProcessQState = props => {
         state.queue.forEach(process => {
 
             const payload = {
-                server: process.server.id,
-                user: process.exec_user.id,
-                script: process.script.id,
-                parameter: process.parameter !== null ? process.parameter.id : 1,
+                server: process.server_id,
+                user: process.exec_id,
+                script: process.script_id,
+                parameter: process.parameter_id !== null ? process.parameter_id : 1,
                 validation: process.validation
             }
 
@@ -76,7 +77,11 @@ const ProcessQState = props => {
 
                 dispatch({
                     type: 'RESPONSE',
-                    payload: res.result.responses
+                    payload: {
+                        response: res.result.responses,
+                        msg: res.result.msg,
+                        status: res.result.status
+                    }
                 });
                 stopInterval();
             }
@@ -89,12 +94,20 @@ const ProcessQState = props => {
                                  
     }
 
-    const setQueue = (queue) => {
+    const setQueue = (del, queue) => {
 
-        dispatch({
-            type: SET_QUEUE,
-            payload: queue
-        });
+        if(!del){
+            dispatch({
+                type: SET_QUEUE,
+                payload: queue
+            });
+        }else{
+            dispatch({
+                type: AFTER_DELETE,
+                payload: queue
+            });
+        }
+        
 
     }
 
@@ -136,13 +149,11 @@ const ProcessQState = props => {
         state.queue.forEach(process => {
 
             const payload = {
-                
-                id_user: process.exec_user.id,
-                id_server: process.server.id,
-                id_script: process.script.id,
-                id_parameter: process.parameter !== null ? process.parameter.id : 1,
+                id_user: process.exec_id,
+                id_server: process.server_id,
+                id_script: process.script_id,
+                id_parameter: process.parameter_id !== null ? process.parameter_id : 1,
                 validation: process.validation
-                
             };
 
             processes.push(payload);
@@ -199,13 +210,18 @@ const ProcessQState = props => {
             for (let i=0; i<resultQueue.length; i++){
 
                 if (flag === 0 ) {
+
                     const process = {
-                        server: {id: resultQueue[i]['id_server'], app: resultQueue[i]['app'], env: resultQueue[i]['environment']},
-                        exec_user: {id: resultQueue[i]['id_user'], name: resultQueue[i]['execuser_name']},
-                        script: {id: resultQueue[i]['id_script'], alias: resultQueue[i]['script_alias']},
-                        parameter: {id: resultQueue[i]['id_parameter'], param: resultQueue[i]['param']},
-                        validation: resultQueue[i]['validation'],
-                        tableData: {id: i}
+                        server_id: resultQueue[i]['id_server'],
+                        server_app: resultQueue[i]['app'],
+                        server_env: resultQueue[i]['environment'],
+                        exec_id: resultQueue[i]['id_user'], 
+                        exec_name: resultQueue[i]['execuser_name'],
+                        script_id: resultQueue[i]['id_script'], 
+                        script_alias: resultQueue[i]['script_alias'],
+                        parameter_id: resultQueue[i]['id_parameter'], 
+                        parameter_param: resultQueue[i]['param'],
+                        validation: resultQueue[i]['validation']
                     }
                     
                     data.push(process)
@@ -273,6 +289,17 @@ const ProcessQState = props => {
 
     }
 
+    const setProcToEdit = (index) => {
+
+        const process = state.queue[index];
+
+        dispatch({
+            type: SET_PTOEDIT,
+            payload: process
+        });
+
+    }
+
     return (
         <processQContext.Provider
             value={{
@@ -286,6 +313,7 @@ const ProcessQState = props => {
                 alert: state.alert,
                 alertmsg: state.alertmsg,
                 alertstatus: state.alertstatus,
+                process_ToEdit: state.processToEdit,
                 runQueue: runQueue,
                 setQueue: setQueue,
                 setLoading: setLoading,
@@ -294,7 +322,8 @@ const ProcessQState = props => {
                 saveQueue: saveQueue,
                 cleanAlias: cleanAlias,
                 setAlert: setAlert,
-                getAllQueues: getAllQueues
+                getAllQueues: getAllQueues,
+                setProcToEdit: setProcToEdit
             }}
         >
             {props.children}

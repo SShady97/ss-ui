@@ -5,6 +5,7 @@ import Input from '@material-ui/core/Input';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import InputLabel from '@material-ui/core/InputLabel';
 import DialogActions from '@material-ui/core/DialogActions';
+import Tooltip from "@material-ui/core/Tooltip";
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
@@ -47,16 +48,20 @@ const SaveQueueModal = () => {
 
   return (
     <div>
-        <Button
-            variant="contained"
-            color="default"
-            style={{ width: "100%", fontWeight: "bold" }}
-            startIcon={<Save />}
-            onClick={handleClickOpen}
-            disabled={(queue.length > 0 && alias === null) ? false : true}
-        >
-            Guardar
-        </Button>
+        <Tooltip title={"Guardar Cola"}>
+          <span>
+            <Button
+                variant="contained"
+                color="default"
+                style={{ width: "100%", fontWeight: "bold" }}
+                startIcon={<Save />}
+                onClick={handleClickOpen}
+                disabled={(queue.length > 0 && alias === null) ? false : true}
+            >
+                Guardar
+            </Button>
+          </span>
+        </Tooltip>
         <Dialog
             fullScreen={fullScreen}
             open={open}

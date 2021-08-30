@@ -42,7 +42,7 @@ const ActionsModal = () => {
         className={classes.boton}
         startIcon={<CodeIcon />} onClick={handleClickOpen}
       >
-        Acciones
+        VER ACCIONES DISPONIBLES
       </Button>
       <Dialog
         fullScreen={fullScreen}

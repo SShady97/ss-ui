@@ -1,8 +1,5 @@
 import React, { useContext } from "react";
-
-import tableIcons from '../../tableIcons';
-import MaterialTable from 'material-table';
-
+import MUIDataTable from "mui-datatables";
 import scriptContext from '../../../context/scripts/scriptContext';
 
 
@@ -14,26 +11,32 @@ const ActionsTable = () => {
     const { scripts } = scriptsContext;
 
     const columns = [
-        {
-            title:'Alias',
-            field: 'alias'
+        {   
+            name: 'alias',
+            label:'Alias'
+            
         },
-        {
-            title:'Comando PowerShell',
-            field: 'script'
+        {   
+            name: 'script',
+            label:'Comando PowerShell'
         }
     ];
 
+    const options = {
+        download: 'false',
+        print: 'false',
+        selectableRows: 'none',
+        viewColumns: 'false',
+        filter: 'false'
+    };
+
     return (
         <div>
-            <MaterialTable
-                title=""
-                icons={tableIcons}
+            <MUIDataTable 
+                title={""} 
+                data={scripts} 
                 columns={columns}
-                data={scripts}        
-                options={{
-                search: true
-                }}
+                options={options}  
             />
         </div>
     );

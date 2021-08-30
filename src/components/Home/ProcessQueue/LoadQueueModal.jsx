@@ -4,6 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
+import Tooltip from "@material-ui/core/Tooltip";
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Publish from '@material-ui/icons/Publish';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
@@ -40,15 +41,18 @@ const LoadQueueModal = () => {
 
   return (
     <div>
-        <Button
-            variant="contained"
-            color="primary"
-            style={{ width: "100%", fontWeight: "bold" }}
-            startIcon={<Publish />}
-            onClick={handleClickOpen}
-        >
-            Cargar
-        </Button>
+        
+        <Tooltip title={"Cargar Cola Guardada"}>
+          <Button
+              variant="contained"
+              color="primary"
+              style={{ width: "100%", fontWeight: "bold" }}
+              startIcon={<Publish />}
+              onClick={handleClickOpen}
+          >
+              Cargar
+          </Button>
+        </Tooltip>
         <Dialog
             fullScreen={fullScreen}
             open={open}

@@ -26,3 +26,5 @@ export const CLEAN_ALIAS = 'CLEAN_ALIAS';
 export const SAVE_QUEUE = 'SAVE_QUEUE';
 export const SET_ALERT = 'SET_ALERT';
 export const QUEUES = 'QUEUES';
+export const AFTER_DELETE = 'AFTER_DELETE';
+export const SET_PTOEDIT = 'SET_PTOEDIT';

@@ -7,8 +7,9 @@ import Appbar from '../Appbar';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import ActionsModal from './Actions/ActionsModal';
-import ProcessesTable from './ProcessQueue/ProcessesTable';
 import ResultsTable from './ResultsTable';
+
+import ProcessesDataTable from './ProcessQueue/ProcessesDataTable';
 
 import serverContext from '../../context/servers/serverContext';
 import scriptContext from '../../context/scripts/scriptContext';
@@ -85,11 +86,10 @@ const Home = () => {
                                 <Typography className={classes.heading}>COLA DE PROCESOS</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <ProcessesTable />
+                                <ProcessesDataTable />
                             </AccordionDetails>
                         </Accordion>
                     </Grid>
-
                     <Grid item xs={12} sm container direction="column" justifyContent="flex-start">
                         <Grid item >
                             <Box mt={2}>

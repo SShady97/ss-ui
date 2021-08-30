@@ -2,7 +2,7 @@ import React, { useContext, Fragment } from "react";
 
 import MUIDataTable from "mui-datatables";
 import CircularProgress from '@material-ui/core/CircularProgress';
-
+import Tooltip from "@material-ui/core/Tooltip";
 import Button from '@material-ui/core/Button';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ThemeProvider, useTheme } from '@material-ui/core/styles';
@@ -33,7 +33,14 @@ const ResultsTable = () => {
             name: "Acción"
         }, 
         {
-            name: "Resultado"
+            name: "Resultado",
+            options: {
+                customBodyRender: (value) => {
+                    return (
+                        <div>{value.length > 200 ? value.substring(0, 301) : value}</div>
+                    );
+                }
+            }
         }, 
         {
             name: "Usuario"
@@ -44,15 +51,17 @@ const ResultsTable = () => {
                 customBodyRender: (value) => {
                     
                     return (
-                        <Button
-                            variant="contained"
-                            color="primary"
-                            endIcon={<GetAppIcon />}
-                            style={{ width: "100%" }}
-                            href={`${process.env.REACT_APP_API_URL}/api/get-txt/${value}`}
-                        >
-                            Resultado
-                        </Button>
+                        <Tooltip title={"Descargar Resultado"}>
+                            <Button
+                                variant="contained"
+                                color="primary"
+                                endIcon={<GetAppIcon />}
+                                style={{ width: "100%" }}
+                                href={`${process.env.REACT_APP_API_URL}/api/get-txt/${value}`}
+                            >
+                                Resultado
+                            </Button>
+                        </Tooltip>
                     )
                 }
             }
@@ -94,7 +103,8 @@ const ResultsTable = () => {
                             },
                             MUIDataTableHeadCell: {
                                 data: {
-                                    fontWeight: "bold"
+                                    fontWeight: "bold",
+                                    alignItems: "center"
                                 }
                             }
                         }
