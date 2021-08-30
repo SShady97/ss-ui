@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import parameterReducer from './parameterReducer';
 import parameterContext from './parameterContext';
 
-import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS } from '../../types';
+import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -101,6 +101,33 @@ const ParameterState = props => {
         })
     }
 
+    const addParameter = async ( formData ) => {
+
+        let token = await authProvider.getIdToken();
+        token = token.idToken.rawIdToken;
+
+        const data = {
+            param: formData.param,
+            cat: formData.cat,
+            alias: formData.alias
+        }
+
+        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/parameter`;
+
+        const responseAddParameter = await fetch(datastore_url, 
+                                                { method: 'POST',
+                                                headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                body: JSON.stringify(data)
+                                                });
+        
+        const resultAddParameter = responseAddParameter.json();                                        
+
+        dispatch({
+            type: ADD_PARAMETER,
+            payload: {msg: resultAddParameter.msg }
+        })
+    }
+
 
     return (
         <parameterContext.Provider
@@ -110,7 +137,8 @@ const ParameterState = props => {
                 getParameters: getParameters,
                 getAllParameters: getAllParameters,
                 selectParameter: selectParameter,
-                cleanParameters: cleanParameters
+                cleanParameters: cleanParameters,
+                addParameter: addParameter
             }}
         >
             {props.children}

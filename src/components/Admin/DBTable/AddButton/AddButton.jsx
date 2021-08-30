@@ -4,27 +4,9 @@ import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 import Tooltip from "@material-ui/core/Tooltip";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from '@material-ui/icons/Close';
+import InputTextField from './InputTextField';
 
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
-
-// const FormTextField = withStyles({
-//     root: {
-//         '& label.Mui-focused': {
-//             color: 'green',
-//         },
-//         '& .MuiOutlinedInput-root': {
-//             '& fieldset': {
-//                 borderColor: 'yellow',
-//             },
-//             '&:hover fieldset': {
-//                 borderColor: 'black',
-//             },
-//             '&.Mui-focused fieldset': {
-//                 borderColor: 'red',
-//             },
-//         },
-//     },
-// })(TextField);
 
 const ColorButton = withStyles((theme) => ({
     root: {
@@ -107,7 +89,7 @@ const AddButton = ({ table, columns, addFunction, getFunction }) => {
                 <DialogContentText>
                     <form id="addForm" onSubmit={handleCreate} className={classes.root} noValidate autoComplete="off">
                         {columnsCopy.map((option) => (
-                            <TextField id={option.name} label={option.label} style={{ width: "100%" }} variant="outlined" />
+                            <InputTextField table={table} option={option}/>
                         ))}
                     </form>
                 </DialogContentText>

@@ -1,4 +1,4 @@
-import { SERVERS, SET_SERVER, CLEAN_SERVERS } from '../../types';
+import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER } from '../../types';
 
 const serverReducer = (state, action) => {
     switch(action.type) {
@@ -20,6 +20,12 @@ const serverReducer = (state, action) => {
                 ...state,
                 servers: [],
                 selected_server: null
+            };
+
+        case ADD_SERVER:
+            return {
+                ...state,
+                alert: action.payload.msg
             };
 
         default:
