@@ -35,7 +35,7 @@ const EditProcessButton = ({ rowIndex }) => {
         const server = {
             id: proc_toEdit.server_id,
             app: proc_toEdit.server_app,
-            env: proc_toEdit.server_env
+            environment: proc_toEdit.server_env
         };
 
         const exec_user = {

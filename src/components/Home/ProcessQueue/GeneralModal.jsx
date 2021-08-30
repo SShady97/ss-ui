@@ -80,7 +80,7 @@ const GeneralModal = ({ open, setOpen, addModal }) => {
         const process_queue = {
             server_id: selected_server.id,
             server_app: selected_server.app, 
-            server_env: selected_server.env,
+            server_env: selected_server.environment,
             exec_id: selected_exec.id,
             exec_name: selected_exec.name,
             script_id: selected_script.id,

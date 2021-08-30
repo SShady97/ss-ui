@@ -93,7 +93,7 @@ const ProcessForm = ({ setValidation, open }) => {
                     id="servers"
                     options={servers}
                     value={selected_server}
-                    getOptionLabel={(server) => (`${server.app} / ${server.env}`)}
+                    getOptionLabel={(server) => (`${server.app} / ${server.environment}`)}
                     getOptionSelected={(option, value) => option.id === value.id}
                     style={{ width: "100%" }}
                     onChange={(e, server) => handleChangeServer(server)}

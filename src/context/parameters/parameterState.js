@@ -45,6 +45,8 @@ const ParameterState = props => {
 
                     console.log(res.result)
 
+                    res.result.shift();
+
                     dispatch({
                         type: PARAMETERS,
                         payload: res.result

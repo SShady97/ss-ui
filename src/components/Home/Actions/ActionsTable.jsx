@@ -17,7 +17,7 @@ const ActionsTable = () => {
             
         },
         {   
-            name: 'script',
+            name: 'command',
             label:'Comando PowerShell'
         }
     ];

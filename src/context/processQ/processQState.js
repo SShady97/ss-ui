@@ -219,8 +219,9 @@ const ProcessQState = props => {
                         exec_name: resultQueue[i]['execuser_name'],
                         script_id: resultQueue[i]['id_script'], 
                         script_alias: resultQueue[i]['script_alias'],
-                        parameter_id: resultQueue[i]['id_parameter'], 
-                        parameter_param: resultQueue[i]['param'],
+                        script_parameter: resultQueue[i]['parameter'],
+                        parameter_id: (resultQueue[i]['id_parameter'] === 1 ? null : resultQueue[i]['id_parameter']), 
+                        parameter_param: (resultQueue[i]['param'] === 'No Aplica' ? null : resultQueue[i]['param']),
                         validation: resultQueue[i]['validation']
                     }
                     
