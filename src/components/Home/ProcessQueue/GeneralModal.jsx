@@ -68,6 +68,7 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
     const  { queue, setQueue, editProcess } = processesQContext;
 
     useEffect(() => {
+
         if(open === true && addModal === false){
             const proc_toEdit = queue[rowIndex];
     
@@ -86,7 +87,7 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
                 id: proc_toEdit.script_id,
                 alias: proc_toEdit.script_alias,
                 parameter: (proc_toEdit.script_parameter === 'No Aplica' ? null : proc_toEdit.script_parameter),
-                validation: proc_toEdit.validation === 'Si' ? true : false
+                validation: validation
             };
 
             let parameter = null;
@@ -103,6 +104,7 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
             selectScript(script);
             selectParameter(parameter);
         }
+
     }, [open]);
 
     useEffect(() => {
@@ -150,7 +152,7 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
             script_parameter: selected_script.parameter,
             parameter_id: (selected_parameter !== null ? selected_parameter.id : null),
             parameter_param: (selected_parameter !== null ? selected_parameter.param : null),
-            validation: (validation === true ? 'Si' : 'No')
+            validation: validation
         }
 
         setOpen(false);

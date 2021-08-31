@@ -26,12 +26,11 @@ const ProcessForm = ({ setValidation, open }) => {
         
         if(open === true){
             if(selected_script){
-                setChecked(selected_script.validation)
+                setChecked(selected_script.validation);
             }
-            
         }
         
-    }, [open])
+    }, [open]);
 
     const handleChangeServer = (server) => {
 
