@@ -1,13 +1,9 @@
-FROM node:alpine
-
-WORKDIR '/frontend'
-
-COPY package.json .
-
+FROM node:14-alpine AS builder
+WORKDIR /app
+COPY package.json ./
 RUN npm install
-
-RUN chown -R node.node /frontend
-
 COPY . .
+RUN npm run build
 
-CMD [ "npm", "run", "start" ]
+FROM nginx:1.19-alpine AS server
+COPY --from=builder ./app/build /usr/share/nginx/html

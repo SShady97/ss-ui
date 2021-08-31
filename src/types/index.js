@@ -31,3 +31,4 @@ export const SET_ALERT = 'SET_ALERT';
 export const QUEUES = 'QUEUES';
 export const AFTER_DELETE = 'AFTER_DELETE';
 export const SET_PTOEDIT = 'SET_PTOEDIT';
+export const EDIT_PROCESS = 'EDIT_PROCESS';

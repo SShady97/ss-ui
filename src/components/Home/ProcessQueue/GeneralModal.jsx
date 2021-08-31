@@ -49,9 +49,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-const GeneralModal = ({ open, setOpen, addModal }) => {
-
-
+const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
 
     const classes = useStyles();
     const theme = useTheme();
@@ -66,10 +64,55 @@ const GeneralModal = ({ open, setOpen, addModal }) => {
     const processesQContext = useContext(processQContext);
     
     const  { selected_server, selectServer } = serversContext;
-    const  { selected_exec, selectExec } = execusersContext;
+    const  { selected_exec, selectExec, getExecUsers } = execusersContext;
     const  { selected_script, selectScript } = scriptsContext;
-    const  { selected_parameter, selectParameter } = parametersContext;
-    const  { setQueue, process_ToEdit } = processesQContext;
+    const  { selected_parameter, selectParameter, getParameters } = parametersContext;
+    const  { queue, setQueue, process_ToEdit, editProcess } = processesQContext;
+
+    useEffect(() => {
+        if(open === true && addModal === false){
+            const proc_toEdit = queue[rowIndex];
+    
+            const server = {
+                id: proc_toEdit.server_id,
+                app: proc_toEdit.server_app,
+                environment: proc_toEdit.server_env
+            };
+
+            const exec_user = {
+                id: proc_toEdit.exec_id,
+                name: proc_toEdit.exec_name
+            };
+
+            const script = {
+                id: proc_toEdit.script_id,
+                alias: proc_toEdit.script_alias,
+                parameter: (proc_toEdit.script_parameter === 'No Aplica' ? null : proc_toEdit.script_parameter),
+                validation: proc_toEdit.validation === 'Si' ? true : false
+            };
+
+            let parameter = null;
+
+            if(proc_toEdit.parameter_id !== null){
+                parameter = {
+                    id: proc_toEdit.parameter_id,
+                    param: proc_toEdit.parameter_param
+                };
+            }
+
+            selectServer(server);
+            selectExec(exec_user);
+            selectScript(script);
+            selectParameter(parameter);
+        }
+    }, [open]);
+
+    useEffect(() => {
+        if(selected_server !== null && addModal === false){
+            getExecUsers(selected_server.id);
+            getParameters(selected_server.id);
+        }
+    }, [selected_server])
 
     const handleClose = () => {
         setOpen(false);
@@ -101,7 +144,7 @@ const GeneralModal = ({ open, setOpen, addModal }) => {
         const process_queue = {
             server_id: selected_server.id,
             server_app: selected_server.app, 
-            server_env: selected_server.env,
+            server_env: selected_server.environment,
             exec_id: selected_exec.id,
             exec_name: selected_exec.name,
             script_id: selected_script.id,
@@ -112,10 +155,8 @@ const GeneralModal = ({ open, setOpen, addModal }) => {
             validation: (validation === true ? 'Si' : 'No')
         }
 
-        console.log(process_queue)
-
         setOpen(false);
-        //setQueue(false, process_queue); */
+        editProcess(process_queue, rowIndex);
 
     }
 

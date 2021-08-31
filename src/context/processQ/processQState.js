@@ -7,7 +7,7 @@ import processQContext from './processQContext';
 
 import { 
     SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
-    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT
+    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT, EDIT_PROCESS
 } from '../../types';
 
 import getStatus from '../../functions/getStatus';
@@ -301,6 +301,15 @@ const ProcessQState = props => {
 
     }
 
+    const editProcess = (new_process, rowIndex) => {
+
+        state.queue.splice(rowIndex, 1, new_process);
+        dispatch({
+            type: EDIT_PROCESS,
+            payload: state.queue
+        });
+    }
+
     return (
         <processQContext.Provider
             value={{
@@ -324,7 +333,8 @@ const ProcessQState = props => {
                 cleanAlias: cleanAlias,
                 setAlert: setAlert,
                 getAllQueues: getAllQueues,
-                setProcToEdit: setProcToEdit
+                setProcToEdit: setProcToEdit,
+                editProcess: editProcess
             }}
         >
             {props.children}

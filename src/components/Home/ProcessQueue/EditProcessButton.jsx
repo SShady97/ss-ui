@@ -19,9 +19,9 @@ const EditProcessButton = ({ rowIndex }) => {
     const processesQContext = useContext(processQContext);
     
     const  { selectServer } = serversContext;
-    const  { selectExec } = execusersContext;
+    const  { selectExec, getExecUsers } = execusersContext;
     const  { selectScript } = scriptsContext;
-    const  { selectParameter } = parametersContext;
+    const  { selectParameter, getParameters } = parametersContext;
     const  { queue, setProcToEdit } = processesQContext;
 
     const [open, setOpen] = useState(false);
@@ -29,40 +29,6 @@ const EditProcessButton = ({ rowIndex }) => {
 
     const handleOpen = () => {
         setOpen(true);
-        
-        const proc_toEdit = queue[rowIndex];
-    
-        const server = {
-            id: proc_toEdit.server_id,
-            app: proc_toEdit.server_app,
-            environment: proc_toEdit.server_env
-        };
-
-        const exec_user = {
-            id: proc_toEdit.exec_id,
-            name: proc_toEdit.exec_name
-        };
-
-        const script = {
-            id: proc_toEdit.script_id,
-            alias: proc_toEdit.script_alias,
-            parameter: (proc_toEdit.script_parameter === 'No Aplica' ? null : proc_toEdit.script_parameter),
-            validation: proc_toEdit.validation === 'Si' ? true : false
-        };
-
-        let parameter = null;
-
-        if(proc_toEdit.parameter_id !== null){
-            parameter = {
-                id: proc_toEdit.parameter_id,
-                param: proc_toEdit.parameter_param
-            };
-        }
-
-        selectServer(server);
-        selectExec(exec_user);
-        selectScript(script);
-        selectParameter(parameter);
     };
 
 
@@ -73,7 +39,7 @@ const EditProcessButton = ({ rowIndex }) => {
                     <EditIcon className={EditIcon} />
                 </Button>
             </Tooltip>
-            <GeneralModal open={open} setOpen={setOpen} addModal={false}/>
+            <GeneralModal open={open} setOpen={setOpen} addModal={false} rowIndex={rowIndex} />
         </Fragment>
     );
 }
