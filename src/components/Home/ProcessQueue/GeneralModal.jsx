@@ -1,8 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { IconButton, TextField, Button, Box, useMediaQuery } from "@material-ui/core";
+import { IconButton, Button, Box, useMediaQuery } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import Tooltip from "@material-ui/core/Tooltip";
-import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from '@material-ui/icons/Close';
 import ProcessForm from './ProcessForm';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
@@ -67,7 +65,7 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
     const  { selected_exec, selectExec, getExecUsers } = execusersContext;
     const  { selected_script, selectScript } = scriptsContext;
     const  { selected_parameter, selectParameter, getParameters } = parametersContext;
-    const  { queue, setQueue, process_ToEdit, editProcess } = processesQContext;
+    const  { queue, setQueue, editProcess } = processesQContext;
 
     useEffect(() => {
         if(open === true && addModal === false){
