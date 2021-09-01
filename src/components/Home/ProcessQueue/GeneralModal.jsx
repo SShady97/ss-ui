@@ -87,7 +87,7 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
                 id: proc_toEdit.script_id,
                 alias: proc_toEdit.script_alias,
                 parameter: (proc_toEdit.script_parameter === 'No Aplica' ? null : proc_toEdit.script_parameter),
-                validation: validation
+                validation: proc_toEdit.validation
             };
 
             let parameter = null;
