@@ -5,6 +5,8 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 
+import DeleteButton from './DeleteButton';
+
 const ColorButton = withStyles((theme) => ({
     root: {
         color: theme.palette.getContrastText('#517461'),
@@ -56,11 +58,12 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const RowDialog = ({ columns, rowValues, toogle, open }) => {
+const RowDialog = ({ columns, rowValues, toogle, open, getFunction, deleteFunction }) => {
 
     const classes = useStyles();
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    let id = null;
 
     const handleClose = () => {
         toogle();
@@ -72,6 +75,7 @@ const RowDialog = ({ columns, rowValues, toogle, open }) => {
         if(column.name !== 'id') {
             result.push(column.label);
         } else {
+            id = rowValues[index];
             rowValuesCopy.splice(index, 1);
         }
         return result;
@@ -93,9 +97,7 @@ const RowDialog = ({ columns, rowValues, toogle, open }) => {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button autoFocus onClick={handleClose} color="secondary">
-                    Eliminar
-                </Button>
+                <DeleteButton id ={id} handleClose={handleClose} getFunction={getFunction} deleteFunction={deleteFunction} />
                 <Button onClick={handleClose} autoFocus color="disabled" varitant="contained">
                     Cancelar
                 </Button>

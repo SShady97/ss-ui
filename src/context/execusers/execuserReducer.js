@@ -1,4 +1,4 @@
-import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER } from '../../types';
+import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER, DELETE_EXECUSER } from '../../types';
 
 const execuserReducer = (state, action) => {
     switch(action.type) {
@@ -23,6 +23,12 @@ const execuserReducer = (state, action) => {
             };
 
         case ADD_EXECUSER:
+            return {
+                ...state,
+                alert: action.payload.msg
+            };
+
+        case DELETE_EXECUSER:
             return {
                 ...state,
                 alert: action.payload.msg

@@ -1,9 +1,11 @@
 import React , { useContext } from "react";
 
-import { Button, useMediaQuery } from "@material-ui/core";
+import { Button, useMediaQuery, Popover, Box } from "@material-ui/core";
+import ErrorIcon from '@material-ui/icons/Error';
 import { Dialog, DialogActions, DialogContent, DialogContentText } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
 import { withStyles, useTheme } from "@material-ui/core/styles";
+
 import processQContext from '../../../context/processQ/processQContext';
 
 const ColorButton = withStyles((theme) => ({
@@ -19,7 +21,38 @@ const ColorButton = withStyles((theme) => ({
 const QueueModal = ({ open, toogle }) => {
 
     const processQsContext = useContext(processQContext);
-    const { queueA } = processQsContext;
+    const { queueA, getAllQueues, deleteQueue } = processQsContext;
+
+    let title = null;
+    let queue_id = null;
+    if ( queueA[0] ) {
+        title = queueA[0].alias;
+        queue_id = queueA[0].queue_id;
+    }
+
+    const theme = useTheme();
+    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const [anchorEl, setAnchorEl] = React.useState(null);
+    const popoverOpen = Boolean(anchorEl);
+    const deletePopover = popoverOpen ? 'delete-popconfirm' : undefined;
+
+    const handleClose = () => {
+        toogle();
+    };
+
+    const handleDelete = () => {
+        deleteQueue(queue_id);
+        getAllQueues();
+        handleClose();
+    };
+
+    const handleClick = (event) => {
+        setAnchorEl(event.currentTarget);
+    };
+
+    const handleCancel = () => {
+        setAnchorEl(null);
+    };
 
     const columns = [
         {
@@ -32,11 +65,11 @@ const QueueModal = ({ open, toogle }) => {
         },
         {
             name: 'exec_user',
-            label:'Usuaruio',
+            label:'Usuario',
         },
         {
             name: 'script',
-            label:'DAccion',
+            label:'Acción',
         },
         {
             name: 'parameter',
@@ -44,22 +77,9 @@ const QueueModal = ({ open, toogle }) => {
         },
         {
             name: 'validation',
-            label:'Validacion',
+            label:'Validación',
         }
     ];
-
-    let title = null;
-    if ( queueA[0] ) {
-        title = queueA[0].alias;
-    }
-
-    // const classes = useStyles();
-    const theme = useTheme();
-    const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-
-    const handleClose = () => {
-        toogle();
-    };
 
     const options = {
         download: 'false',
@@ -82,9 +102,36 @@ const QueueModal = ({ open, toogle }) => {
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Button autoFocus onClick={handleClose} color="secondary">
+                <Button autoFocus aria-describedby={deletePopover} onClick={handleClick} color="secondary">
                     Eliminar
                 </Button>
+                <Popover 
+                id={deletePopover}
+                open={popoverOpen}
+                anchorEl={anchorEl}
+                onClose={handleCancel}
+                anchorOrigin={{
+                vertical: 'center',
+                horizontal: 'center',
+                }}
+                transformOrigin={{
+                vertical: 'bottom',
+                horizontal: 'center',
+                }}
+                >
+                    <Box fullWidth display="flex" pt={1} justifyContent="center" alignItems="center">
+                        <ErrorIcon/>
+                        <Box ml={1}>
+                            ¿Está seguro?
+                        </Box>
+                    </Box>
+                    <Button autoFocus onClick={handleCancel} color="disabled">
+                        Cancelar
+                    </Button>
+                    <Button autoFocus onClick={handleDelete} color="primary">
+                        Confirmar
+                    </Button>
+                </Popover>
                 <ColorButton onClick={handleClose} autoFocus>
                     Cerrar
                 </ColorButton>

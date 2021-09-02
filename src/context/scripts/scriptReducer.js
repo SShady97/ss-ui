@@ -1,4 +1,4 @@
-import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT } from '../../types';
+import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT, DELETE_SCRIPT } from '../../types';
 
 const scriptReducer = (state, action) => {
     switch(action.type) {
@@ -23,6 +23,12 @@ const scriptReducer = (state, action) => {
             };
 
         case ADD_SCRIPT:
+            return {
+                ...state,
+                alert: action.payload.msg
+            };
+
+        case DELETE_SCRIPT:
             return {
                 ...state,
                 alert: action.payload.msg

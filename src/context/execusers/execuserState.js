@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import execuserReducer from './execuserReducer';
 import execuserContext from './execurserContext';
 
-import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER } from '../../types';
+import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER, DELETE_EXECUSER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -127,6 +127,28 @@ const ExecuserState = props => {
         })
     }
 
+    const deleteExec = async (exec_user_id) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+            
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/exec_user/${exec_user_id}`;
+
+            const responseDeleteExecUser = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
+            const resultDeleteExecUser = await responseDeleteExecUser.json();
+
+            dispatch({
+                type: DELETE_EXECUSER,
+                payload: {msg: resultDeleteExecUser.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <execuserContext.Provider
@@ -137,7 +159,8 @@ const ExecuserState = props => {
                 getAllExecUsers: getAllExecUsers,
                 selectExec: selectExec,
                 cleanExec: cleanExec,
-                addExec: addExec
+                addExec: addExec,
+                deleteExec: deleteExec
             }}
         >
             {props.children}

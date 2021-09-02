@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => ({
         borderRadius: 10,
         margin: '5%',
         width: '90%',
-        backgroundColor: theme.palette.text.disabled,
+        backgroundColor: theme.palette.action.disabled,
     }
 }));
 

@@ -7,7 +7,7 @@ import processQContext from './processQContext';
 
 import { 
     SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
-    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT
+    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE
 } from '../../types';
 
 import getStatus from '../../functions/getStatus';
@@ -196,7 +196,7 @@ const ProcessQState = props => {
     const loadSavedQueue = async (queue, flag=0) => {
 
         const alias = queue.alias;
-        const queue_id = queue.id
+        const queue_id = queue.id;
         let token = await authProvider.getIdToken();
         token = token.idToken.rawIdToken;
 
@@ -237,6 +237,7 @@ const ProcessQState = props => {
 
                     const process = {
                         alias: alias,
+                        queue_id: queue_id,
                         server_app: resultQueue[i]['app'],
                         server_env: resultQueue[i]['environment'],
                         exec_user: resultQueue[i]['execuser_name'],
@@ -301,6 +302,28 @@ const ProcessQState = props => {
 
     }
 
+    const deleteQueue = async (queue_id) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+            
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/queue/${queue_id}`;
+
+            const responseDeleteQueue = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
+            const resultDeleteQueue = await responseDeleteQueue.json();
+
+            dispatch({
+                type: DELETE_QUEUE,
+                payload: {msg: resultDeleteQueue.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <processQContext.Provider
             value={{
@@ -324,7 +347,8 @@ const ProcessQState = props => {
                 cleanAlias: cleanAlias,
                 setAlert: setAlert,
                 getAllQueues: getAllQueues,
-                setProcToEdit: setProcToEdit
+                setProcToEdit: setProcToEdit,
+                deleteQueue: deleteQueue
             }}
         >
             {props.children}

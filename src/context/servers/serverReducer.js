@@ -1,4 +1,4 @@
-import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER } from '../../types';
+import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER, DELETE_SERVER } from '../../types';
 
 const serverReducer = (state, action) => {
     switch(action.type) {
@@ -27,6 +27,12 @@ const serverReducer = (state, action) => {
                 ...state,
                 alert: action.payload.msg
             };
+
+        case DELETE_SERVER:
+                return {
+                    ...state,
+                    alert: action.payload.msg
+                };
 
         default:
             return 'Tipo desconocido';

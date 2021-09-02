@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import scriptReducer from './scriptReducer';
 import scriptContext from './scriptContext';
 
-import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT } from '../../types';
+import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT, DELETE_SCRIPT } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -109,6 +109,28 @@ const ScriptState = props => {
         })
     }
 
+    const deleteScript = async (script_id) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+            
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/script/${script_id}`;
+
+            const responseDeleteScript = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
+            const resultDeleteScript = await responseDeleteScript.json();
+
+            dispatch({
+                type: DELETE_SCRIPT,
+                payload: {msg: resultDeleteScript.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <scriptContext.Provider
@@ -118,7 +140,8 @@ const ScriptState = props => {
                 getScripts: getScripts,
                 selectScript: selectScript,
                 cleanScripts: cleanScripts,
-                addScript: addScript
+                addScript: addScript,
+                deleteScript: deleteScript
             }}
         >
             {props.children}

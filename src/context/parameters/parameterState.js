@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import parameterReducer from './parameterReducer';
 import parameterContext from './parameterContext';
 
-import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER } from '../../types';
+import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER, DELETE_PARAMETER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -130,6 +130,28 @@ const ParameterState = props => {
         })
     }
 
+    const deleteParameter = async (parameter_id) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+            
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/parameter/${parameter_id}`;
+
+            const responseDeleteParameter = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
+            const resultDeleteParameter = await responseDeleteParameter.json();
+
+            dispatch({
+                type: DELETE_PARAMETER,
+                payload: {msg: resultDeleteParameter.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
 
     return (
         <parameterContext.Provider
@@ -140,7 +162,8 @@ const ParameterState = props => {
                 getAllParameters: getAllParameters,
                 selectParameter: selectParameter,
                 cleanParameters: cleanParameters,
-                addParameter: addParameter
+                addParameter: addParameter,
+                deleteParameter: deleteParameter
             }}
         >
             {props.children}

@@ -6,7 +6,7 @@ import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 
 import AddButton from './AddButton/AddButton';
 import QueueModal from './QueueModal';
-import RowDialog from './RowModal/RowDialog';
+import RowDialog from './RowDialog/RowDialog';
 
 import execuserContext from '../../../context/execusers/execurserContext';
 import serverContext from '../../../context/servers/serverContext';
@@ -27,13 +27,13 @@ const DBTable = ({ table }) => {
     const toggleQueueModal = () => setQueueModal(!queueModal);
     
     const execusersContext = useContext(execuserContext);
-    const { exec_users, getAllExecUsers, addExec } = execusersContext;
+    const { exec_users, getAllExecUsers, addExec, deleteExec } = execusersContext;
     const serversContext = useContext(serverContext);
-    const { servers, getServers, addServer } = serversContext;
+    const { servers, getServers, addServer, deleteServer } = serversContext;
     const scriptsContext = useContext(scriptContext);
-    const { scripts, getScripts, addScript } = scriptsContext;
+    const { scripts, getScripts, addScript, deleteScript } = scriptsContext;
     const parametersContext = useContext(parameterContext);
-    const { parameters, getAllParameters, addParameter } = parametersContext;
+    const { parameters, getAllParameters, addParameter, deleteParameter } = parametersContext;
     const processQsContext = useContext(processQContext);
     const { savedQueues, getAllQueues, loadSavedQueue } = processQsContext;
 
@@ -41,6 +41,7 @@ const DBTable = ({ table }) => {
     let data = null;
     let addFunction = null;
     let getFunction = null;
+    let deleteFunction = null;
 
     useEffect(() => {
         getAllExecUsers();
@@ -69,6 +70,7 @@ const DBTable = ({ table }) => {
             ];
             addFunction = addExec;
             getFunction = getAllExecUsers;
+            deleteFunction = deleteExec;
             data = exec_users;
             break;
 
@@ -97,6 +99,7 @@ const DBTable = ({ table }) => {
             ];
             addFunction = addServer;
             getFunction = getServers;
+            deleteFunction = deleteServer;
             data = servers;  
             break;
 
@@ -134,6 +137,7 @@ const DBTable = ({ table }) => {
             ];
             addFunction = addScript;
             getFunction = getScripts;
+            deleteFunction = deleteScript;
             data = scripts;   
             break;
 
@@ -158,6 +162,7 @@ const DBTable = ({ table }) => {
             ];
             addFunction = addParameter;
             getFunction = getAllParameters;
+            deleteFunction = deleteParameter;
             data = parameters;   
             break;
 
@@ -239,8 +244,16 @@ const DBTable = ({ table }) => {
                 columns={columns}
                 options={options}
             />
-            <RowDialog rowValues={rowValues} toogle={toggleModal} open={modal} columns={columns} />
-            <QueueModal toogle={toggleQueueModal} open={queueModal} />
+            <RowDialog 
+                rowValues={rowValues} 
+                toogle={toggleModal} 
+                open={modal} 
+                columns={columns} 
+                getFunction={getFunction}
+                deleteFunction={deleteFunction}/>
+            <QueueModal 
+                toogle={toggleQueueModal} 
+                open={queueModal} />
         </ThemeProvider>
     );
 };

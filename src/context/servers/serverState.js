@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import serverReducer from './serverReducer';
 import serverContext from './serverContext';
 
-import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER } from '../../types';
+import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER, DELETE_SERVER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -107,6 +107,28 @@ const ServerState = props => {
         })
     }
 
+    const deleteServer = async (server_id) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+            
+            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/server/${server_id}`;
+
+            const responseDeleteServer = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
+            const resultDeleteServer = await responseDeleteServer.json();
+
+            dispatch({
+                type: DELETE_SERVER,
+                payload: {msg: resultDeleteServer.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <serverContext.Provider
             value={{
@@ -115,7 +137,8 @@ const ServerState = props => {
                 getServers: getServers,
                 selectServer: selectServer,
                 cleanServers: cleanServers,
-                addServer: addServer
+                addServer: addServer,
+                deleteServer: deleteServer
             }}
         >
             {props.children}
