@@ -21,7 +21,7 @@ const processQReducer = (state, action) => {
             return {
                 ...state,
                 res: action.payload.response,
-                loading: false,
+                loading: null,
                 alertmsg: action.payload.msg,
                 alertstatus: action.payload.status,
                 alert: true
@@ -42,8 +42,12 @@ const processQReducer = (state, action) => {
         case LOAD_SQUEUE:
         return {
             ...state,
-            queue: action.payload[0],
-            alias: action.payload[1]
+            queue: action.payload.data,
+            alias: action.payload.alias,
+            alertmsg: action.payload.msg,
+            alertstatus: action.payload.status,
+            alert: true,
+            loading: null
         }
 
         case LOAD_SQUEUE_ADMIN:
@@ -89,7 +93,10 @@ const processQReducer = (state, action) => {
         case EDIT_PROCESS:
         return {
             ...state,
-            queue: action.payload
+            queue: action.payload.queue,
+            alertmsg: action.payload.msg,
+            alertstatus: action.payload.status,
+            alert: true
         }
 
         default:

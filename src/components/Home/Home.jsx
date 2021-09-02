@@ -1,5 +1,5 @@
 import React, { Fragment, useEffect, useContext, useState } from 'react';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import { Grid, Container, Box, Accordion, Typography, makeStyles, AccordionSummary, AccordionDetails, Divider } from '@material-ui/core';
 import { ExpandMore } from '@material-ui/icons';
 
@@ -44,7 +44,7 @@ const Home = () => {
 
     const { getServers } = serversContext;
     const { getScripts } = scriptsContext;
-    const  { alertmsg, alertstatus, alert, setAlert } = processesQContext;
+    const  { alertmsg, alertstatus, alert, setAlert, loading } = processesQContext;
 
 
     
@@ -85,8 +85,15 @@ const Home = () => {
                             >
                                 <Typography className={classes.heading}>COLA DE PROCESOS</Typography>
                             </AccordionSummary>
-                            <AccordionDetails>
-                                <ProcessesDataTable />
+                            <AccordionDetails style={{display: "flex", justifyContent: "center"}}>
+                                {loading === 'queue'
+                                    ?
+                                        <div style={{ margin: "50px" }}>
+                                            <CircularProgress />
+                                        </div>
+                                    :
+                                        <ProcessesDataTable />
+                                }
                             </AccordionDetails>
                         </Accordion>
                     </Grid>
@@ -98,7 +105,15 @@ const Home = () => {
                             <Box display="flex" justifyContent="center">
                                 <h3>RESULTADOS</h3>
                             </Box>
-                            <ResultsTable />
+                            {loading === 'results'
+
+                                ?
+                                    <div style={{display: "flex", justifyContent: "center", margin: "50px"}}>
+                                        <CircularProgress />
+                                    </div>
+                                :
+                                    <ResultsTable />
+                            }
                         </Grid>
                     </Grid>
                 </Grid>

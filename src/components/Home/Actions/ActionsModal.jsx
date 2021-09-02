@@ -11,20 +11,12 @@ import CodeIcon from '@material-ui/icons/Code';
 
 import ActionsTable from './ActionsTable';
 
-const useStyles = makeStyles((theme) => ({
-  boton: {
-    width: '100%',
-    backgroundColor: theme.palette.background.paper,
-  }
-}));
-
 const ActionsModal = () => {
 
   const [open, setOpen] = useState(false);
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
-  const classes = useStyles();
 
   const handleClickOpen = () => {
     setOpen(true);
@@ -38,8 +30,9 @@ const ActionsModal = () => {
   return (
     <div>
       <Button
-        variant="outlined"
-        className={classes.boton}
+        variant="contained"
+        color="primary"
+        style={{ width: '100%', fontWeight: 'bold'}}
         startIcon={<CodeIcon />} onClick={handleClickOpen}
       >
         VER ACCIONES DISPONIBLES
@@ -58,7 +51,7 @@ const ActionsModal = () => {
           </DialogContentText>
         </DialogContent>
         <DialogActions>
-          <Button onClick={handleClose} color="primary" autoFocus>
+          <Button onClick={handleClose} style={{ fontWeight: 'bold' }} color="secondary" variant='contained' autoFocus>
             Cerrar
           </Button>
         </DialogActions>

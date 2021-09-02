@@ -18,6 +18,7 @@ const ServerState = props => {
 
     const [ state, dispatch ] = useReducer(serverReducer, initialState)
 
+    const url = `${window.location.protocol}//${window.location.hostname}`;
 
     const getServers = async () => {
 
@@ -26,7 +27,7 @@ const ServerState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
 
-            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/servers`;
+            const api_url = `${url}:5000/api/win-remote-client/servers`;
 
             const responseServers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const resultServers = await responseServers.json();
@@ -91,7 +92,7 @@ const ServerState = props => {
             ip: formData.ip
         }
 
-        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/server`;
+        const datastore_url = `${url}:8181/data/add/server`;
 
         const responseAddServer = await fetch(datastore_url, 
                                                 { method: 'POST',

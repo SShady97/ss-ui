@@ -18,6 +18,7 @@ const ExecuserState = props => {
 
     const [ state, dispatch ] = useReducer(execuserReducer, initialState)
 
+    const url = `${window.location.protocol}//${window.location.hostname}`;
 
     const getExecUsers = async (server_id) => {
 
@@ -26,7 +27,7 @@ const ExecuserState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
 
-            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/exec_users/server/${server_id}`;
+            const api_url = `${url}:5000/api/win-remote-client/exec_users/server/${server_id}`;
 
             const responseExecUsers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const resultExecUsers = await responseExecUsers.json();
@@ -72,7 +73,7 @@ const ExecuserState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/exec_user`;
+            const api_url = `${url}:8181/data/exec_user`;
 
             const responseExecUsers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const exec_users = await responseExecUsers.json();
@@ -111,7 +112,7 @@ const ExecuserState = props => {
             password: formData.password
         }
 
-        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/exec_user`;
+        const datastore_url = `${url}:8181/data/add/exec_user`;
 
         const responseAddExecUser = await fetch(datastore_url, 
                                                 { method: 'POST',

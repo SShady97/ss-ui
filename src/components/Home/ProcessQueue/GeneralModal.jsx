@@ -54,6 +54,7 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
     const [ validation, setValidation ] = useState(false);
+    const [ disabled, setDisabled ] = useState(true);
 
     const serversContext = useContext(serverContext);
     const execusersContext = useContext(execuserContext);
@@ -68,6 +69,8 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
     const  { queue, setQueue, editProcess } = processesQContext;
 
     useEffect(() => {
+
+        setDisabled(true);
 
         if(open === true && addModal === false){
             const proc_toEdit = queue[rowIndex];
@@ -160,6 +163,26 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
 
     }
 
+    useEffect(() => {
+        
+        if(selected_server === null || selected_exec === null || selected_script === null){
+            setDisabled(true);
+        }else{
+            if(selected_script.parameter === true){
+                if(selected_parameter !== null){
+                    setDisabled(false);
+                }else{
+                    setDisabled(true);
+                }
+            }else{
+                setDisabled(false);
+            }
+        }
+
+        
+        
+
+    }, [selected_server, selected_exec, selected_script, selected_parameter]);
 
     return (
         <Dialog
@@ -169,23 +192,30 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
             aria-labelledby="responsive-dialog-title"
             fullWidth
         >
-            <DialogTitle id="responsive-dialog-title">{addModal ? 'Añadir Proceso a la Cola' : 'Editar Proceso'}
-            <IconButton aria-label="close" className={classes.customizedButton} onClick={handleClose}>
-                <CloseIcon />
-            </IconButton></DialogTitle>
+            <DialogTitle id="responsive-dialog-title">
+                {addModal ? 'Añadir Proceso a la Cola' : 'Editar Proceso'}
+            </DialogTitle>
             <DialogContent>
                 <DialogContentText>
                     <ProcessForm setValidation={setValidation} open={open}/>
                 </DialogContentText>
             </DialogContent>
             <DialogActions>
-                <Box textAlign='center' display="flex" flexDirection="row-reverse">
-                    <ColorButton variant='contained' type='submit' form='addForm' onClick={addModal ? handleAddProcess : handleEditProcess}>
-                        <div>
-                            {addModal ? 'Añadir' : 'Editar'}
-                        </div>
-                    </ColorButton>
-                </Box>
+                
+                <Button onClick={handleClose} style={{ fontWeight: 'bold' }} color="secondary" variant='contained' autoFocus>
+                    Cancelar
+                </Button>
+                <Button 
+                    disabled={disabled}
+                    variant='contained' 
+                    color='primary' 
+                    style={{ fontWeight: 'bold' }} 
+                    onClick={addModal ? handleAddProcess : handleEditProcess}>
+                    <div>
+                        {addModal ? 'Añadir' : 'Editar'}
+                    </div>
+                </Button>
+                
             </DialogActions>
         </Dialog>
     );

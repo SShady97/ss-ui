@@ -8,12 +8,15 @@ import AddProcessButton from './AddProcessButton';
 import LoadQueueModal from './LoadQueueModal';
 import SaveQueueModal from './SaveQueueModal';
 import Tooltip from "@material-ui/core/Tooltip";
-
-import processQContext from '../../../context/processQ/processQContext';
 import EditProcessButton from './EditProcessButton';
+import processQContext from '../../../context/processQ/processQContext';
+
+import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 
 
 const ProcessesDataTable = () => {
+
+    const theme = useTheme();
 
     const processesQContext = useContext(processQContext);
     
@@ -22,19 +25,19 @@ const ProcessesDataTable = () => {
     const columns = [
         {
             name: 'server_app',
-            label:'Servidor',
+            label: 'Servidor'
         },
         {
             name: 'server_env',
-            label:'Entorno',
+            label:'Entorno'
         },
         {
             name: 'exec_name',
-            label:'Usuario',
+            label:'Usuario'
         },
         {
             name: 'script_alias',
-            label:'Acción',
+            label:'Acción'
         },
         {
             name: 'parameter_param',
@@ -88,7 +91,7 @@ const ProcessesDataTable = () => {
     };
 
     const handleRun = () => {
-        setLoading(true);
+        setLoading('results');
         runQueue();
     };
   
@@ -102,9 +105,10 @@ const ProcessesDataTable = () => {
     const options = {
         download: 'false',
         print: 'false',
+        sort: 'false',
         selectableRows: 'multiply',
         onRowsDelete:(rows)=> handleDelete(rows.data),
-        filter: false,
+        filter: 'false',
         viewColumns: 'false',
         customToolbar: () => {
             return(
@@ -117,13 +121,37 @@ const ProcessesDataTable = () => {
     return (
         <Grid container spacing={3}>
             <Grid item xs={12}>
-                <MUIDataTable 
-                    title={alias !== null ? alias : ""} 
-                    data={queue} 
-                    columns={columns} 
-                    options={options}
-                    style={{width: '100%'}}
-                />
+                <ThemeProvider theme={outerTheme => ({
+                    ...outerTheme,
+                    overrides: {
+                        MUIDataTableBodyRow: {
+                            root: {
+                                '&:nth-of-type(odd)': {
+                                    backgroundColor: theme.palette.action.selected,
+                                },
+                            }
+                        },
+                        MUIDataTableToolbar: {
+                            titleText: {
+                                fontWeight: "bold",
+                                fontSize: "150%"
+                            }
+                        },
+                        MUIDataTableHeadCell: {
+                            data: {
+                                fontWeight: "bold"
+                            }
+                        }
+                    }
+                })}>
+                    <MUIDataTable 
+                        title={alias !== null ? alias : ""} 
+                        data={queue} 
+                        columns={columns} 
+                        options={options}
+                        style={{width: '100%'}}
+                    />
+                </ThemeProvider>
             </Grid>
             <Grid item xs={3}>
                 <Tooltip title={"Limpiar Cola"}>
