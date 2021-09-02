@@ -26,12 +26,11 @@ const ProcessForm = ({ setValidation, open }) => {
         
         if(open === true){
             if(selected_script){
-                setChecked(selected_script.validation)
+                setChecked(selected_script.validation);
             }
-            
         }
         
-    }, [open])
+    }, [open]);
 
     const handleChangeServer = (server) => {
 
@@ -153,7 +152,7 @@ const ProcessForm = ({ setValidation, open }) => {
                 <Autocomplete
                     bgcolor={"red"}
                     id="parameters"
-                    disabled={selected_script?.parameter !== false ? false : true}
+                    disabled={selected_script !== null ? (selected_script.parameter !== false ? false : true ) : true}
                     options={parameters !== undefined ? parameters : []}
                     getOptionLabel={(parameter) => parameter.param}
                     getOptionSelected={(option, value) => option.id === value.id}

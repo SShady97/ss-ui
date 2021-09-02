@@ -30,6 +30,9 @@ const QueueModal = ({ open, toogle }) => {
         queue_id = queueA[0].queue_id;
     }
 
+    console.log("jio");
+    console.log(queueA);
+
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
     const [anchorEl, setAnchorEl] = React.useState(null);

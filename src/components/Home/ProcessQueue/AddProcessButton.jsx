@@ -40,7 +40,7 @@ const AddProcessButton = () => {
                     <AddIcon className={AddIcon} />
                 </IconButton>
             </Tooltip>
-            <GeneralModal open={open} setOpen={setOpen} addModal={true} />
+            <GeneralModal open={open} setOpen={setOpen} addModal={true} rowIndex={-1}/>
         </Fragment>
     );
 }

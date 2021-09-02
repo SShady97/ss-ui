@@ -7,7 +7,7 @@ import processQContext from './processQContext';
 
 import { 
     SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
-    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE
+    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE, EDIT_PROCESS
 } from '../../types';
 
 import getStatus from '../../functions/getStatus';
@@ -21,7 +21,7 @@ const ProcessQState = props => {
         savedQueues: [],
         selected_SQueue: null,
         res: [],
-        loading: false,
+        loading: null,
         alert: false,
         alertmsg: null,
         alertstatus: null,
@@ -30,6 +30,7 @@ const ProcessQState = props => {
 
     const [ state, dispatch ] = useReducer(processQReducer, initialState);
 
+    const url = `${window.location.protocol}//${window.location.hostname}`;
 
     const runQueue = async () => {
 
@@ -51,7 +52,7 @@ const ProcessQState = props => {
             
         });
 
-        const api_url = `${process.env.REACT_APP_API_URL}/api/win-client`;
+        const api_url = `${url}:5000/api/win-client`;
 
         const responseServers = await fetch(api_url, 
                                             { method: 'POST', 
@@ -111,10 +112,10 @@ const ProcessQState = props => {
 
     }
 
-    const setLoading = (bool) => {
+    const setLoading = (location) => {
         dispatch({
             type: LOADING,
-            payload: bool
+            payload: location
         });    
     }
 
@@ -125,7 +126,7 @@ const ProcessQState = props => {
         token = token.idToken.rawIdToken;
 
         try{
-            const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/queues/${login_email}`;
+            const datastore_url = `${url}:8181/data/queues/${login_email}`;
             const responseQueues = await fetch(datastore_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const resultQueues = await responseQueues.json();
 
@@ -165,7 +166,7 @@ const ProcessQState = props => {
             queue_processes: processes
         }
 
-        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/queue`;
+        const datastore_url = `${url}:8181/data/add/queue`;
 
         const responseSaveQueue = await fetch(datastore_url, 
                                             { method: 'POST', 
@@ -201,36 +202,43 @@ const ProcessQState = props => {
         token = token.idToken.rawIdToken;
 
         try{
-            const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/queue/${queue_id}`;
+            const datastore_url = `${url}:8181/data/queue/${queue_id}`;
             const responseQueue = await fetch(datastore_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const resultQueue = await responseQueue.json();
-  
+        
+            const queue = resultQueue.queue;
+            console.log(queue);
             let data = [];
 
-            for (let i=0; i<resultQueue.length; i++){
+            for (let i=0; i<queue.length; i++){
 
                 if (flag === 0 ) {
 
                     const process = {
-                        server_id: resultQueue[i]['id_server'],
-                        server_app: resultQueue[i]['app'],
-                        server_env: resultQueue[i]['environment'],
-                        exec_id: resultQueue[i]['id_user'], 
-                        exec_name: resultQueue[i]['execuser_name'],
-                        script_id: resultQueue[i]['id_script'], 
-                        script_alias: resultQueue[i]['script_alias'],
-                        script_parameter: resultQueue[i]['parameter'],
-                        parameter_id: (resultQueue[i]['id_parameter'] === 1 ? null : resultQueue[i]['id_parameter']), 
-                        parameter_param: (resultQueue[i]['param'] === 'No Aplica' ? null : resultQueue[i]['param']),
-                        validation: resultQueue[i]['validation']
+                        server_id: queue[i]['id_server'],
+                        server_app: queue[i]['app'],
+                        server_env: queue[i]['environment'],
+                        exec_id: queue[i]['id_user'], 
+                        exec_name: queue[i]['execuser_name'],
+                        script_id: queue[i]['id_script'], 
+                        script_alias: queue[i]['script_alias'],
+                        script_parameter: queue[i]['parameter'],
+                        parameter_id: (queue[i]['id_parameter'] === 1 ? null : queue[i]['id_parameter']), 
+                        parameter_param: (queue[i]['param'] === 'No Aplica' ? null : queue[i]['param']),
+                        validation: queue[i]['validation']
                     }
                     
                     data.push(process)
 
-                    if(i === resultQueue.length - 1){
+                    if(i === queue.length - 1){
                         dispatch({
                             type: LOAD_SQUEUE,
-                            payload: [data, alias]
+                            payload: {
+                                data: data, 
+                                alias: alias,
+                                msg: resultQueue.msg,
+                                status: resultQueue.status
+                            }
                         })
                     }
                 } else if ( flag === 1) {
@@ -238,16 +246,16 @@ const ProcessQState = props => {
                     const process = {
                         alias: alias,
                         queue_id: queue_id,
-                        server_app: resultQueue[i]['app'],
-                        server_env: resultQueue[i]['environment'],
-                        exec_user: resultQueue[i]['execuser_name'],
-                        script: resultQueue[i]['script_alias'],
-                        parameter: resultQueue[i]['param'],
-                        validation: resultQueue[i]['validation'] === true ? 'Si' : 'No'
+                        server_app: queue[i]['app'],
+                        server_env: queue[i]['environment'],
+                        exec_user: queue[i]['execuser_name'],
+                        script: queue[i]['script_alias'],
+                        parameter: queue[i]['param'],
+                        validation: queue[i]['validation'] === true ? 'Si' : 'No'
                     }
                     
                     data.push(process)
-                    if(i === resultQueue.length - 1){
+                    if(i === queue.length - 1){
                         dispatch({
                             type: LOAD_SQUEUE_ADMIN,
                             payload: data
@@ -275,7 +283,7 @@ const ProcessQState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/queues`;
+            const api_url = `${url}:8181/data/queues`;
 
             const responseQueues = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const savedQueues = await responseQueues.json();
@@ -323,6 +331,19 @@ const ProcessQState = props => {
             console.log(error);
         }
     }
+    
+    const editProcess = (new_process, rowIndex) => {
+
+        state.queue.splice(rowIndex, 1, new_process);
+        dispatch({
+            type: EDIT_PROCESS,
+            payload: {
+                queue: state.queue,
+                msg: 'Proceso editado con éxito!',
+                status: 200
+            }
+        });
+    }
 
     return (
         <processQContext.Provider
@@ -348,7 +369,8 @@ const ProcessQState = props => {
                 setAlert: setAlert,
                 getAllQueues: getAllQueues,
                 setProcToEdit: setProcToEdit,
-                deleteQueue: deleteQueue
+                deleteQueue: deleteQueue,
+                editProcess: editProcess
             }}
         >
             {props.children}

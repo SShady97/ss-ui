@@ -1,5 +1,5 @@
 import { SET_QUEUE, QUEUES, RESPONSE, LOADING, SET_SQUEUES, LOAD_SQUEUE, LOAD_SQUEUE_ADMIN, CLEAN_ALIAS,
-    SAVE_QUEUE, SET_ALERT, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE
+    SAVE_QUEUE, SET_ALERT, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE, EDIT_PROCESS
 } from '../../types';
 
 const processQReducer = (state, action) => {
@@ -21,7 +21,7 @@ const processQReducer = (state, action) => {
             return {
                 ...state,
                 res: action.payload.response,
-                loading: false,
+                loading: null,
                 alertmsg: action.payload.msg,
                 alertstatus: action.payload.status,
                 alert: true
@@ -42,8 +42,12 @@ const processQReducer = (state, action) => {
         case LOAD_SQUEUE:
         return {
             ...state,
-            queue: action.payload[0],
-            alias: action.payload[1]
+            queue: action.payload.data,
+            alias: action.payload.alias,
+            alertmsg: action.payload.msg,
+            alertstatus: action.payload.status,
+            alert: true,
+            loading: null
         }
 
         case LOAD_SQUEUE_ADMIN:
@@ -91,6 +95,15 @@ const processQReducer = (state, action) => {
                 ...state,
                 alert: action.payload.msg
             };
+            
+        case EDIT_PROCESS:
+        return {
+            ...state,
+            queue: action.payload.queue,
+            alertmsg: action.payload.msg,
+            alertstatus: action.payload.status,
+            alert: true
+        }
 
         default:
             return 'Tipo desconocido';

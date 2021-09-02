@@ -18,6 +18,7 @@ const ScriptState = props => {
 
     const [ state, dispatch ] = useReducer(scriptReducer, initialState)
 
+    const url = `${window.location.protocol}//${window.location.hostname}`;
 
     const getScripts = async () => {
 
@@ -26,7 +27,7 @@ const ScriptState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/scripts`;
+            const api_url = `${url}:5000/api/win-remote-client/scripts`;
 
             const responseScripts = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const resultScripts = await responseScripts.json();
@@ -93,7 +94,7 @@ const ScriptState = props => {
             parameter: formData.command.includes("$param")
         }
 
-        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/script`;
+        const datastore_url = `${url}:8181/data/add/script`;
 
         const responseAddScript = await fetch(datastore_url, 
                                                 { method: 'POST',

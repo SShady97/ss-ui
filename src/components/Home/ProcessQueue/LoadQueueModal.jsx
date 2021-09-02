@@ -20,7 +20,7 @@ const LoadQueueModal = () => {
   const [open, setOpen] = useState(false);
   const [ selected, setSelected ] = useState(null);
 
-  const  { getSavedQueues, loadSavedQueue } = processesQContext;
+  const  { getSavedQueues, loadSavedQueue, setLoading } = processesQContext;
 
   const theme = useTheme();
   const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
@@ -35,6 +35,7 @@ const LoadQueueModal = () => {
   };
 
   const handleAccept = () => {
+    setLoading('queue');
     setOpen(false);
     loadSavedQueue(selected);
   };
@@ -61,19 +62,19 @@ const LoadQueueModal = () => {
             onClose={handleClose}
             aria-labelledby="responsive-dialog-title"
         >
-            <DialogTitle id="responsive-dialog-title">{"Cargar Cola Almacenada"}</DialogTitle>
+            <DialogTitle id="responsive-dialog-title">Cargar Cola Almacenada</DialogTitle>
             <DialogContent>
             <DialogContentText>
                 <LoadQueue setSelected={setSelected} />
             </DialogContentText>
             </DialogContent>
             <DialogActions>
-            <Button onClick={handleClose} color="primary" autoFocus>
+              <Button onClick={handleClose} style={{ fontWeight: 'bold' }} color="secondary" variant='contained' autoFocus>
                 Cancelar
-            </Button>
-            <Button onClick={handleAccept} color="primary" autoFocus>
+              </Button>
+              <Button disabled={selected === null ? true : false} onClick={handleAccept} style={{ fontWeight: 'bold' }} color="primary" variant='contained' autoFocus>
                 Cargar
-            </Button>
+              </Button>
             </DialogActions>
         </Dialog>
     </div>

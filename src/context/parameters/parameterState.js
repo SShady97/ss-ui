@@ -18,6 +18,7 @@ const ParameterState = props => {
 
     const [ state, dispatch ] = useReducer(parameterReducer, initialState)
 
+    const url = `${window.location.protocol}//${window.location.hostname}`;
 
     const getParameters = async (server_id) => {
 
@@ -26,7 +27,7 @@ const ParameterState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_API_URL}/api/win-remote-client/params/server/${server_id}`;
+            const api_url = `${url}:5000/api/win-remote-client/params/server/${server_id}`;
 
             const responseParameters = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const resultParameters = await responseParameters.json();
@@ -74,7 +75,7 @@ const ParameterState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/parameter`;
+            const api_url = `${url}:8181/data/parameter`;
 
             const responseParameters = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});
             const parameters = await responseParameters.json();
@@ -114,7 +115,7 @@ const ParameterState = props => {
             alias: formData.alias
         }
 
-        const datastore_url = `${process.env.REACT_APP_DATASTORE_URL}/data/add/parameter`;
+        const datastore_url = `${url}:8181/data/add/parameter`;
 
         const responseAddParameter = await fetch(datastore_url, 
                                                 { method: 'POST',
