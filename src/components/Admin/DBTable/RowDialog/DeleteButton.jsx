@@ -10,6 +10,7 @@ const DeleteButton = ({ handleClose, deleteFunction, getFunction, id }) => {
     const handleDelete = () => {
         deleteFunction(id);
         getFunction();
+        handleCancel();
         handleClose();
     };
 

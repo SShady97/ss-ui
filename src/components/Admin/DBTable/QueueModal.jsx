@@ -46,6 +46,7 @@ const QueueModal = ({ open, toogle }) => {
     const handleDelete = () => {
         deleteQueue(queue_id);
         getAllQueues();
+        handleCancel();
         handleClose();
     };
 
