@@ -46,7 +46,6 @@ const LoadQueueModal = () => {
         <Tooltip title={"Cargar Cola Guardada"}>
           <Button
               variant="contained"
-              color="primary"
               style={{ width: "100%", fontWeight: "bold" }}
               startIcon={<Publish />}
               onClick={handleClickOpen}
