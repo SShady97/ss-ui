@@ -2,6 +2,8 @@ import React, { useContext } from "react";
 
 import MUIDataTable from "mui-datatables";
 import Tooltip from "@material-ui/core/Tooltip";
+import Chip from '@material-ui/core/Chip';
+import DoneIcon from '@material-ui/icons/Done';
 import Button from '@material-ui/core/Button';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ThemeProvider, useTheme } from '@material-ui/core/styles';
@@ -49,18 +51,23 @@ const ResultsTable = () => {
                     let color;
                     if(value !== null){
                         if(value === true){
-                            validation = 'Done';
-                            color = 'green';
+                            validation = 'DONE!';
+                            color = '#46BD3E';
                         }else{
-                            validation = 'Failed';
-                            color = 'red';
+                            validation = 'FAILED!';
+                            color = '#FB0707';
                         }
                     }else{
-                        validation = 'No Aplica';
-                        color = 'black';
+                        validation = 'N/A';
+                        color = '#4186E3';
                     }
                     return (
-                        <div style={{color: color}}>validation</div>
+                        <Chip
+                            label={validation}
+                            clickable
+                            style={{backgroundColor: color, fontWeight: 'bold', color: 'white'}}
+                            deleteIcon={<DoneIcon />}
+                        />
                     );
                 }
             }
@@ -72,7 +79,12 @@ const ResultsTable = () => {
             name: "Descargar",
             options: {
                 customBodyRender: (value) => {
-                    
+                    let disabled;
+                    if(value.includes('start') || value.includes('stop')){
+                        disabled = true;
+                    }else{
+                        disabled = false;
+                    }
                     return (
                         <Tooltip title={"Descargar Resultado"}>
                             <Button
@@ -80,6 +92,7 @@ const ResultsTable = () => {
                                 color="primary"
                                 endIcon={<GetAppIcon />}
                                 style={{ width: "100%" }}
+                                disabled={disabled}
                                 href={`${process.env.REACT_APP_API_URL}/api/get-txt/${value}`}
                             >
                                 Resultado

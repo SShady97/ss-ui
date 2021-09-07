@@ -21,6 +21,7 @@ const ProcessForm = ({ setValidation, open }) => {
     const  { parameters, selectParameter, selected_parameter, getParameters, cleanParameters } = parametersContext;
 
     const [ checked, setChecked ] = useState(false);
+    const [ disabledVal, setDisabledVal ] = useState(true);
 
     useEffect(() => {
         
@@ -63,8 +64,14 @@ const ProcessForm = ({ setValidation, open }) => {
         selectParameter(null);
         if(script !== null){
             selectScript(script);
+            if(script.command.includes('Stop') || script.command.includes('Start')){
+                setDisabledVal(false);
+            }else{
+                setDisabledVal(true);
+            }
         }else{
             selectScript(null);
+            setDisabledVal(true);
         }
 
     };
@@ -171,6 +178,7 @@ const ProcessForm = ({ setValidation, open }) => {
             </FormControl>
             <FormControl required={true} style={{ width: "100%", marginBottom: '10px' }}>
                 <FormControlLabel
+                    disabled={disabledVal}
                     label="Validar ejecución del proceso"
                     control={<Checkbox onChange={handleChangeValidation} checked={checked} name="validation" />}
                 />

@@ -1,7 +1,6 @@
 import React, { useState, useContext, useEffect } from "react";
-import { IconButton, Button, Box, useMediaQuery } from "@material-ui/core";
+import { Button, useMediaQuery } from "@material-ui/core";
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
-import CloseIcon from '@material-ui/icons/Close';
 import ProcessForm from './ProcessForm';
 import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from "@material-ui/core";
 
@@ -11,15 +10,6 @@ import scriptContext from '../../../context/scripts/scriptContext';
 import parameterContext from '../../../context/parameters/parameterContext';
 import processQContext from '../../../context/processQ/processQContext';
 
-const ColorButton = withStyles((theme) => ({
-    root: {
-        color: theme.palette.getContrastText('#517461'),
-        backgroundColor: '#517461',
-        '&:hover': {
-            backgroundColor: '#517461',
-        },
-    },
-}))(Button);
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -49,7 +39,6 @@ const useStyles = makeStyles((theme) => ({
 
 const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
 
-    const classes = useStyles();
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
 
@@ -71,6 +60,10 @@ const GeneralModal = ({ open, setOpen, addModal, rowIndex }) => {
     useEffect(() => {
 
         setDisabled(true);
+
+        if(open === true && addModal === true){
+            setValidation(false);
+        }
 
         if(open === true && addModal === false){
             const proc_toEdit = queue[rowIndex];
