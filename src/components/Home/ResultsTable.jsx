@@ -40,6 +40,30 @@ const ResultsTable = () => {
                     );
                 }
             }
+        },
+        {
+            name: "Validación",
+            options: {
+                customBodyRender: (value) => {
+                    let validation;
+                    let color;
+                    if(value !== null){
+                        if(value === true){
+                            validation = 'Done';
+                            color = 'green';
+                        }else{
+                            validation = 'Failed';
+                            color = 'red';
+                        }
+                    }else{
+                        validation = 'No Aplica';
+                        color = 'black';
+                    }
+                    return (
+                        <div style={{color: color}}>validation</div>
+                    );
+                }
+            }
         }, 
         {
             name: "Usuario"
