@@ -27,13 +27,13 @@ const DBTable = ({ table }) => {
     const toggleQueueModal = () => setQueueModal(!queueModal);
     
     const execusersContext = useContext(execuserContext);
-    const { exec_users, getAllExecUsers, addExec, deleteExec } = execusersContext;
+    const { exec_users, getAllExecUsers, addExec, editExec, deleteExec } = execusersContext;
     const serversContext = useContext(serverContext);
-    const { servers, getServers, addServer, deleteServer } = serversContext;
+    const { servers, getServers, addServer, editServer, deleteServer } = serversContext;
     const scriptsContext = useContext(scriptContext);
-    const { scripts, getScripts, addScript, deleteScript } = scriptsContext;
+    const { scripts, getScripts, addScript, editScript, deleteScript } = scriptsContext;
     const parametersContext = useContext(parameterContext);
-    const { parameters, getAllParameters, addParameter, deleteParameter } = parametersContext;
+    const { parameters, getAllParameters, addParameter, editParameter, deleteParameter } = parametersContext;
     const processQsContext = useContext(processQContext);
     const { savedQueues, getAllQueues, loadSavedQueue } = processQsContext;
 
@@ -41,6 +41,7 @@ const DBTable = ({ table }) => {
     let data = null;
     let addFunction = null;
     let getFunction = null;
+    let editFunction = null;
     let deleteFunction = null;
 
     useEffect(() => {
@@ -60,16 +61,21 @@ const DBTable = ({ table }) => {
                 },
                 {
                     name: 'name',
-                    label:'Name',
+                    label:'Usuario',
                 },
                 {
                     name: 'password',
-                    label:'Password',
-                    
+                    label:'Contraseña',
+                    options: {
+                        customBodyRender: (value, tableMeta, updateValue) => {
+                            return "********";
+                        }
+                    }
                 }
             ];
             addFunction = addExec;
             getFunction = getAllExecUsers;
+            editFunction = editExec;
             deleteFunction = deleteExec;
             data = exec_users;
             break;
@@ -99,6 +105,7 @@ const DBTable = ({ table }) => {
             ];
             addFunction = addServer;
             getFunction = getServers;
+            editFunction = editServer;
             deleteFunction = deleteServer;
             data = servers;  
             break;
@@ -137,6 +144,7 @@ const DBTable = ({ table }) => {
             ];
             addFunction = addScript;
             getFunction = getScripts;
+            editFunction = editScript;
             deleteFunction = deleteScript;
             data = scripts;   
             break;
@@ -162,6 +170,7 @@ const DBTable = ({ table }) => {
             ];
             addFunction = addParameter;
             getFunction = getAllParameters;
+            editFunction = editParameter;
             deleteFunction = deleteParameter;
             data = parameters;   
             break;
@@ -245,11 +254,13 @@ const DBTable = ({ table }) => {
                 options={options}
             />
             <RowDialog 
+                table={table} 
                 rowValues={rowValues} 
                 toogle={toggleModal} 
                 open={modal} 
                 columns={columns} 
                 getFunction={getFunction}
+                editFunction={editFunction}
                 deleteFunction={deleteFunction}/>
             <QueueModal 
                 toogle={toggleQueueModal} 

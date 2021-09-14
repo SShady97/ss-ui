@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import parameterReducer from './parameterReducer';
 import parameterContext from './parameterContext';
 
-import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER, DELETE_PARAMETER } from '../../types';
+import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER, EDIT_PARAMETER, DELETE_PARAMETER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -131,6 +131,37 @@ const ParameterState = props => {
         })
     }
 
+    const editParameter = async ( parameter_id, formData ) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+
+            const data = {
+                alias: formData.alias,
+                param: formData.param,
+                cat: formData.cat
+            }
+            
+            const datastore_url = `${url}:8181/data/parameter/${parameter_id}`;
+
+            const responseEditParameter = await fetch(datastore_url, { method: 'PUT',
+                                                                    headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                                    body: JSON.stringify(data)
+                                                                    });
+            const resultEditParameter = await responseEditParameter.json();
+
+            dispatch({
+                type: EDIT_PARAMETER,
+                payload: {msg: resultEditParameter.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const deleteParameter = async (parameter_id) => {
 
         try {
@@ -138,9 +169,9 @@ const ParameterState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/parameter/${parameter_id}`;
+            const datastore_url = `${url}:8181/data/parameter/${parameter_id}`;
 
-            const responseDeleteParameter = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
+            const responseDeleteParameter = await fetch(datastore_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
             const resultDeleteParameter = await responseDeleteParameter.json();
 
             dispatch({
@@ -164,6 +195,7 @@ const ParameterState = props => {
                 selectParameter: selectParameter,
                 cleanParameters: cleanParameters,
                 addParameter: addParameter,
+                editParameter: editParameter,
                 deleteParameter: deleteParameter
             }}
         >

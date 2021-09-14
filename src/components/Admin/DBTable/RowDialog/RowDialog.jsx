@@ -6,6 +6,7 @@ import { Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } 
 import { makeStyles, withStyles, useTheme } from "@material-ui/core/styles";
 
 import DeleteButton from './DeleteButton';
+import EditTextField from './EditTextField';
 
 const ColorButton = withStyles((theme) => ({
     root: {
@@ -17,24 +18,6 @@ const ColorButton = withStyles((theme) => ({
     },
 }))(Button);
 
-const FormTextField = withStyles({
-    root: {
-        '& label.Mui-focused': {
-            color: 'green',
-        },
-        '& .MuiOutlinedInput-root': {
-            '& fieldset': {
-                borderColor: '#517461',
-            },
-            '&:hover fieldset': {
-                borderColor: 'black',
-            },
-            '&.Mui-focused fieldset': {
-                borderColor: '#517461',
-            },
-        },
-    },
-})(TextField);
 
 const useStyles = makeStyles((theme) => ({
     paper: {
@@ -58,7 +41,7 @@ const useStyles = makeStyles((theme) => ({
 
 }));
 
-const RowDialog = ({ columns, rowValues, toogle, open, getFunction, deleteFunction }) => {
+const RowDialog = ({ table, columns, rowValues, toogle, open, getFunction, editFunction, deleteFunction }) => {
 
     const classes = useStyles();
     const theme = useTheme();
@@ -69,29 +52,40 @@ const RowDialog = ({ columns, rowValues, toogle, open, getFunction, deleteFuncti
         toogle();
     };
 
+    const columnsCopy = [...columns];
     const rowValuesCopy = [...rowValues];
+    const idIndex = columns.findIndex(x => x.name ==='id');
+    columnsCopy.splice(idIndex, 1);
+    rowValuesCopy.splice(idIndex, 1);
+    id = rowValues[idIndex];
 
-    const columnsCopy = columns.reduce( (result, column, index) => {
-        if(column.name !== 'id') {
-            result.push(column.label);
-        } else {
-            id = rowValues[index];
-            rowValuesCopy.splice(index, 1);
+    const handleEdit = e => {
+        e.preventDefault();
+
+        let target = e.target;
+        let formData = {};
+
+        for (let i=0; i<target.length; i++) {
+            if(target.elements[i].value) {
+                formData[target.elements[i].getAttribute('id')] = target.elements[i].value;
+            }
         }
-        return result;
-    }, []);
+
+        editFunction(id, formData);
+        getFunction();
+        handleClose();
+    };
     
     const body = (
         <div>
             <DialogTitle id="responsive-dialog-title">{"Editar"}</DialogTitle>
             <DialogContent>
                 <DialogContentText>
-                    <form className={classes.root} noValidate autoComplete="off">
+                    <form id="editForm" onSubmit={handleEdit} className={classes.root} noValidate autoComplete="off">
                         {columnsCopy.map((columnCopy, index) => (
                             <Box mb={2}>
-                                <FormTextField id="standard-basic" label={columnCopy} style={{ width: "100%" }} variant="outlined" value={rowValuesCopy[index]} />
+                                <EditTextField name={columnCopy.name} label={columnCopy.label} value={rowValuesCopy[index]} table={table} />
                             </Box>
-
                         ))} 
                     </form>
                 </DialogContentText>
@@ -101,7 +95,7 @@ const RowDialog = ({ columns, rowValues, toogle, open, getFunction, deleteFuncti
                 <Button onClick={handleClose} autoFocus color="disabled" varitant="contained">
                     Cancelar
                 </Button>
-                <ColorButton onClick={handleClose} autoFocus>
+                <ColorButton type='submit' form='editForm' autoFocus>
                     Guardar
                 </ColorButton>
             </DialogActions>

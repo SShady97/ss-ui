@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import scriptReducer from './scriptReducer';
 import scriptContext from './scriptContext';
 
-import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT, DELETE_SCRIPT } from '../../types';
+import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT, EDIT_SCRIPT, DELETE_SCRIPT } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -110,6 +110,38 @@ const ScriptState = props => {
         })
     }
 
+    const editScript = async ( script_id, formData ) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+
+            const data = {
+                types: formData.types,
+                command: formData.command,
+                alias: formData.alias,
+                parameter: formData.command.includes("$param")
+            }
+            
+            const datastore_url = `${url}:8181/data/script/${script_id}`;
+
+            const responseEditScript = await fetch(datastore_url, { method: 'PUT',
+                                                                    headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                                    body: JSON.stringify(data)
+                                                                    });
+            const resultEditScript = await responseEditScript.json();
+
+            dispatch({
+                type: EDIT_SCRIPT,
+                payload: {msg: resultEditScript.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const deleteScript = async (script_id) => {
 
         try {
@@ -117,9 +149,9 @@ const ScriptState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/script/${script_id}`;
+            const datastore_url = `${url}:8181/data/script/${script_id}`;
 
-            const responseDeleteScript = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
+            const responseDeleteScript = await fetch(datastore_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
             const resultDeleteScript = await responseDeleteScript.json();
 
             dispatch({
@@ -142,6 +174,7 @@ const ScriptState = props => {
                 selectScript: selectScript,
                 cleanScripts: cleanScripts,
                 addScript: addScript,
+                editScript: editScript,
                 deleteScript: deleteScript
             }}
         >

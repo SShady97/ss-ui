@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import execuserReducer from './execuserReducer';
 import execuserContext from './execurserContext';
 
-import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER, DELETE_EXECUSER } from '../../types';
+import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER, EDIT_EXECUSER, DELETE_EXECUSER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -128,6 +128,36 @@ const ExecuserState = props => {
         })
     }
 
+    const editExec = async ( exec_user_id, formData ) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+
+            const data = {
+                name: formData.name,
+                password: formData.new_password ? formData.new_password : formData.password
+            }
+            
+            const datastore_url = `${url}:8181/data/exec_user/${exec_user_id}`;
+
+            const responseEditExecUser = await fetch(datastore_url, { method: 'PUT',
+                                                                    headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                                    body: JSON.stringify(data)
+                                                                    });
+            const resultEditExecUser = await responseEditExecUser.json();
+
+            dispatch({
+                type: EDIT_EXECUSER,
+                payload: {msg: resultEditExecUser.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const deleteExec = async (exec_user_id) => {
 
         try {
@@ -135,7 +165,7 @@ const ExecuserState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/exec_user/${exec_user_id}`;
+            const api_url = `${url}:8181/data/exec_user/${exec_user_id}`;
 
             const responseDeleteExecUser = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
             const resultDeleteExecUser = await responseDeleteExecUser.json();
@@ -161,6 +191,7 @@ const ExecuserState = props => {
                 selectExec: selectExec,
                 cleanExec: cleanExec,
                 addExec: addExec,
+                editExec: editExec,
                 deleteExec: deleteExec
             }}
         >

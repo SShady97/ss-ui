@@ -1,4 +1,4 @@
-import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER, DELETE_PARAMETER } from '../../types';
+import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER, DELETE_PARAMETER, EDIT_PARAMETER } from '../../types';
 
 const parameterReducer = (state, action) => {
     switch(action.type) {
@@ -23,6 +23,12 @@ const parameterReducer = (state, action) => {
             };
 
         case ADD_PARAMETER:
+            return {
+                ...state,
+                alert: action.payload.msg
+            };
+
+        case EDIT_PARAMETER:
             return {
                 ...state,
                 alert: action.payload.msg

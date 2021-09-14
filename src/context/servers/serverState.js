@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import serverReducer from './serverReducer';
 import serverContext from './serverContext';
 
-import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER, DELETE_SERVER } from '../../types';
+import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER, EDIT_SERVER, DELETE_SERVER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -108,6 +108,38 @@ const ServerState = props => {
         })
     }
 
+    const editServer = async ( server_id, formData ) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+
+            const data = {
+                name: formData.name,
+                app: formData.app,
+                environment: formData.environment,
+                ip: formData.ip
+            }
+            
+            const datastore_url = `${url}:8181/data/server/${server_id}`;
+
+            const responseEditServer = await fetch(datastore_url, { method: 'PUT',
+                                                                    headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                                    body: JSON.stringify(data)
+                                                                    });
+            const resultEditServer = await responseEditServer.json();
+
+            dispatch({
+                type: EDIT_SERVER,
+                payload: {msg: resultEditServer.msg }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     const deleteServer = async (server_id) => {
 
         try {
@@ -115,7 +147,7 @@ const ServerState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/server/${server_id}`;
+            const api_url = `${url}:8181/data/server/${server_id}`;
 
             const responseDeleteServer = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
             const resultDeleteServer = await responseDeleteServer.json();
@@ -139,6 +171,7 @@ const ServerState = props => {
                 selectServer: selectServer,
                 cleanServers: cleanServers,
                 addServer: addServer,
+                editServer: editServer,
                 deleteServer: deleteServer
             }}
         >
