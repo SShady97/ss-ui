@@ -181,7 +181,7 @@ const ProcessesDataTable = () => {
                         <Button
                             variant="contained"
                             color="primary"
-                            style={{ width: "100%", fontWeight: "bold", background: "green" }}
+                            style={{ width: "100%", fontWeight: "bold" }}
                             startIcon={<PlayArrow />}
                             onClick={handleRun}
                             disabled={queue.length > 0 ? false : true}
