@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import serverReducer from './serverReducer';
 import serverContext from './serverContext';
 
-import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER, EDIT_SERVER, DELETE_SERVER } from '../../types';
+import { SERVERS, SET_SERVER, CLEAN_SERVERS, ADD_SERVER, EDIT_SERVER, DELETE_SERVER, SET_ALERT_SERVER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -13,12 +13,22 @@ const ServerState = props => {
     
     const initialState = {
         servers : [],
-        selected_server: null
+        selected_server: null,
+        alert_server: false,
+        alertmsg_server: null,
+        alertstatus_server: null
     }
 
     const [ state, dispatch ] = useReducer(serverReducer, initialState)
 
     const url = `${window.location.protocol}//${window.location.hostname}`;
+
+    const setAlertServer = (bool) => {
+        dispatch({
+            type: SET_ALERT_SERVER,
+            payload: bool
+        });
+    } 
 
     const getServers = async () => {
 
@@ -100,11 +110,11 @@ const ServerState = props => {
                                                 body: JSON.stringify(data)
                                                 });
         
-        const resultAddServer = responseAddServer.json();                                        
+        const resultAddServer = await responseAddServer.json();                                        
 
         dispatch({
             type: ADD_SERVER,
-            payload: {msg: resultAddServer.msg }
+            payload: {msg: resultAddServer.msg, status: resultAddServer.status }
         })
     }
 
@@ -132,7 +142,7 @@ const ServerState = props => {
 
             dispatch({
                 type: EDIT_SERVER,
-                payload: {msg: resultEditServer.msg }
+                payload: {msg: resultEditServer.msg, status: resultEditServer.status  }
             })
             
         } catch (error) {
@@ -154,7 +164,7 @@ const ServerState = props => {
 
             dispatch({
                 type: DELETE_SERVER,
-                payload: {msg: resultDeleteServer.msg }
+                payload: {msg: resultDeleteServer.msg, status: resultDeleteServer.status }
             })
             
         } catch (error) {
@@ -167,6 +177,10 @@ const ServerState = props => {
             value={{
                 servers: state.servers,
                 selected_server: state.selected_server,
+                alert_server: state.alert_server,
+                alertmsg_server: state.alertmsg_server,
+                alertstatus_server: state.alertstatus_server,
+                setAlertServer: setAlertServer,
                 getServers: getServers,
                 selectServer: selectServer,
                 cleanServers: cleanServers,

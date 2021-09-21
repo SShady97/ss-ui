@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import parameterReducer from './parameterReducer';
 import parameterContext from './parameterContext';
 
-import { PARAMETERS, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER, EDIT_PARAMETER, DELETE_PARAMETER } from '../../types';
+import { PARAMETERS, SET_ALERT_PARAMETER, SET_PARAMETER, CLEAN_PARAMETERS, ADD_PARAMETER, EDIT_PARAMETER, DELETE_PARAMETER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -13,12 +13,22 @@ const ParameterState = props => {
     
     const initialState = {
         parameters : [],
-        selected_parameter: null
+        selected_parameter: null,
+        alert_parameter: false,
+        alertmsg_parameter: null,
+        alertstatus_parameter: null
     }
 
     const [ state, dispatch ] = useReducer(parameterReducer, initialState)
 
     const url = `${window.location.protocol}//${window.location.hostname}`;
+
+    const setAlertParameter = (bool) => {
+        dispatch({
+            type: SET_ALERT_PARAMETER,
+            payload: bool
+        });
+    } 
 
     const getParameters = async (server_id) => {
 
@@ -106,29 +116,35 @@ const ParameterState = props => {
 
     const addParameter = async ( formData ) => {
 
-        let token = await authProvider.getIdToken();
-        token = token.idToken.rawIdToken;
+        try {
 
-        const data = {
-            param: formData.param,
-            cat: formData.cat,
-            alias: formData.alias
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+
+            const data = {
+                param: formData.param,
+                cat: formData.cat,
+                alias: formData.alias
+            }
+
+            const datastore_url = `${url}:8181/data/add/parameter`;
+
+            const responseAddParameter = await fetch(datastore_url, 
+                                                    { method: 'POST',
+                                                    headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                    body: JSON.stringify(data)
+                                                    });
+            
+            const resultAddParameter = await responseAddParameter.json();    
+
+            dispatch({
+                type: ADD_PARAMETER,
+                payload: {msg: resultAddParameter.msg, status: resultAddParameter.status }
+            })
+
+        } catch (error) {
+            console.log(error)
         }
-
-        const datastore_url = `${url}:8181/data/add/parameter`;
-
-        const responseAddParameter = await fetch(datastore_url, 
-                                                { method: 'POST',
-                                                headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
-                                                body: JSON.stringify(data)
-                                                });
-        
-        const resultAddParameter = responseAddParameter.json();                                        
-
-        dispatch({
-            type: ADD_PARAMETER,
-            payload: {msg: resultAddParameter.msg }
-        })
     }
 
     const editParameter = async ( parameter_id, formData ) => {
@@ -154,7 +170,7 @@ const ParameterState = props => {
 
             dispatch({
                 type: EDIT_PARAMETER,
-                payload: {msg: resultEditParameter.msg }
+                payload: {msg: resultEditParameter.msg, status: resultEditParameter.status}
             })
             
         } catch (error) {
@@ -176,7 +192,7 @@ const ParameterState = props => {
 
             dispatch({
                 type: DELETE_PARAMETER,
-                payload: {msg: resultDeleteParameter.msg }
+                payload: {msg: resultDeleteParameter.msg, status: resultDeleteParameter.status }
             })
             
         } catch (error) {
@@ -190,6 +206,10 @@ const ParameterState = props => {
             value={{
                 parameters: state.parameters,
                 selected_parameter: state.selected_parameter,
+                alert_parameter: state.alert_parameter,
+                alertmsg_parameter: state.alertmsg_parameter,
+                alertstatus_parameter: state.alertstatus_parameter,
+                setAlertParameter: setAlertParameter,
                 getParameters: getParameters,
                 getAllParameters: getAllParameters,
                 selectParameter: selectParameter,

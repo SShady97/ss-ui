@@ -93,17 +93,19 @@ const processQReducer = (state, action) => {
         case DELETE_QUEUE:
             return {
                 ...state,
-                alert: action.payload.msg
+                alertmsg: action.payload.msg,
+                alertstatus: action.payload.status,
+                alert: true
             };
             
         case EDIT_PROCESS:
-        return {
-            ...state,
-            queue: action.payload.queue,
-            alertmsg: action.payload.msg,
-            alertstatus: action.payload.status,
-            alert: true
-        }
+            return {
+                ...state,
+                queue: action.payload.queue,
+                alertmsg: action.payload.msg,
+                alertstatus: action.payload.status,
+                alert: true
+            }
 
         default:
             return 'Tipo desconocido';

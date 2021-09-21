@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import scriptReducer from './scriptReducer';
 import scriptContext from './scriptContext';
 
-import { SCRIPTS, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT, EDIT_SCRIPT, DELETE_SCRIPT } from '../../types';
+import { SCRIPTS, SET_ALERT_SCRIPT, SET_SCRIPTS, CLEAN_SCRIPTS, ADD_SCRIPT, EDIT_SCRIPT, DELETE_SCRIPT } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -13,12 +13,22 @@ const ScriptState = props => {
     
     const initialState = {
         scripts : [],
-        selected_script: null
+        selected_script: null,
+        alert_script: false,
+        alertmsg_script: null,
+        alertstatus_script: null
     }
 
     const [ state, dispatch ] = useReducer(scriptReducer, initialState)
 
     const url = `${window.location.protocol}//${window.location.hostname}`;
+
+    const setAlertScript = (bool) => {
+        dispatch({
+            type: SET_ALERT_SCRIPT,
+            payload: bool
+        });
+    } 
 
     const getScripts = async () => {
 
@@ -102,11 +112,11 @@ const ScriptState = props => {
                                                 body: JSON.stringify(data)
                                                 });
         
-        const resultAddScript = responseAddScript.json();                                        
+        const resultAddScript = await responseAddScript.json();                                        
 
         dispatch({
             type: ADD_SCRIPT,
-            payload: {msg: resultAddScript.msg }
+            payload: {msg: resultAddScript.msg, status: resultAddScript.status }
         })
     }
 
@@ -134,7 +144,7 @@ const ScriptState = props => {
 
             dispatch({
                 type: EDIT_SCRIPT,
-                payload: {msg: resultEditScript.msg }
+                payload: {msg: resultEditScript.msg, status: resultEditScript.status }
             })
             
         } catch (error) {
@@ -156,7 +166,7 @@ const ScriptState = props => {
 
             dispatch({
                 type: DELETE_SCRIPT,
-                payload: {msg: resultDeleteScript.msg }
+                payload: {msg: resultDeleteScript.msg, status: resultDeleteScript.status }
             })
             
         } catch (error) {
@@ -170,6 +180,10 @@ const ScriptState = props => {
             value={{
                 scripts: state.scripts,
                 selected_script: state.selected_script,
+                alert_script: state.alert_script,
+                alertmsg_script: state.alertmsg_script,
+                alertstatus_script: state.alertstatus_script,
+                setAlertScript: setAlertScript,
                 getScripts: getScripts,
                 selectScript: selectScript,
                 cleanScripts: cleanScripts,

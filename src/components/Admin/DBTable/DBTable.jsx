@@ -3,6 +3,8 @@ import React, { useContext, useEffect } from "react";
 import MUIDataTable from "mui-datatables";
 
 import { ThemeProvider, useTheme } from '@material-ui/core/styles';
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 
 import AddButton from './AddButton/AddButton';
 import QueueModal from './QueueModal';
@@ -18,22 +20,22 @@ const DBTable = ({ table }) => {
 
     const theme = useTheme();
 
+    const [openAlert, setOpenAlert] = React.useState(false);
     const [modal, setModal] = React.useState(false);
     const [queueModal, setQueueModal] = React.useState(false);
-
     const [rowValues, setRowValues] = React.useState([]);
 
     const toggleModal = () => setModal(!modal);
     const toggleQueueModal = () => setQueueModal(!queueModal);
     
     const execusersContext = useContext(execuserContext);
-    const { exec_users, getAllExecUsers, addExec, editExec, deleteExec } = execusersContext;
+    const { exec_users, getAllExecUsers, addExec, editExec, deleteExec, alert_exec, alertmsg_exec, alertstatus_exec, setAlertExec } = execusersContext;
     const serversContext = useContext(serverContext);
-    const { servers, getServers, addServer, editServer, deleteServer } = serversContext;
+    const { servers, getServers, addServer, editServer, deleteServer, alert_server, alertmsg_server, alertstatus_server, setAlertServer } = serversContext;
     const scriptsContext = useContext(scriptContext);
-    const { scripts, getScripts, addScript, editScript, deleteScript } = scriptsContext;
+    const { scripts, getScripts, addScript, editScript, deleteScript, alert_script, alertmsg_script, alertstatus_script, setAlertScript } = scriptsContext;
     const parametersContext = useContext(parameterContext);
-    const { parameters, getAllParameters, addParameter, editParameter, deleteParameter } = parametersContext;
+    const { parameters, getAllParameters, addParameter, editParameter, deleteParameter, alertmsg_parameter, alertstatus_parameter, alert_parameter, setAlertParameter } = parametersContext;
     const processQsContext = useContext(processQContext);
     const { savedQueues, getAllQueues, loadSavedQueue } = processQsContext;
 
@@ -43,6 +45,15 @@ const DBTable = ({ table }) => {
     let getFunction = null;
     let editFunction = null;
     let deleteFunction = null;
+    let alertmsg = null;
+    let alertstatus = null;
+    let alert = null;
+    let setAlert = null;
+
+    const handleClose = (event, reason) => {
+        setOpenAlert(false);
+        setAlert(false);
+      };
 
     useEffect(() => {
         getAllExecUsers();
@@ -51,6 +62,7 @@ const DBTable = ({ table }) => {
         getAllParameters();
         getAllQueues();
     }, []);
+
     switch (table) {
         default:
         case 'Usuarios de Ejeccución':
@@ -78,6 +90,10 @@ const DBTable = ({ table }) => {
             editFunction = editExec;
             deleteFunction = deleteExec;
             data = exec_users;
+            alert = alert_exec;
+            alertmsg = alertmsg_exec;
+            alertstatus = alertstatus_exec;
+            setAlert = setAlertExec;
             break;
 
         case 'Servidores':
@@ -108,6 +124,10 @@ const DBTable = ({ table }) => {
             editFunction = editServer;
             deleteFunction = deleteServer;
             data = servers;  
+            alert = alert_server;  
+            alertmsg = alertmsg_server;
+            alertstatus = alertstatus_server;
+            setAlert = setAlertServer;
             break;
 
         case 'Acciones':
@@ -146,7 +166,11 @@ const DBTable = ({ table }) => {
             getFunction = getScripts;
             editFunction = editScript;
             deleteFunction = deleteScript;
-            data = scripts;   
+            data = scripts; 
+            alert = alert_script;  
+            alertmsg = alertmsg_script;
+            alertstatus = alertstatus_script;
+            setAlert = setAlertScript;
             break;
 
         case 'Parametros':
@@ -173,6 +197,10 @@ const DBTable = ({ table }) => {
             editFunction = editParameter;
             deleteFunction = deleteParameter;
             data = parameters;   
+            alert = alert_parameter;
+            alertmsg = alertmsg_parameter;
+            alertstatus = alertstatus_parameter;
+            setAlert = setAlertParameter;
             break;
 
         case 'Cola de Procesos':
@@ -247,6 +275,19 @@ const DBTable = ({ table }) => {
                 }
             }
         })}>
+            <Snackbar 
+                open={alert} 
+                autoHideDuration={4000} 
+                onClose={handleClose} 
+                anchorOrigin={{
+                    vertical: 'left',
+                    horizontal: 'top'
+                }}
+            >
+                <Alert variant="filled" onClose={handleClose} severity={alertstatus === 200 ? 'success' : 'error'}>
+                    {alertstatus === 200 ? alertmsg : 'Error'}
+                </Alert>
+            </Snackbar>
             < MUIDataTable
                 title={table}
                 data={data}

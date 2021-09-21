@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import execuserReducer from './execuserReducer';
 import execuserContext from './execurserContext';
 
-import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER, EDIT_EXECUSER, DELETE_EXECUSER } from '../../types';
+import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER, EDIT_EXECUSER, DELETE_EXECUSER, SET_ALERT_EXECUSER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -13,12 +13,22 @@ const ExecuserState = props => {
     
     const initialState = {
         exec_users : [],
-        selected_exec: null
+        selected_exec: null,
+        alert_exec: false,
+        alertmsg_exec: null,
+        alertstatus_exec: null
     }
 
     const [ state, dispatch ] = useReducer(execuserReducer, initialState)
 
     const url = `${window.location.protocol}//${window.location.hostname}`;
+
+    const setAlertExec = (bool) => {
+        dispatch({
+            type: SET_ALERT_EXECUSER,
+            payload: bool
+        });
+    } 
 
     const getExecUsers = async (server_id) => {
 
@@ -120,11 +130,11 @@ const ExecuserState = props => {
                                                 body: JSON.stringify(data)
                                                 });
         
-        const resultAddExecUser = responseAddExecUser.json();                                        
+        const resultAddExecUser = await responseAddExecUser.json();                                        
 
         dispatch({
             type: ADD_EXECUSER,
-            payload: {msg: resultAddExecUser.msg }
+            payload: {msg: resultAddExecUser.msg, status: resultAddExecUser.status }
         })
     }
 
@@ -150,7 +160,7 @@ const ExecuserState = props => {
 
             dispatch({
                 type: EDIT_EXECUSER,
-                payload: {msg: resultEditExecUser.msg }
+                payload: {msg: resultEditExecUser.msg, status: resultEditExecUser.status }
             })
             
         } catch (error) {
@@ -172,7 +182,7 @@ const ExecuserState = props => {
 
             dispatch({
                 type: DELETE_EXECUSER,
-                payload: {msg: resultDeleteExecUser.msg }
+                payload: {msg: resultDeleteExecUser.msg, status: resultDeleteExecUser.status }
             })
             
         } catch (error) {
@@ -186,6 +196,10 @@ const ExecuserState = props => {
             value={{
                 exec_users: state.exec_users,
                 selected_exec: state.selected_exec,
+                alert_exec: state.alert_exec,
+                alertmsg_exec: state.alertmsg_exec,
+                alertstatus_exec: state.alertstatus_exec,
+                setAlertExec: setAlertExec,
                 getExecUsers: getExecUsers,
                 getAllExecUsers: getAllExecUsers,
                 selectExec: selectExec,

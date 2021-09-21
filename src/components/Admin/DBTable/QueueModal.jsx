@@ -1,6 +1,8 @@
 import React , { useContext } from "react";
 
 import { Button, useMediaQuery, Popover, Box } from "@material-ui/core";
+import Alert from '@material-ui/lab/Alert';
+import Snackbar from '@material-ui/core/Snackbar';
 import ErrorIcon from '@material-ui/icons/Error';
 import { Dialog, DialogActions, DialogContent, DialogContentText } from "@material-ui/core";
 import MUIDataTable from "mui-datatables";
@@ -21,7 +23,7 @@ const ColorButton = withStyles((theme) => ({
 const QueueModal = ({ open, toogle }) => {
 
     const processQsContext = useContext(processQContext);
-    const { queueA, getAllQueues, deleteQueue } = processQsContext;
+    const { alert, alertmsg, alertstatus, setAlert, queueA, getAllQueues, deleteQueue } = processQsContext;
 
     let title = null;
     let queue_id = null;
@@ -32,6 +34,7 @@ const QueueModal = ({ open, toogle }) => {
 
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('sm'));
+    const [openAlert, setOpenAlert] = React.useState(false);
     const [anchorEl, setAnchorEl] = React.useState(null);
     const popoverOpen = Boolean(anchorEl);
     const deletePopover = popoverOpen ? 'delete-popconfirm' : undefined;
@@ -54,6 +57,11 @@ const QueueModal = ({ open, toogle }) => {
     const handleCancel = () => {
         setAnchorEl(null);
     };
+
+    const handleAlertClose = (event, reason) => {
+        setOpenAlert(false);
+        setAlert(false);
+      };
 
     const columns = [
         {
@@ -142,16 +150,31 @@ const QueueModal = ({ open, toogle }) => {
     );
 
     return (
-        <Dialog
-            open={open}
-            onClose={handleClose}
-            fullScreen={fullScreen}
-            aria-labelledby="responsive-dialog-title"
-            fullWidth
-            maxWidth="md"
-        >
-            {body}
-        </Dialog>
+        <div>
+            <Snackbar 
+                open={alert} 
+                autoHideDuration={4000} 
+                onClose={handleAlertClose}
+                anchorOrigin={{
+                    vertical: 'left',
+                    horizontal: 'top'
+                }}
+            >
+                <Alert variant="filled" onClose={handleAlertClose} severity={alertstatus === 200 ? 'success' : 'warning'}>
+                    {alertmsg}
+                </Alert>
+            </Snackbar>
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                fullScreen={fullScreen}
+                aria-labelledby="responsive-dialog-title"
+                fullWidth
+                maxWidth="md"
+            >
+                {body}
+            </Dialog>
+        </div>
     );
 };
 
