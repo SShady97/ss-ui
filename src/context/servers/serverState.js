@@ -26,7 +26,7 @@ const ServerState = props => {
 
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
-
+            console.log(token);
             const api_url = `${url}:5000/api/win-remote-client/servers`;
 
             const responseServers = await fetch(api_url, { method: 'GET', headers: { 'Authorization': `Bearer ${token} `}});

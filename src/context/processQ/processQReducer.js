@@ -44,6 +44,7 @@ const processQReducer = (state, action) => {
             ...state,
             queue: action.payload.data,
             alias: action.payload.alias,
+            schedulable: true,
             alertmsg: action.payload.msg,
             alertstatus: action.payload.status,
             alert: true,
@@ -59,7 +60,9 @@ const processQReducer = (state, action) => {
         case CLEAN_ALIAS:
         return {
             ...state,
-            alias: null
+            alias: null,
+            schedulable: false,
+            scheduleDateTime: null
         }
 
         case SAVE_QUEUE:
@@ -68,7 +71,8 @@ const processQReducer = (state, action) => {
             alias: action.payload.alias,
             alertmsg: action.payload.msg,
             alertstatus: action.payload.status,
-            alert: true
+            alert: true,
+            schedulable: true
         }
 
         case SET_ALERT:

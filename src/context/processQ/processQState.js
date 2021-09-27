@@ -18,6 +18,8 @@ const ProcessQState = props => {
         queue : [],
         queueA: [],
         alias: null,
+        schedulable: false,
+        scheduleDateTime: null,
         savedQueues: [],
         selected_SQueue: null,
         res: [],
@@ -32,9 +34,10 @@ const ProcessQState = props => {
 
     const url = `${window.location.protocol}//${window.location.hostname}`;
 
-    const runQueue = async () => {
+    const runQueue = async (datetime = null) => {
 
         let data = [];
+        let sec;
         let token = await authProvider.getIdToken();
         token = token.idToken.rawIdToken;
         
@@ -52,47 +55,77 @@ const ProcessQState = props => {
             
         });
 
-        const api_url = `${url}:5000/api/win-client`;
-
-        const responseServers = await fetch(api_url, 
-                                            { method: 'POST', 
-                                            headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
-                                            body: JSON.stringify(data)
-                                            });
-                                            
-        const resultServers = await responseServers.json();
-
-        const { task_id, task_name } = resultServers;
-                                
-        let res;
         
-        const i = setInterval(async () => {
 
-            res = await getStatus(task_id, task_name);
+        if(datetime !== null){
 
-            console.log(res.status)
-            
-            if(res.status === 'SUCCESS'){
+            const api_url = `${url}:5000/api/win-scheduler`;
 
-                console.log(res.result.responses)
+            sec = datetime.getTime();
 
-                dispatch({
-                    type: 'RESPONSE',
-                    payload: {
-                        response: res.result.responses,
-                        msg: res.result.msg,
-                        status: res.result.status
-                    }
-                });
-                stopInterval();
+            const schedule_data = {
+                data: data,
+                alias: state.alias,
+                sec: sec,
+                token: token
             }
-        
-        },1000);
 
-        const stopInterval = () => {
-            clearInterval(i);
+            const responseScheduler = await fetch(api_url, 
+                { method: 'POST', 
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(schedule_data)
+                }
+            );
+
+            const resultScheduler = await responseScheduler.json();
+
+            console.log(resultScheduler);
+
+        }else{
+
+            const api_url = `${url}:5000/api/win-client`;
+
+            const responseServers = await fetch(api_url, 
+                { method: 'POST', 
+                headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+                }
+            );
+            
+            const resultServers = await responseServers.json();
+            const { task_id, task_name } = resultServers;
+                                    
+            let res;
+            
+            const i = setInterval(async () => {
+    
+                res = await getStatus(task_id, task_name);
+    
+                console.log(res.status)
+                
+                if(res.status === 'SUCCESS'){
+    
+                    console.log(res.result)
+    
+                    dispatch({
+                        type: 'RESPONSE',
+                        payload: {
+                            response: res.result.responses,
+                            msg: res.result.msg,
+                            status: res.result.status
+                        }
+                    });
+                    stopInterval();
+                }
+            
+            },1000);
+    
+            const stopInterval = () => {
+                clearInterval(i);
+            }
+
         }
-                                 
+                                                 
     }
 
     const setQueue = (del, queue) => {
@@ -345,6 +378,7 @@ const ProcessQState = props => {
         });
     }
 
+
     return (
         <processQContext.Provider
             value={{
@@ -354,6 +388,8 @@ const ProcessQState = props => {
                 savedQueues: state.savedQueues,
                 selected_SQueue: state.selected_SQueue,
                 res: state.res,
+                schedulable: state.schedulable,
+                scheduleDateTime: state.scheduleDateTime,
                 loading: state.loading,
                 alert: state.alert,
                 alertmsg: state.alertmsg,

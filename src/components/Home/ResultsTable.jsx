@@ -3,6 +3,7 @@ import React, { useContext } from "react";
 import MUIDataTable from "mui-datatables";
 import Tooltip from "@material-ui/core/Tooltip";
 import Chip from '@material-ui/core/Chip';
+import IconButton from '@material-ui/core/IconButton';
 import DoneIcon from '@material-ui/icons/Done';
 import Button from '@material-ui/core/Button';
 import GetAppIcon from '@material-ui/icons/GetApp';
@@ -79,24 +80,14 @@ const ResultsTable = () => {
             name: "Descargar",
             options: {
                 customBodyRender: (value) => {
-                    let disabled;
-                    if(value.includes('start') || value.includes('stop')){
-                        disabled = true;
-                    }else{
-                        disabled = false;
-                    }
                     return (
                         <Tooltip title={"Descargar Resultado"}>
-                            <Button
-                                variant="contained"
-                                color="primary"
-                                endIcon={<GetAppIcon />}
-                                style={{ width: "100%" }}
-                                disabled={disabled}
+                            <IconButton
+                                color='primary'
                                 href={`${process.env.REACT_APP_API_URL}/api/get-txt/${value}`}
                             >
-                                Resultado
-                            </Button>
+                                <GetAppIcon /> 
+                            </IconButton>
                         </Tooltip>
                     )
                 }

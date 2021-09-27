@@ -64,8 +64,8 @@ const Home = () => {
         <Fragment>
             <Appbar />
             <Container maxWidth="xl" style={{ marginTop: '20px'}}>
-                <Snackbar open={alert} autoHideDuration={6000} onClose={handleClose}>
-                    <Alert onClose={handleClose} severity={alertstatus === 200 ? 'success' : 'warning'}>
+                <Snackbar open={alert} anchorOrigin={{ vertical: 'top', horizontal: 'center' }} autoHideDuration={6000} onClose={handleClose}>
+                    <Alert variant='filled' onClose={handleClose} severity={alertstatus === 200 ? 'success' : 'warning'}>
                         {alertmsg}
                     </Alert>
                 </Snackbar>
