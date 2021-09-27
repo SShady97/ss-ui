@@ -357,7 +357,7 @@ const ProcessQState = props => {
 
             dispatch({
                 type: DELETE_QUEUE,
-                payload: {msg: resultDeleteQueue.msg }
+                payload: {msg: resultDeleteQueue.msg, status: resultDeleteQueue.status }
             })
             
         } catch (error) {

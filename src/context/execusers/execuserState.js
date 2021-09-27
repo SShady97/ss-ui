@@ -5,7 +5,7 @@ import { authProvider } from '../../Auth/authProvider';
 import execuserReducer from './execuserReducer';
 import execuserContext from './execurserContext';
 
-import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER, DELETE_EXECUSER } from '../../types';
+import { EXEC_USERS, SET_EXEC, CLEAN_EXECUSERS, ADD_EXECUSER, EDIT_EXECUSER, DELETE_EXECUSER, SET_ALERT_EXECUSER } from '../../types';
 
 import getStatus from '../../functions/getStatus';
 
@@ -13,12 +13,22 @@ const ExecuserState = props => {
     
     const initialState = {
         exec_users : [],
-        selected_exec: null
+        selected_exec: null,
+        alert_exec: false,
+        alertmsg_exec: null,
+        alertstatus_exec: null
     }
 
     const [ state, dispatch ] = useReducer(execuserReducer, initialState)
 
     const url = `${window.location.protocol}//${window.location.hostname}`;
+
+    const setAlertExec = (bool) => {
+        dispatch({
+            type: SET_ALERT_EXECUSER,
+            payload: bool
+        });
+    } 
 
     const getExecUsers = async (server_id) => {
 
@@ -120,12 +130,42 @@ const ExecuserState = props => {
                                                 body: JSON.stringify(data)
                                                 });
         
-        const resultAddExecUser = responseAddExecUser.json();                                        
+        const resultAddExecUser = await responseAddExecUser.json();                                        
 
         dispatch({
             type: ADD_EXECUSER,
-            payload: {msg: resultAddExecUser.msg }
+            payload: {msg: resultAddExecUser.msg, status: resultAddExecUser.status }
         })
+    }
+
+    const editExec = async ( exec_user_id, formData ) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+
+            const data = {
+                name: formData.name,
+                password: formData.new_password ? formData.new_password : formData.password
+            }
+            
+            const datastore_url = `${url}:8181/data/exec_user/${exec_user_id}`;
+
+            const responseEditExecUser = await fetch(datastore_url, { method: 'PUT',
+                                                                    headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                                                                    body: JSON.stringify(data)
+                                                                    });
+            const resultEditExecUser = await responseEditExecUser.json();
+
+            dispatch({
+                type: EDIT_EXECUSER,
+                payload: {msg: resultEditExecUser.msg, status: resultEditExecUser.status }
+            })
+            
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const deleteExec = async (exec_user_id) => {
@@ -135,14 +175,14 @@ const ExecuserState = props => {
             let token = await authProvider.getIdToken();
             token = token.idToken.rawIdToken;
             
-            const api_url = `${process.env.REACT_APP_DATASTORE_URL}/data/exec_user/${exec_user_id}`;
+            const api_url = `${url}:8181/data/exec_user/${exec_user_id}`;
 
             const responseDeleteExecUser = await fetch(api_url, { method: 'DELETE', headers: { 'Authorization': `Bearer ${token} `}});
             const resultDeleteExecUser = await responseDeleteExecUser.json();
 
             dispatch({
                 type: DELETE_EXECUSER,
-                payload: {msg: resultDeleteExecUser.msg }
+                payload: {msg: resultDeleteExecUser.msg, status: resultDeleteExecUser.status }
             })
             
         } catch (error) {
@@ -156,11 +196,16 @@ const ExecuserState = props => {
             value={{
                 exec_users: state.exec_users,
                 selected_exec: state.selected_exec,
+                alert_exec: state.alert_exec,
+                alertmsg_exec: state.alertmsg_exec,
+                alertstatus_exec: state.alertstatus_exec,
+                setAlertExec: setAlertExec,
                 getExecUsers: getExecUsers,
                 getAllExecUsers: getAllExecUsers,
                 selectExec: selectExec,
                 cleanExec: cleanExec,
                 addExec: addExec,
+                editExec: editExec,
                 deleteExec: deleteExec
             }}
         >
