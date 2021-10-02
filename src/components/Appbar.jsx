@@ -133,7 +133,7 @@ const Appbar = () => {
                                                 </ListItemIcon>
                                                 <ListItemText primary="Admin" />
                                             </StyledMenuItem>
-                                            <StyledMenuItem>
+                                            {/* <StyledMenuItem>
                                                 <ListItemIcon>
                                                     <SettingsRemote fontSize="small" />
                                                 </ListItemIcon>
@@ -156,7 +156,7 @@ const Appbar = () => {
                                                     <SettingsEthernet fontSize="small" />
                                                 </ListItemIcon>
                                                 <ListItemText primary="Monitoring" />
-                                            </StyledMenuItem>
+                                            </StyledMenuItem> */}
                                             <StyledMenuItem onClick={logout}>
                                                 <ListItemIcon>
                                                     <ExitToApp fontSize="small" />

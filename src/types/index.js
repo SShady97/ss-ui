@@ -45,3 +45,4 @@ export const AFTER_DELETE = 'AFTER_DELETE';
 export const SET_PTOEDIT = 'SET_PTOEDIT';
 export const DELETE_QUEUE = 'DELETE_QUEUE';
 export const EDIT_PROCESS = 'EDIT_PROCESS';
+export const SCHEDULED_EXEC = 'SCHEDULED_EXEC';

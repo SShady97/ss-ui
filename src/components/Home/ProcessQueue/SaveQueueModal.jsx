@@ -62,6 +62,7 @@ const SaveQueueModal = () => {
 
   const handleAcceptSchedule = () => {
     runQueue(selectedDate);
+    setOpen(false);
   };
   
   const handleChange = (e) => {

@@ -1,13 +1,13 @@
 import React, { Fragment, useEffect, useContext, useState } from 'react';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import { Grid, Container, Box, Accordion, Typography, makeStyles, AccordionSummary, AccordionDetails, Divider } from '@material-ui/core';
-import { ExpandMore } from '@material-ui/icons';
-
+import { ExpandMore, Schedule, ViewList } from '@material-ui/icons';
 import Appbar from '../Appbar';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import ActionsModal from './Actions/ActionsModal';
 import ResultsTable from './ResultsTable';
+import ScheduledTable from './ScheduledTable';
 
 import ProcessesDataTable from './ProcessQueue/ProcessesDataTable';
 
@@ -44,7 +44,7 @@ const Home = () => {
 
     const { getServers } = serversContext;
     const { getScripts } = scriptsContext;
-    const  { alertmsg, alertstatus, alert, setAlert, loading } = processesQContext;
+    const  { alertmsg, alertstatus, alert, setAlert, loading, getScheduledExec } = processesQContext;
 
 
     
@@ -56,6 +56,7 @@ const Home = () => {
     useEffect(() => {
         getServers();
         getScripts();
+        getScheduledExec();
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
@@ -77,12 +78,28 @@ const Home = () => {
                                 <ActionsModal />
                             </Box>
                         </Box>
+                        <Box mb={2}>
+                            <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMore />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >   
+                                    <Schedule style={{marginRight: '10px'}}/>
+                                    <Typography className={classes.heading}>EJECUCIONES PROGRAMADAS</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails style={{display: "flex", justifyContent: "center"}}>
+                                    <ScheduledTable />
+                                </AccordionDetails>
+                            </Accordion>
+                        </Box>
                         <Accordion>
                             <AccordionSummary
                                 expandIcon={<ExpandMore />}
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
+                                <ViewList style={{marginRight: '10px'}}/>
                                 <Typography className={classes.heading}>COLA DE PROCESOS</Typography>
                             </AccordionSummary>
                             <AccordionDetails style={{display: "flex", justifyContent: "center"}}>

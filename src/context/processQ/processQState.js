@@ -7,7 +7,8 @@ import processQContext from './processQContext';
 
 import { 
     SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
-    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE, EDIT_PROCESS
+    SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE, EDIT_PROCESS,
+    SCHEDULED_EXEC
 } from '../../types';
 
 import getStatus from '../../functions/getStatus';
@@ -27,7 +28,8 @@ const ProcessQState = props => {
         alert: false,
         alertmsg: null,
         alertstatus: null,
-        process_ToEdit: null
+        process_ToEdit: null,
+        scheduledExec: []
     }
 
     const [ state, dispatch ] = useReducer(processQReducer, initialState);
@@ -39,6 +41,7 @@ const ProcessQState = props => {
         let data = [];
         let sec;
         let token = await authProvider.getIdToken();
+        let email = token.idToken.preferredName;
         token = token.idToken.rawIdToken;
         
         state.queue.forEach(process => {
@@ -66,6 +69,7 @@ const ProcessQState = props => {
             const schedule_data = {
                 data: data,
                 alias: state.alias,
+                email: email,
                 sec: sec,
                 token: token
             }
@@ -80,6 +84,7 @@ const ProcessQState = props => {
             const resultScheduler = await responseScheduler.json();
 
             console.log(resultScheduler);
+            getScheduledExec();
 
         }else{
 
@@ -341,7 +346,7 @@ const ProcessQState = props => {
             payload: process
         });
 
-    }
+    };
 
     const deleteQueue = async (queue_id) => {
 
@@ -363,7 +368,7 @@ const ProcessQState = props => {
         } catch (error) {
             console.log(error);
         }
-    }
+    };
     
     const editProcess = (new_process, rowIndex) => {
 
@@ -376,7 +381,43 @@ const ProcessQState = props => {
                 status: 200
             }
         });
-    }
+    };
+
+    const getScheduledExec = async () => {
+
+        const api_url = `${url}:5000/api/tasks-scheduled`;
+
+        const responseScheduled = await fetch(api_url, { method: 'GET'});
+        
+        const resultScheduled = await responseScheduled.json();
+        const { task_id, task_name } = resultScheduled;
+                                
+        let res;
+        
+        const i = setInterval(async () => {
+
+            res = await getStatus(task_id, task_name);
+
+            console.log(res.status)
+            
+            if(res.status === 'SUCCESS'){
+
+                console.log(res.result)
+
+                dispatch({
+                    type: SCHEDULED_EXEC,
+                    payload: res.result
+                });
+
+                stopInterval();
+            }
+        
+        },1000);
+
+        const stopInterval = () => {
+            clearInterval(i);
+        }
+    };
 
 
     return (
@@ -395,6 +436,7 @@ const ProcessQState = props => {
                 alertmsg: state.alertmsg,
                 alertstatus: state.alertstatus,
                 process_ToEdit: state.processToEdit,
+                scheduledExec: state.scheduledExec,
                 runQueue: runQueue,
                 setQueue: setQueue,
                 setLoading: setLoading,
@@ -406,7 +448,8 @@ const ProcessQState = props => {
                 getAllQueues: getAllQueues,
                 setProcToEdit: setProcToEdit,
                 deleteQueue: deleteQueue,
-                editProcess: editProcess
+                editProcess: editProcess,
+                getScheduledExec: getScheduledExec
             }}
         >
             {props.children}

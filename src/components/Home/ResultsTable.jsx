@@ -5,7 +5,7 @@ import Tooltip from "@material-ui/core/Tooltip";
 import Chip from '@material-ui/core/Chip';
 import IconButton from '@material-ui/core/IconButton';
 import DoneIcon from '@material-ui/icons/Done';
-import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 
@@ -104,37 +104,40 @@ const ResultsTable = () => {
     };
 
     return (
-        
-        <ThemeProvider theme={outerTheme => ({
-            ...outerTheme,
-            overrides: {
-                MUIDataTableBodyRow: {
-                    root: {
-                        '&:nth-of-type(odd)': {
-                            backgroundColor: theme.palette.action.selected,
+        <Grid container spacing={3}>
+            <Grid item xs={12}>
+                <ThemeProvider theme={outerTheme => ({
+                    ...outerTheme,
+                    overrides: {
+                        MUIDataTableBodyRow: {
+                            root: {
+                                '&:nth-of-type(odd)': {
+                                    backgroundColor: theme.palette.action.selected,
+                                },
+                            }
                         },
+                        MUIDataTableToolbar: {
+                            titleText: {
+                                fontWeight: "bold",
+                                fontSize: "150%"
+                            }
+                        },
+                        MUIDataTableHeadCell: {
+                            data: {
+                                fontWeight: "bold"
+                            }
+                        }
                     }
-                },
-                MUIDataTableToolbar: {
-                    titleText: {
-                        fontWeight: "bold",
-                        fontSize: "150%"
-                    }
-                },
-                MUIDataTableHeadCell: {
-                    data: {
-                        fontWeight: "bold"
-                    }
-                }
-            }
-        })}>
-            <MUIDataTable 
-                title={""} 
-                data={res} 
-                columns={columns}
-                options={options}  
-            />
-        </ThemeProvider>
+                })}>
+                    <MUIDataTable 
+                        title={""} 
+                        data={res} 
+                        columns={columns}
+                        options={options}  
+                    />
+                </ThemeProvider>
+            </Grid>
+        </Grid>
 
     );
 };

@@ -1,5 +1,5 @@
 import { SET_QUEUE, QUEUES, RESPONSE, LOADING, SET_SQUEUES, LOAD_SQUEUE, LOAD_SQUEUE_ADMIN, CLEAN_ALIAS,
-    SAVE_QUEUE, SET_ALERT, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE, EDIT_PROCESS
+    SAVE_QUEUE, SET_ALERT, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE, EDIT_PROCESS, SCHEDULED_EXEC
 } from '../../types';
 
 const processQReducer = (state, action) => {
@@ -109,6 +109,12 @@ const processQReducer = (state, action) => {
                 alertmsg: action.payload.msg,
                 alertstatus: action.payload.status,
                 alert: true
+            }
+
+        case SCHEDULED_EXEC:
+            return {
+                ...state,
+                scheduledExec: action.payload
             }
 
         default:
