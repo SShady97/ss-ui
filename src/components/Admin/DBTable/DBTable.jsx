@@ -100,7 +100,7 @@ const DBTable = ({ table }) => {
             columns = [
                 {
                     name: 'app',
-                    label:'App',
+                    label:'Nombre',
                 },
                 {
                     name: 'environment',
@@ -116,7 +116,7 @@ const DBTable = ({ table }) => {
                 },
                 {
                     name: 'ip',
-                    label:'Direción IP',
+                    label:'Dirección IP',
                 },
             ];
             addFunction = addServer;
@@ -159,7 +159,7 @@ const DBTable = ({ table }) => {
                 },
                 {
                     name: 'types',
-                    label:'Typo',
+                    label:'Tipo',
                 },
             ];
             addFunction = addScript;
@@ -181,7 +181,7 @@ const DBTable = ({ table }) => {
                 },
                 {
                     name: 'cat',
-                    label:'CAT',
+                    label:'Categoria',
                 },
                 {
                     name: 'id',
@@ -189,7 +189,7 @@ const DBTable = ({ table }) => {
                 },
                 {
                     name: 'param',
-                    label:'Param',
+                    label:'Parametro',
                 },
             ];
             addFunction = addParameter;

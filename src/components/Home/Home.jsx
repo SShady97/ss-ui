@@ -114,8 +114,7 @@ const Home = () => {
                             </AccordionDetails>
                         </Accordion>
                     </Grid>
-                    <Grid item xs={12} sm container direction="column" justifyContent="flex-start">
-                        <Grid item >
+                    <Grid item sm xs={12} direction="column">
                             <Box mt={2}>
                                 <Divider />
                             </Box>
@@ -131,7 +130,6 @@ const Home = () => {
                                 :
                                     <ResultsTable />
                             }
-                        </Grid>
                     </Grid>
                 </Grid>
             </Container>
