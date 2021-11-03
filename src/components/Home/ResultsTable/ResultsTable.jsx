@@ -9,14 +9,15 @@ import Grid from '@material-ui/core/Grid';
 import GetAppIcon from '@material-ui/icons/GetApp';
 import { ThemeProvider, useTheme } from '@material-ui/core/styles';
 
-import processQContext from '../../context/processQ/processQContext';
+import processQContext from '../../../context/processQ/processQContext';
+import EmailButton from './EmailButton';
 
 const ResultsTable = () => {
 
     const theme = useTheme();
     
     const processesQContext = useContext(processQContext);
-    const  { res } = processesQContext;
+    const  { res, sendEmail } = processesQContext;
 
     const columns = [
         {
@@ -100,7 +101,12 @@ const ResultsTable = () => {
         print: 'false',
         selectableRows: 'none',
         viewColumns: 'false',
-        filter: 'false'
+        filter: 'false',
+        customToolbar: () => {
+            return (
+                <EmailButton sendEmail={sendEmail}/>
+            );
+        }
     };
 
     return (

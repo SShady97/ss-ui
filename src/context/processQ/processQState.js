@@ -24,6 +24,7 @@ const ProcessQState = props => {
         savedQueues: [],
         selected_SQueue: null,
         res: [],
+        txt: null,
         loading: null,
         alert: false,
         alertmsg: null,
@@ -35,6 +36,52 @@ const ProcessQState = props => {
     const [ state, dispatch ] = useReducer(processQReducer, initialState);
 
     const url = `${window.location.protocol}//${window.location.hostname}`;
+
+    const sendEmail = async (email) => {
+
+        try {
+
+            let token = await authProvider.getIdToken();
+            token = token.idToken.rawIdToken;
+
+            let winrmTaskTxtArray = [];
+            let data = [];
+
+            const today = new Date();
+            const date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+            const time = today.getHours()+":"+today.getMinutes()+":"+today.getSeconds();
+            const dateTime = date+' '+time;
+
+            for(let response in state.res) {
+                winrmTaskTxtArray.push(state.res[response][8]);
+                data.push({
+                    app: state.res[response][0],
+                    env: state.res[response][1],
+                    hostname: state.res[response][2],
+                    ip: state.res[response][3],
+                    action: state.res[response][4],
+                    result: state.res[response][5],
+                    validation: false,
+                    user: state.res[response][7],
+                });
+            };
+
+            const api_url = `${url}:5000/api/send-email/` + email + '/' + winrmTaskTxtArray;
+
+            const responseSendEmail = await fetch(api_url, 
+                { method: 'POST',
+                headers: { 'Authorization': `Bearer ${token}`,  'Content-Type': 'application/json'},
+                body: JSON.stringify(state.res)
+                });
+
+            const resultSendEmail = await responseSendEmail.json();  
+
+            console.log(api_url);
+        
+        } catch (error) {
+            console.log(error);
+        }
+    };
 
     const runQueue = async (datetime = null) => {
 
@@ -106,18 +153,17 @@ const ProcessQState = props => {
     
                 res = await getStatus(task_id, task_name);
     
-                console.log(res.status)
+                console.log(res);
                 
                 if(res.status === 'SUCCESS'){
-    
-                    console.log(res.result)
     
                     dispatch({
                         type: 'RESPONSE',
                         payload: {
                             response: res.result.responses,
                             msg: res.result.msg,
-                            status: res.result.status
+                            status: res.result.status,
+                            txt: res.result.txt
                         }
                     });
                     stopInterval();
@@ -429,6 +475,7 @@ const ProcessQState = props => {
                 savedQueues: state.savedQueues,
                 selected_SQueue: state.selected_SQueue,
                 res: state.res,
+                txt: state.txt,
                 schedulable: state.schedulable,
                 scheduleDateTime: state.scheduleDateTime,
                 loading: state.loading,
@@ -449,7 +496,8 @@ const ProcessQState = props => {
                 setProcToEdit: setProcToEdit,
                 deleteQueue: deleteQueue,
                 editProcess: editProcess,
-                getScheduledExec: getScheduledExec
+                getScheduledExec: getScheduledExec,
+                sendEmail: sendEmail
             }}
         >
             {props.children}

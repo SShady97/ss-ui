@@ -6,7 +6,7 @@ import Appbar from '../Appbar';
 import Alert from '@material-ui/lab/Alert';
 import Snackbar from '@material-ui/core/Snackbar';
 import ActionsModal from './Actions/ActionsModal';
-import ResultsTable from './ResultsTable';
+import ResultsTable from './ResultsTable/ResultsTable';
 import ScheduledTable from './ScheduledTable';
 
 import ProcessesDataTable from './ProcessQueue/ProcessesDataTable';

@@ -22,6 +22,7 @@ const processQReducer = (state, action) => {
                 ...state,
                 res: action.payload.response,
                 loading: null,
+                txt: action.payload.txt,
                 alertmsg: action.payload.msg,
                 alertstatus: action.payload.status,
                 alert: true
