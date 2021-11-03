@@ -47,7 +47,14 @@ const getStatus = async (task_id, task_name, poll_sec=1000) => {
                 if (taskStatus === 'SUCCESS') {
                     return {status: taskStatus, result: resultTask.data.task_result};
                 }
-                 break; 
+                break; 
+
+            case 'tasks.sendEmail':
+                taskStatus = resultTask.data.task_status;
+                if (taskStatus === 'SUCCESS') {
+                    return {status: taskStatus, result: resultTask.data.task_result};
+                }
+                break;
             
             default:
                 return 'No se ha encontrado la tarea';

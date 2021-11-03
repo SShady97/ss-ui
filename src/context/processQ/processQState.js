@@ -8,7 +8,7 @@ import processQContext from './processQContext';
 import { 
     SET_QUEUE, QUEUES, LOADING, SET_SQUEUES, LOAD_SQUEUE, CLEAN_ALIAS, SAVE_QUEUE,
     SET_ALERT, LOAD_SQUEUE_ADMIN, AFTER_DELETE, SET_PTOEDIT, DELETE_QUEUE, EDIT_PROCESS,
-    SCHEDULED_EXEC
+    SCHEDULED_EXEC, SEND_EMAIL
 } from '../../types';
 
 import getStatus from '../../functions/getStatus';
@@ -74,9 +74,30 @@ const ProcessQState = props => {
                 body: JSON.stringify(state.res)
                 });
 
-            const resultSendEmail = await responseSendEmail.json();  
+            const resultSendEmail = await responseSendEmail.json(); 
 
-            console.log(api_url);
+            const { task_id, task_name } = resultSendEmail;
+                                    
+            let res;
+            
+            const i = setInterval(async () => {
+    
+                res = await getStatus(task_id, task_name);
+                
+                if(res.status === 'SUCCESS'){
+    
+                    dispatch({
+                        type: SEND_EMAIL,
+                        payload: {msg: res.result.msg, status: res.result.status }
+                    });
+                    stopInterval();
+                }
+            
+            },1000);
+    
+            const stopInterval = () => {
+                clearInterval(i);
+            } 
         
         } catch (error) {
             console.log(error);
@@ -130,7 +151,6 @@ const ProcessQState = props => {
 
             const resultScheduler = await responseScheduler.json();
 
-            console.log(resultScheduler);
             getScheduledExec();
 
         }else{
@@ -152,8 +172,6 @@ const ProcessQState = props => {
             const i = setInterval(async () => {
     
                 res = await getStatus(task_id, task_name);
-    
-                console.log(res);
                 
                 if(res.status === 'SUCCESS'){
     
@@ -443,8 +461,6 @@ const ProcessQState = props => {
         const i = setInterval(async () => {
 
             res = await getStatus(task_id, task_name);
-
-            console.log(res.status)
             
             if(res.status === 'SUCCESS'){
 
